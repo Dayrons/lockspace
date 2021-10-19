@@ -6,14 +6,15 @@ class PaginaLogin extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black54,
+      backgroundColor: Color(0xFF000000),
       body: Center(
         child: Form(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Input(),
-              Input(),
+              Input(
+                text: "Contraseña",
+              ),
               Boton(),
             ],
           ),
