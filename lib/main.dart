@@ -15,7 +15,6 @@ class AppState extends StatelessWidget {
         BlocProvider<LoginBloc>(
           create: (context) => LoginBloc(),
         ),
-       
       ],
       child: App(),
     );
@@ -28,6 +27,10 @@ class App extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: PaginaLogin(),
+      theme: ThemeData(
+        splashColor: Colors.black,
+        primaryColor: Colors.black,
+      ),
     );
   }
 }

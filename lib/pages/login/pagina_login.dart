@@ -1,4 +1,5 @@
 import 'package:app/bloc/bloc/login_bloc.dart';
+import 'package:app/pages/usuario/pagina_usuario.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:app/pages/login/widgets/Input.dart';
@@ -13,7 +14,10 @@ class PaginaLogin extends StatelessWidget {
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
         if (state is Logeado) {
-          print("Logeado");
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute<Null>(
+                  builder: (BuildContext context) => PaginaUsuario()),
+              (Route<dynamic> route) => false);
         }
       },
       child: Scaffold(
