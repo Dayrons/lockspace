@@ -1,10 +1,19 @@
 import 'package:app/db.dart';
-import 'package:encrypt/encrypt.dart';
+import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:sqflite/sqflite.dart';
 
 class Usuario {
   final String nombre;
   final String password;
+
+  //me quede probando encriptado y desencriptado con este modo
+  // For Fernet Encryption/Decryption
+  static final keyFernet =
+      encrypt.Key.fromUtf8('TechWithVPIsBestTechWithVPIsBest');
+  // if you need to use the ttl feature, you'll need to use APIs in the algorithm itself
+  static final fernet = encrypt.Fernet(keyFernet);
+
+  static final encrypterFernet = encrypt.Encrypter(fernet);
 
   Usuario({this.nombre, this.password});
 
@@ -36,17 +45,14 @@ class Usuario {
   }
 
   String encriptar(password) {
-    final plainText = password;
-    final key = Key.fromUtf8('my 32 length key................');
-    final iv = IV.fromLength(16);
+    final encrypted = encrypterFernet.encrypt(password);
 
-    final encrypter = Encrypter(AES(key));
-
-    final encrypted = encrypter.encrypt(plainText, iv: iv);
-    final decrypted = encrypter.decrypt(encrypted, iv: iv);
-
-    print(decrypted);
-    print(encrypted);
+    print(fernet.extractTimestamp(encrypted.bytes));
+    // unix timestamp
     return encrypted.base64;
+  }
+
+  static decryptFernet(password) {
+    return encrypterFernet.decrypt(password);
   }
 }
