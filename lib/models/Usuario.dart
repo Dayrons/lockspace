@@ -44,15 +44,22 @@ class Usuario {
     return favoritos;
   }
 
-  String encriptar(password) {
+   encriptar(password) {
     final encrypted = encrypterFernet.encrypt(password);
 
-    print(fernet.extractTimestamp(encrypted.bytes));
+
+    
+    
+
+    // print(fernet.extractTimestamp(encrypted.bytes));
     // unix timestamp
     return encrypted.base64;
   }
 
-  static decryptFernet(password) {
-    return encrypterFernet.decrypt(password);
+   decryptFernet(password) {
+
+     encrypterFernet.decrypt64(password);
+
+    return encrypterFernet.decrypt64(password);
   }
 }

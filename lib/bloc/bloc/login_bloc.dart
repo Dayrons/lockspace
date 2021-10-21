@@ -18,6 +18,17 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
       List usuarios = await usuario.obtener();
 
+      var password = usuarios[0].password;
+
+      var passwordDecryp = usuario.decryptFernet(password);
+
+      password = passwordDecryp;
+      if (event.password == password) {
+        yield Logeado();
+      }
+
+      /* 
+
       final key = Key.fromUtf8('my 32 length key................');
       final iv = IV.fromLength(16);
       final encrypter = Encrypter(AES(key));
@@ -27,8 +38,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       String password = usuarios[0].password;
 
       if (encrypted.base64 == password) {
-        yield Logeado();
-      }
+       
+      } */
     }
   }
 }
