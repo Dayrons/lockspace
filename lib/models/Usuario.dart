@@ -46,6 +46,7 @@ class Usuario {
     final decrypted = encrypter.decrypt(encrypted, iv: iv);
 
     print(decrypted);
+    print(encrypted);
     return encrypted.base64;
   }
 }

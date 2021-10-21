@@ -1,8 +1,9 @@
-import 'package:app/bloc/bloc/login_bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class Boton extends StatelessWidget {
+  final Function onTap;
+
+  const Boton({Key key, this.onTap}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -12,8 +13,7 @@ class Boton extends StatelessWidget {
         minWidth: double.infinity,
         color: Color(0XFF2CDA9D),
         onPressed: () {
-
-            BlocProvider.of<LoginBloc>(context).add(Sigin());
+          onTap(context);
         },
         child: Text(
           "INICIAR SESION",

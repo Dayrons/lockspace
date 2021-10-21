@@ -3,6 +3,8 @@ part of 'login_bloc.dart';
 @immutable
 abstract class LoginEvent {}
 
+class Sigin extends LoginEvent {
+  final String password;
 
-
-class Sigin extends LoginEvent{}
+  Sigin({@required this.password});
+}

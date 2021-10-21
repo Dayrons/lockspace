@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 class Input extends StatelessWidget {
   final String text;
+  final Function changePassword;
 
-  const Input({Key key, this.text}) : super(key: key);
+  const Input({Key key, this.text, this.changePassword}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,6 +15,9 @@ class Input extends StatelessWidget {
       ),
       margin: EdgeInsets.symmetric(horizontal: 20.00, vertical: 15.00),
       child: TextFormField(
+        onChanged: (text) {
+          changePassword(text);
+        },
         style: TextStyle(fontSize: 14.00, fontWeight: FontWeight.bold),
         cursorColor: Color(0XFF2CDA9D),
         decoration: InputDecoration(
