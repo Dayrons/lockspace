@@ -1,4 +1,5 @@
 import 'package:app/bloc/GestionPasswordBloc/gestionpassword_bloc.dart';
+import 'package:app/pages/registrar_password/pagina_registrar_password.dart';
 import 'package:app/pages/usuario/widgets/password.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -38,7 +39,10 @@ class PaginaUsuario extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         backgroundColor: Color(0XFF2CDA9D),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).push(MaterialPageRoute<Null>(
+              builder: (BuildContext context) => PaginaRegistrarPassword()));
+        },
       ),
     );
   }
