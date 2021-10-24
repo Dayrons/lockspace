@@ -17,5 +17,12 @@ class GestionpasswordBloc
     List passwords = await password.obtener();
 
     yield PasswordsObtenidas(passwords: passwords);
+
+    if (event is RegistrarPassword) {
+      Password password = event.password;
+
+      await password.insertar();
+      yield PasswordsObtenidas(passwords: passwords);
+    }
   }
 }

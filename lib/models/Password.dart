@@ -19,7 +19,7 @@ class Password {
 
   Map<String, dynamic> toMap() {
     return {
-      'titulo': encriptar(this.titulo),
+      'titulo': this.titulo,
       'password': encriptar(this.password),
     };
   }
@@ -35,7 +35,7 @@ class Password {
 
   Future obtener() async {
     Database db = await DB().conexion();
-    List<Map<String, dynamic>> resultado = await db.query('tbl_usuario');
+    List<Map<String, dynamic>> resultado = await db.query('tbl_passwords');
     List passwords = List.generate(resultado.length, (i) {
       return Password(
           titulo: resultado[i]["titulo"], password: resultado[i]["password"]);

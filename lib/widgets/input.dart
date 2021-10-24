@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 class Input extends StatelessWidget {
   final String texto;
-
-  const Input({Key key, this.texto}) : super(key: key);
+  final Function onChange;
+  const Input({Key key, this.texto, this.onChange}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +32,9 @@ class Input extends StatelessWidget {
               child: TextField(
                 cursorColor: Color(0XFF2CDA9D),
                 decoration: InputDecoration(border: InputBorder.none),
+                onChanged: (text) {
+                  onChange(text);
+                },
               ),
             ),
           ]),
