@@ -1,4 +1,5 @@
-import 'package:app/bloc/bloc/login_bloc.dart';
+import 'package:app/bloc/AuthBloc/login_bloc.dart';
+import 'package:app/bloc/GestionPasswordBloc/gestionpassword_bloc.dart';
 import 'package:app/pages/login/pagina_login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,6 +15,9 @@ class AppState extends StatelessWidget {
       providers: [
         BlocProvider<LoginBloc>(
           create: (context) => LoginBloc(),
+        ),
+        BlocProvider<GestionpasswordBloc>(
+          create: (context) => GestionpasswordBloc(),
         ),
       ],
       child: App(),

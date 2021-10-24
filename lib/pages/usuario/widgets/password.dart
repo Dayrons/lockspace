@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
 class Password extends StatelessWidget {
+  final String password;
+  final String titulo;
+
+  const Password({Key key, this.password, this.titulo}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -17,10 +21,22 @@ class Password extends StatelessWidget {
             Icons.lock,
             color: Colors.white,
           ),
-          Text(
-            "password",
-            style: TextStyle(color: Colors.white),
-          ),
+          Column(children: [
+            Text(
+              "$titulo",
+              style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16.00),
+            ),
+            SizedBox(
+              height: 5.00,
+            ),
+            Text(
+              "password",
+              style: TextStyle(color: Colors.white, fontSize: 10.00),
+            ),
+          ]),
           Icon(
             Icons.lock,
             color: Colors.white,
