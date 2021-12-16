@@ -8,12 +8,18 @@ class Password extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: EdgeInsets.symmetric(horizontal: 20.00, vertical: 10.00),
       padding: EdgeInsets.symmetric(horizontal: 20.00, vertical: 15.00),
       decoration: BoxDecoration(
-          border: Border(
-        bottom: BorderSide(
-            width: 2.00, style: BorderStyle.solid, color: Color(0XFF393939)),
-      )),
+        color: Color(0XFF2b2e3d),
+        borderRadius: BorderRadius.circular(15),
+        /* border: Border(
+            bottom: BorderSide(
+                width: 2.00,
+                style: BorderStyle.solid,
+                color: Color(0XFF393939)),
+          ) */
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

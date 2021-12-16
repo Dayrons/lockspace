@@ -9,8 +9,14 @@ class PaginaUsuario extends StatelessWidget {
   Widget build(BuildContext context) {
     init(context);
     return Scaffold(
-      backgroundColor: Color(0XFF23272A),
+      backgroundColor: Color(0XFF1c1d22),
       appBar: AppBar(
+        elevation: 0,
+        title: Text(
+          "Mis contraseñas",
+          style: TextStyle(fontSize: 18.00, color: Color(0XFF2CDA9D)),
+        ),
+        centerTitle: true,
         backgroundColor: Color(0XFF23272A),
       ),
       body: BlocBuilder<GestionpasswordBloc, GestionpasswordState>(

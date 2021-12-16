@@ -10,6 +10,7 @@ class BarraSuperiro extends StatelessWidget {
       child: Row(
         children: [
           IconButton(
+            splashRadius: 30.00,
             onPressed: () {
               Navigator.of(context).pop();
             },
