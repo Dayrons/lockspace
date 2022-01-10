@@ -25,6 +25,11 @@ class Formulario extends StatelessWidget {
             controller: controller,
             onChange: onChange,
           ),
+          Input(
+            input: 'cantidad',
+            texto: "Cantidad de caracteres",
+            onChange: onChange,
+          ),
         ],
       ),
     );

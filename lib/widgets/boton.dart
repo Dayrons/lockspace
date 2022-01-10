@@ -12,13 +12,13 @@ class Boton extends StatelessWidget {
       child: FlatButton(
         padding: EdgeInsets.all(18.00),
         minWidth: double.infinity,
-        color: Color(0XFFfca06d),
+        color: Colors.white,
         onPressed: () {
           onTap();
         },
         child: Text(
           texto,
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
       ),
     );

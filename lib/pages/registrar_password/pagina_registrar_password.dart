@@ -18,7 +18,8 @@ class _PaginaRegistrarPasswordState extends State<PaginaRegistrarPassword> {
     'numero': false,
     'caracteres': false,
     'password': '',
-    'titulo': ''
+    'titulo': '',
+    'cantidad': 0
   };
   final TextEditingController _textPasswordController = TextEditingController();
 
@@ -79,11 +80,104 @@ class _PaginaRegistrarPasswordState extends State<PaginaRegistrarPassword> {
   }
 
   void _registrar() {
+    print(values);
     /* BlocProvider.of<GestionpasswordBloc>(context).add(RegistrarPassword(
         password: Password(password: password, titulo: titulo))); */
   }
 
   void _generarPassword() {
-    setState(() {});
+    //https://stackoverflow.com/questions/11674820/how-do-i-generate-random-numbers-in-dart
+
+    List caracteres = [
+      'a',
+      'b',
+      'c',
+      'd',
+      'e',
+      'f',
+      'g',
+      'h',
+      'i',
+      'j',
+      'k',
+      'l',
+      'm',
+      'n',
+      'o',
+      'p',
+      'q',
+      'r',
+      's',
+      't',
+      'u',
+      'v',
+      'w',
+      'x',
+      'y',
+      'z'
+    ];
+
+    const List mayusculas = [
+      'A',
+      'B',
+      'C',
+      'D',
+      'E',
+      'F',
+      'G',
+      'H',
+      'I',
+      'J',
+      'K',
+      'L',
+      'M',
+      'N',
+      'O',
+      'P',
+      'Q',
+      'R',
+      'S',
+      'T',
+      'U',
+      'V',
+      'W',
+      'X',
+      'Y',
+      'Z'
+    ];
+    const List caracteres_especiales = [
+      '!',
+      '@',
+      '#',
+      '\$',
+      '%',
+      '^',
+      '&',
+      '*',
+      '(',
+      ')',
+      '+',
+      '{',
+      '}',
+      '[',
+      ']'
+    ];
+    const List numeros = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
+
+    if (values['mayuscula']) {
+      caracteres.addAll(mayusculas);
+    }
+    if (values['numero']) {
+      caracteres.addAll(numeros);
+    }
+    if (values['caracteres']) {
+      caracteres.addAll(caracteres_especiales);
+    }
+
+    print(caracteres);
+
+    setState(() {
+      _textPasswordController.text = 'probando';
+    });
   }
 }

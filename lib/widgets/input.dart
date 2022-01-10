@@ -33,6 +33,7 @@ class Input extends StatelessWidget {
                 color: Color(0XFF2b2e3d).withOpacity(0.5),
               ),
               child: TextFormField(
+                style: TextStyle(color: Colors.white),
                 controller: controller,
                 cursorColor: Color(0XFF2CDA9D),
                 decoration: InputDecoration(border: InputBorder.none),
