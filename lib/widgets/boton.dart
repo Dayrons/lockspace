@@ -12,9 +12,9 @@ class Boton extends StatelessWidget {
       child: FlatButton(
         padding: EdgeInsets.all(18.00),
         minWidth: double.infinity,
-        color: Color(0XFF2CDA9D),
+        color: Color(0XFFfca06d),
         onPressed: () {
-          onTap(context);
+          onTap();
         },
         child: Text(
           texto,
