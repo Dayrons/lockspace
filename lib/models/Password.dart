@@ -36,7 +36,7 @@ class Password {
   Future obtener() async {
     Database db = await DB().conexion();
     List<Map<String, dynamic>> resultado = await db.query('tbl_passwords');
-    List passwords = List.generate(resultado.length, (i) {
+    List<Password> passwords = List.generate(resultado.length, (i) {
       return Password(
           titulo: resultado[i]["titulo"], password: resultado[i]["password"]);
     });
