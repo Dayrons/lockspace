@@ -87,7 +87,7 @@ class _PaginaRegistrarPasswordState extends State<PaginaRegistrarPassword> {
 
   void _generarPassword() {
     //https://stackoverflow.com/questions/11674820/how-do-i-generate-random-numbers-in-dart
-
+    //https://api.dart.dev/stable/2.15.1/dart-math/Random-class.html
     List caracteres = [
       'a',
       'b',
