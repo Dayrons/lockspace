@@ -21,7 +21,7 @@ class PaginaLogin extends StatelessWidget {
         }
       },
       child: Scaffold(
-        backgroundColor: Color(0xFF000000),
+        backgroundColor: Color(0XFF1c1d22),
         body: Center(
           child: Form(
             child: Column(

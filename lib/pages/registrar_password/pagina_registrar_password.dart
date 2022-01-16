@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:app/bloc/GestionPasswordBloc/gestionpassword_bloc.dart';
 import 'package:app/models/Password.dart';
 import 'package:app/pages/registrar_password/widgets/barra_inferior.dart';
@@ -88,6 +90,10 @@ class _PaginaRegistrarPasswordState extends State<PaginaRegistrarPassword> {
   void _generarPassword() {
     //https://stackoverflow.com/questions/11674820/how-do-i-generate-random-numbers-in-dart
     //https://api.dart.dev/stable/2.15.1/dart-math/Random-class.html
+    //https://protocoderspoint.com/generate-random-number-dart-program/
+
+    String passwordRandom = '';
+
     List caracteres = [
       'a',
       'b',
@@ -174,10 +180,14 @@ class _PaginaRegistrarPasswordState extends State<PaginaRegistrarPassword> {
       caracteres.addAll(caracteres_especiales);
     }
 
-    print(caracteres);
+    var random = Random();
 
-    setState(() {
-      _textPasswordController.text = 'probando';
-    });
+    for (var i = 0; i < 10; i++) {
+      final numeroRandom = random.nextInt(caracteres.length);
+
+      passwordRandom += caracteres[numeroRandom];
+    }
+
+    _textPasswordController.text = passwordRandom;
   }
 }

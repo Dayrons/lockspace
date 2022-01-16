@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 class PaginaDetallePassword extends StatelessWidget {
+  final String password;
+
+  const PaginaDetallePassword({Key key, this.password}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,6 +24,16 @@ class PaginaDetallePassword extends StatelessWidget {
           },
         ),
       ),
+      body: Center(
+        child: QrImage(
+          data: password,
+          backgroundColor: Colors.white,
+          version: QrVersions.auto,
+          size: 200.0,
+        ),
+      ),
     );
   }
 }
+
+//https://pub.dev/packages/qr_flutter

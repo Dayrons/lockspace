@@ -1,5 +1,6 @@
 import 'package:app/pages/detalle_password/pagina_detalle_password.dart';
 import 'package:clipboard/clipboard.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Password extends StatelessWidget {
@@ -15,8 +16,8 @@ class Password extends StatelessWidget {
       onTap: () => {
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (context) => PaginaDetallePassword(),
+          CupertinoPageRoute(
+            builder: (context) => PaginaDetallePassword(password: password),
           ),
         )
       },

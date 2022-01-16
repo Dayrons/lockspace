@@ -31,10 +31,6 @@ class App extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: PaginaLogin(),
-      theme: ThemeData(
-        splashColor: Colors.black,
-        primaryColor: Colors.black,
-      ),
     );
   }
 }
