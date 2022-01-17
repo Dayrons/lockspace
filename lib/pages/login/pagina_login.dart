@@ -6,6 +6,9 @@ import 'package:app/pages/login/widgets/Input.dart';
 import 'package:app/pages/login/widgets/boton.dart';
 import 'package:flutter/material.dart';
 
+//QUE MUESTRE UNA PANTALLA LA PRIMERA VEZ QUE SE INICIE LA APP
+//https://es.stackoverflow.com/questions/3243/saber-cuando-la-app-es-lanzada-por-primera-vez-en-android
+
 class PaginaLogin extends StatelessWidget {
   String password;
 
