@@ -1,5 +1,6 @@
 import 'package:app/bloc/AuthBloc/login_bloc.dart';
 import 'package:app/pages/inicio/pagina_usuario.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:app/pages/login/widgets/Input.dart';
@@ -18,7 +19,7 @@ class PaginaLogin extends StatelessWidget {
       listener: (context, state) {
         if (state is Logeado) {
           Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute<Null>(
+              CupertinoPageRoute(
                   builder: (BuildContext context) => PaginaInicio()),
               (Route<dynamic> route) => false);
         }
