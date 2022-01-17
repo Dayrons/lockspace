@@ -15,6 +15,7 @@ class Input extends StatelessWidget {
       ),
       margin: EdgeInsets.symmetric(horizontal: 20.00, vertical: 15.00),
       child: TextFormField(
+        obscureText: true,
         onChanged: (text) {
           changePassword(text);
         },
