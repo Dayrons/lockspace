@@ -1,5 +1,7 @@
-import 'package:app/utils/colors.dart';
+import 'package:app/pages/registro_usuario/pagina_registro.dart';
+import 'package:app/utils/ui.dart';
 import 'package:app/widgets/input.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class PaginaIniciandoPorPrimeravez extends StatefulWidget {
@@ -17,22 +19,22 @@ class _PaginaIniciandoPorPrimeravezState
       color: Color(fondo),
       titulo: 'SOLO TU TIENES EL CONTROL',
       descripcion:
-          'LockSpace no tiene conexion a ningun servidor por lo que las contraseñas estaran almacenadas e incriptadas en tu mismo dispositivo',
+          'LockSpace no tiene conexion a ningun servidor por lo que las contraseñas estaran almacenadas solo en tu  dispositivo',
       img: 'assets/1.png',
     ),
     Pagina(
       color: Color(fondo),
-      titulo: 'SOLO TU TIENES EL CONTROL',
+      titulo: 'FACIL Y RAPIDO',
       descripcion:
-          'LockSpace no tiene conexion a ningun servidor por lo que las contraseñas estaran almacenadas e incriptadas en tu mismo dispositivo',
+          'Actualiza, elimina y copia contraseñas en cuestion de segundos',
       img: 'assets/2.png',
     ),
     Pagina(
       color: Color(fondo),
-      titulo: 'SOLO TU TIENES EL CONTROL',
+      titulo: 'UNA SOLA CONTRASEÑA',
       descripcion:
-          'LockSpace no tiene conexion a ningun servidor por lo que las contraseñas estaran almacenadas e incriptadas en tu mismo dispositivo',
-      img: 'assets/2.png',
+          'Una unica contraseña con la que te autenticaras y con la que seran encriptadas tus contraseñas',
+      img: 'assets/3.png',
     ),
   ];
 
@@ -92,11 +94,20 @@ class _PaginaIniciandoPorPrimeravezState
                         color: Color(detalles),
                         borderRadius: BorderRadius.circular(20)),
                     child: (_pagina == (_paginas.length - 1))
-                        ? Text(
-                            'Comenzar',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
+                        ? FlatButton(
+                            onPressed: () {
+                              Navigator.of(context).pushAndRemoveUntil(
+                                  CupertinoPageRoute(
+                                      builder: (BuildContext context) =>
+                                          PaginaRegistroUsuario()),
+                                  (Route<dynamic> route) => false);
+                            },
+                            child: Text(
+                              'Comenzar',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
                           )
                         : Icon(
                             Icons.navigate_next,

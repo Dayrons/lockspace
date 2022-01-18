@@ -3,15 +3,16 @@ import 'package:flutter/material.dart';
 class Input extends StatelessWidget {
   final String texto;
   final String input;
+  final bool obscureText;
   final Function onChange;
   final TextEditingController controller;
-  const Input({Key key, this.texto, this.onChange, this.input, this.controller})
+  const Input({Key key, this.texto, this.onChange, this.input, this.controller, this.obscureText = false})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20.00, vertical: 10.00),
+      margin: EdgeInsets.symmetric( vertical: 10.00),
       child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -33,6 +34,7 @@ class Input extends StatelessWidget {
                 color: Color(0XFF2b2e3d).withOpacity(0.5),
               ),
               child: TextFormField(
+                obscureText: obscureText,
                 style: TextStyle(color: Colors.white),
                 controller: controller,
                 cursorColor: Color(0XFF2CDA9D),

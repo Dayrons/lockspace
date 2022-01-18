@@ -5,6 +5,7 @@ import 'package:app/models/Password.dart';
 import 'package:app/pages/registrar_password/widgets/barra_inferior.dart';
 import 'package:app/pages/registrar_password/widgets/formulario.dart';
 import 'package:app/pages/registrar_password/widgets/generador.dart';
+import 'package:app/utils/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -46,32 +47,35 @@ class _PaginaRegistrarPasswordState extends State<PaginaRegistrarPassword> {
           },
         ),
       ),
-      body: Stack(children: [
-        ListView(
-          children: [
-            Formulario(
-              onChange: _onChanged,
-              controller: _textPasswordController,
-            ),
-            Generador(
-                onPressed: _generarPassword,
-                onChanged: _onChanged,
-                values: [
-                  values['mayuscula'],
-                  values['numero'],
-                  values['caracteres']
-                ])
-          ],
-        ),
-        Padding(
-          padding: const EdgeInsets.only(bottom: 20),
-          child: Align(
-              alignment: Alignment.bottomCenter,
-              child: BarraInferio(
-                onTap: _registrar,
-              )),
-        )
-      ]),
+      body: Container(
+        padding: EdgeInsets.symmetric(horizontal: padding),
+        child: Stack(children: [
+          ListView(
+            children: [
+              Formulario(
+                onChange: _onChanged,
+                controller: _textPasswordController,
+              ),
+              Generador(
+                  onPressed: _generarPassword,
+                  onChanged: _onChanged,
+                  values: [
+                    values['mayuscula'],
+                    values['numero'],
+                    values['caracteres']
+                  ])
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 20),
+            child: Align(
+                alignment: Alignment.bottomCenter,
+                child: BarraInferio(
+                  onTap: _registrar,
+                )),
+          )
+        ]),
+      ),
     );
   }
 

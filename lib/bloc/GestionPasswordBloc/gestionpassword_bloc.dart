@@ -16,7 +16,15 @@ class GestionpasswordBloc
 
     List passwords = await password.obtener();
 
-    yield PasswordsObtenidas(passwords: passwords);
+
+    print(passwords);
+    if(passwords.length == 0){
+      yield SinPasswords();
+    }else{
+      yield PasswordsObtenidas(passwords: passwords);
+    }
+
+    
 
     if (event is RegistrarPassword) {
       Password password = event.password;

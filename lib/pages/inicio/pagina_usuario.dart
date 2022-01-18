@@ -13,10 +13,16 @@ class PaginaInicio extends StatefulWidget {
 
 class _PaginaInicioState extends State<PaginaInicio> {
   double opacidad = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    init(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    init(context);
     return Scaffold(
       backgroundColor: Color(0XFF1c1d22),
       appBar: AppBar(
@@ -55,6 +61,27 @@ class _PaginaInicioState extends State<PaginaInicio> {
                 child: Notificacion(opacidad: opacidad),
               ),
             ]);
+          } else if (state is SinPasswords) {
+            return SizedBox(
+              width: double.infinity,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'assets/4.png',
+                    width: 140,
+                  ),
+                  SizedBox(height: 20.00,),
+                  Text('No tienes ninguna contraseña',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16.00
+                      ))
+                ],
+              ),
+            );
           } else {
             return Center(
                 child: CircularProgressIndicator(

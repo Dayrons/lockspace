@@ -13,7 +13,7 @@ class Generador extends StatelessWidget {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Container(
-        margin: EdgeInsets.symmetric(horizontal: 20.00, vertical: 20.00),
+        margin: EdgeInsets.symmetric(vertical: 20.00),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

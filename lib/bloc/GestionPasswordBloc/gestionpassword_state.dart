@@ -10,3 +10,5 @@ class PasswordsObtenidas extends GestionpasswordState {
 
   PasswordsObtenidas({this.passwords});
 }
+
+class SinPasswords extends GestionpasswordState{}

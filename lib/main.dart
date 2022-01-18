@@ -1,7 +1,7 @@
 import 'package:app/bloc/AuthBloc/login_bloc.dart';
 import 'package:app/bloc/GestionPasswordBloc/gestionpassword_bloc.dart';
 import 'package:app/bloc/RootBloc/root_bloc.dart';
-import 'package:app/pages/inicianndo_por_primera_vez/pagina_iniciando_por_primera_vez.dart';
+import 'package:app/pages/registro_usuario/RegistrarUsuarioBloc/registrarusuario_bloc.dart';
 import 'package:app/pages/root.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,6 +21,9 @@ class AppState extends StatelessWidget {
         BlocProvider<GestionpasswordBloc>(
           create: (context) => GestionpasswordBloc(),
         ),
+        BlocProvider<RegistrarusuarioBloc>(
+          create: (context) => RegistrarusuarioBloc(),
+        ),
         BlocProvider<RootBloc>(
           create: (context) => RootBloc(),
         ),
@@ -35,7 +38,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: PaginaIniciandoPorPrimeravez(),
+      home: Root(),
       theme: ThemeData(
         primaryColor: Color(0XFF1c1d22),
       ),

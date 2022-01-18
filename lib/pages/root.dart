@@ -1,4 +1,5 @@
 import 'package:app/bloc/RootBloc/root_bloc.dart';
+import 'package:app/pages/inicio/pagina_usuario.dart';
 // import 'package:app/pages/inicio/pagina_usuario.dart';
 import 'package:app/pages/login/pagina_login.dart';
 import 'package:flutter/cupertino.dart';
@@ -29,7 +30,12 @@ class _RootState extends State<Root> {
                   builder: (BuildContext context) =>
                       PaginaIniciandoPorPrimeravez()),
               (Route<dynamic> route) => false);
-        } else if (state is IniciarSesion) {
+        } else if (state is SesionActiva) {
+          Navigator.of(context).pushAndRemoveUntil(
+              CupertinoPageRoute(
+                  builder: (BuildContext context) => PaginaInicio()),
+              (Route<dynamic> route) => false);
+        } else if (state is SesionInactiva) {
           Navigator.of(context).pushAndRemoveUntil(
               CupertinoPageRoute(
                   builder: (BuildContext context) => PaginaLogin()),

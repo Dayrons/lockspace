@@ -44,22 +44,25 @@ class Usuario {
     return favoritos;
   }
 
-   encriptar(password) {
+  encriptar(password) {
     final encrypted = encrypterFernet.encrypt(password);
-
-
-    
-    
 
     // print(fernet.extractTimestamp(encrypted.bytes));
     // unix timestamp
     return encrypted.base64;
   }
 
-   decryptFernet(password) {
-
-     encrypterFernet.decrypt64(password);
+  decryptFernet(password) {
+    encrypterFernet.decrypt64(password);
 
     return encrypterFernet.decrypt64(password);
+  }
+
+  Future<void> clear() async {
+    Database db = await DB().conexion();
+    await db.delete(
+      'tbl_usuario',
+      where: null,
+    );
   }
 }
