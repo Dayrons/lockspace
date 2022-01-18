@@ -182,7 +182,7 @@ class _PaginaRegistrarPasswordState extends State<PaginaRegistrarPassword> {
 
     var random = Random();
 
-    for (var i = 0; i < 10; i++) {
+    for (var i = 0; i < 12; i++) {
       final numeroRandom = random.nextInt(caracteres.length);
 
       passwordRandom += caracteres[numeroRandom];

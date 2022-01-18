@@ -1,5 +1,6 @@
 import 'package:app/bloc/RootBloc/root_bloc.dart';
-import 'package:app/pages/inicio/pagina_usuario.dart';
+// import 'package:app/pages/inicio/pagina_usuario.dart';
+import 'package:app/pages/login/pagina_login.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,16 +24,15 @@ class _RootState extends State<Root> {
     return BlocListener<RootBloc, RootState>(
       listener: (context, state) {
         if (state is IniciandoPorPrimeraVez) {
-
           Navigator.of(context).pushAndRemoveUntil(
               CupertinoPageRoute(
-                  builder: (BuildContext context) => PaginaIniciandoPorPrimeravez()),
+                  builder: (BuildContext context) =>
+                      PaginaIniciandoPorPrimeravez()),
               (Route<dynamic> route) => false);
-
         } else if (state is IniciarSesion) {
           Navigator.of(context).pushAndRemoveUntil(
               CupertinoPageRoute(
-                  builder: (BuildContext context) => PaginaInicio()),
+                  builder: (BuildContext context) => PaginaLogin()),
               (Route<dynamic> route) => false);
         }
       },

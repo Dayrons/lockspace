@@ -1,31 +1,127 @@
-
+import 'package:app/utils/colors.dart';
 import 'package:app/widgets/input.dart';
 import 'package:flutter/material.dart';
 
-class PaginaIniciandoPorPrimeravez extends StatelessWidget {
+class PaginaIniciandoPorPrimeravez extends StatefulWidget {
+  @override
+  _PaginaIniciandoPorPrimeravezState createState() =>
+      _PaginaIniciandoPorPrimeravezState();
+}
+
+class _PaginaIniciandoPorPrimeravezState
+    extends State<PaginaIniciandoPorPrimeravez> {
+  PageController _controller = PageController();
+  int _pagina = 0;
+  List<Widget> _paginas = [
+    Pagina(
+      color: Color(fondo),
+      titulo: 'SOLO TU TIENES EL CONTROL',
+      descripcion:
+          'LockSpace no tiene conexion a ningun servidor por lo que las contraseñas estaran almacenadas e incriptadas en tu mismo dispositivo',
+      img: 'assets/1.png',
+    ),
+    Pagina(
+      color: Color(fondo),
+      titulo: 'SOLO TU TIENES EL CONTROL',
+      descripcion:
+          'LockSpace no tiene conexion a ningun servidor por lo que las contraseñas estaran almacenadas e incriptadas en tu mismo dispositivo',
+      img: 'assets/2.png',
+    ),
+    Pagina(
+      color: Color(fondo),
+      titulo: 'SOLO TU TIENES EL CONTROL',
+      descripcion:
+          'LockSpace no tiene conexion a ningun servidor por lo que las contraseñas estaran almacenadas e incriptadas en tu mismo dispositivo',
+      img: 'assets/2.png',
+    ),
+  ];
+
+  _onChanged(int index) {
+    setState(() {
+      _pagina = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0XFF1c1d22),
-      body: PageView(
-        children: [
-          Pagina(
-            color: Color(0XFF1c1d22),
-          ),
-          Pagina(
-            color: Color(0XFF1c1d22),
-          ),
-          Pagina1()
-        ],
-      ),
-    );
+        backgroundColor: Color(0XFF1c1d22),
+        body: Stack(
+          children: [
+            PageView.builder(
+              controller: _controller,
+              itemCount: _paginas.length,
+              onPageChanged: _onChanged,
+              itemBuilder: (BuildContext context, int index) {
+                return _paginas[index];
+              },
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(_paginas.length, (int index) {
+                    return AnimatedContainer(
+                      duration: Duration(milliseconds: 300),
+                      margin: EdgeInsets.symmetric(horizontal: 5, vertical: 30),
+                      height: 10,
+                      width: (index == _pagina) ? 30 : 10,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: (index == _pagina)
+                              ? Color(detalles)
+                              : Color(detalles).withOpacity(0.5)),
+                    );
+                  }),
+                ),
+                InkWell(
+                  onTap: () => {
+                    _controller.nextPage(
+                        duration: Duration(milliseconds: 800),
+                        curve: Curves.easeInOutQuint)
+                  },
+                  child: AnimatedContainer(
+                    duration: Duration(
+                      milliseconds: 300,
+                    ),
+                    alignment: Alignment.center,
+                    height: 40,
+                    width: (_pagina == (_paginas.length - 1)) ? 100 : 40,
+                    decoration: BoxDecoration(
+                        color: Color(detalles),
+                        borderRadius: BorderRadius.circular(20)),
+                    child: (_pagina == (_paginas.length - 1))
+                        ? Text(
+                            'Comenzar',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          )
+                        : Icon(
+                            Icons.navigate_next,
+                            color: Colors.white,
+                          ),
+                  ),
+                ),
+                SizedBox(
+                  height: 30,
+                )
+              ],
+            )
+          ],
+        ));
   }
 }
 
 class Pagina extends StatelessWidget {
   final Color color;
+  final String titulo;
+  final String descripcion;
+  final String img;
 
-  const Pagina({Key key, this.color}) : super(key: key);
+  const Pagina({Key key, this.color, this.titulo, this.descripcion, this.img})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +134,7 @@ class Pagina extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Image.asset(
-            'assets/1.png',
+            img,
             width: 250.00,
           ),
           Column(
@@ -47,7 +143,7 @@ class Pagina extends StatelessWidget {
               Container(
                 margin: EdgeInsets.only(top: 40.00),
                 child: Text(
-                  'SOLO TU TIENES EL CONTROL',
+                  titulo,
                   style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -57,7 +153,7 @@ class Pagina extends StatelessWidget {
               Container(
                 margin: EdgeInsets.only(top: 20.00),
                 child: Text(
-                  'LockSpace no tiene conexion a ningun servidor por lo que las contraseñas estaran almacenadas e incriptadas en tu mismo dispositivo',
+                  descripcion,
                   style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -65,49 +161,16 @@ class Pagina extends StatelessWidget {
                       fontSize: 16.00),
                 ),
               ),
-
-              Container(
-                margin: EdgeInsets.only(top: 40.00),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                   
-                    Container(
-                      width: 15.00,
-                      height: 15.00,
-                      margin: EdgeInsets.symmetric(horizontal: 10.00),
-                      decoration: BoxDecoration(
-                        color: const Color(0XFF2CDA9D),
-                        shape: BoxShape.circle
-                      ),
-                     
-                    ),
-                    Container(
-                      width: 15.00,
-                      height: 15.00,
-                      margin: EdgeInsets.symmetric(horizontal: 10.00),
-                      decoration: BoxDecoration(
-                        color: const Color(0XFF25262b),
-                        shape: BoxShape.circle
-                      ),
-                     
-                    ),
-                    Container(
-                      width: 15.00,
-                      height: 15.00,
-                      margin: EdgeInsets.symmetric(horizontal: 10.00),
-                      decoration: BoxDecoration(
-                        color: const Color(0XFF25262b),
-                        shape: BoxShape.circle
-                      ),
-                     
-                    ),
-                  ],
-                ),
-              ),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+}
 
 
-              Container(
+/*Container(
                 margin: EdgeInsets.only(top: 40.00),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -119,9 +182,8 @@ class Pagina extends StatelessWidget {
                       padding: EdgeInsets.symmetric(
                           horizontal: 20.00, vertical: 10.00),
                       decoration: BoxDecoration(
-                        color: const Color(0XFF2CDA9D),
-                        borderRadius: BorderRadius.circular(5.00)
-                      ),
+                          color: const Color(0XFF2CDA9D),
+                          borderRadius: BorderRadius.circular(5.00)),
                       child: Text(
                         'Siguiente',
                         style: TextStyle(
@@ -132,31 +194,4 @@ class Pagina extends StatelessWidget {
                     )
                   ],
                 ),
-              ),
-              
-            ],
-          )
-        ],
-      ),
-    );
-  }
-}
-
-
-
-class Pagina1 extends StatelessWidget {
- 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-     padding: EdgeInsets.symmetric(horizontal: 20.00),
-      width: double.infinity,
-      height: double.infinity,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Input(texto: 'Contraseña',)
-      ],),
-    );
-  }
-}
+              ) */
