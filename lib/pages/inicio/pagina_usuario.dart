@@ -2,6 +2,7 @@ import 'package:app/bloc/GestionPasswordBloc/gestionpassword_bloc.dart';
 import 'package:app/pages/inicio/widgets/notificacion.dart';
 import 'package:app/pages/registrar_password/pagina_registrar_password.dart';
 import 'package:app/pages/inicio/widgets/password.dart';
+import 'package:app/utils/ui.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,6 +26,53 @@ class _PaginaInicioState extends State<PaginaInicio> {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Color(0XFF1c1d22),
+      endDrawer: Container(
+        padding: EdgeInsets.only(bottom: 20),
+        color: Color(fondo),
+        width: MediaQuery.of(context).size.width * 0.6,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ListTile(
+                    leading: Icon(Icons.delete, color: Colors.white),
+                    title: Text(
+                      'eliminar contraseñas',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.settings, color: Colors.white),
+                    title: Text(
+                      'Configuracion',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),   
+                ],
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.logout, color: Colors.white),
+              title: Text(
+                'Cerrar sesion',
+                style: TextStyle(color: Colors.white),
+              ),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      ),
       appBar: AppBar(
         elevation: 0,
         title: Padding(
@@ -72,13 +120,14 @@ class _PaginaInicioState extends State<PaginaInicio> {
                     'assets/4.png',
                     width: 140,
                   ),
-                  SizedBox(height: 20.00,),
+                  SizedBox(
+                    height: 20.00,
+                  ),
                   Text('No tienes ninguna contraseña',
                       style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16.00
-                      ))
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16.00))
                 ],
               ),
             );
