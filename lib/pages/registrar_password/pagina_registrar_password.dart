@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:app/bloc/GestionPasswordBloc/gestionpassword_bloc.dart';
 import 'package:app/models/Password.dart';
+import 'package:app/pages/login/widgets/Input.dart';
+import 'package:app/pages/registrar_password/RegistrarPasswordBloc/registrarpassword_bloc.dart';
 import 'package:app/pages/registrar_password/widgets/barra_inferior.dart';
 import 'package:app/pages/registrar_password/widgets/formulario.dart';
 import 'package:app/pages/registrar_password/widgets/generador.dart';
@@ -47,48 +49,105 @@ class _PaginaRegistrarPasswordState extends State<PaginaRegistrarPassword> {
           },
         ),
       ),
-      body: Container(
-        padding: EdgeInsets.symmetric(horizontal: padding),
-        child: Stack(children: [
-          ListView(
-            children: [
-              Formulario(
-                onChange: _onChanged,
-                controller: _textPasswordController,
+      body: BlocBuilder<RegistrarpasswordBloc, RegistrarpasswordState>(
+        builder: (context, state) {
+          return Container(
+            padding: EdgeInsets.symmetric(horizontal: padding),
+            child: Stack(children: [
+              ListView(
+                children: [
+                  Formulario(
+                    onChange: _validar,
+                    controller: _textPasswordController,
+                  ),
+                  Generador(
+                      onPressed: _generarPassword,
+                      onChanged: _onChanged,
+                      values: [
+                        values['mayuscula'],
+                        values['numero'],
+                        values['caracteres']
+                      ])
+                ],
               ),
-              Generador(
-                  onPressed: _generarPassword,
-                  onChanged: _onChanged,
-                  values: [
-                    values['mayuscula'],
-                    values['numero'],
-                    values['caracteres']
-                  ])
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 20),
-            child: Align(
-                alignment: Alignment.bottomCenter,
-                child: BarraInferio(
-                  onTap: _registrar,
-                )),
-          )
-        ]),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 20),
+                child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: BarraInferio(
+                      onTap: _registrar,
+                    )),
+              ),
+              Align(
+                alignment: Alignment.topCenter,
+                child: AnimatedContainer(
+                    duration: Duration(
+                      milliseconds: 500,
+                    ),
+                    margin: EdgeInsets.symmetric(
+                        horizontal: 20.00, vertical: 10.00),
+                    padding: EdgeInsets.all(8.00),
+                    height: 40.00,
+                    width: state.width,
+                    decoration: BoxDecoration(
+                        color: Color(0xff2ecc71).withOpacity(0.8),
+                        borderRadius: BorderRadius.circular(5.00)),
+                    child: Center(
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              height: 30.00,
+                              width: 30.00,
+                              decoration: BoxDecoration(
+                                  color: Color(detalles).withOpacity(0.3),
+                                  shape: BoxShape.circle),
+                              child: Icon(
+                                Icons.check,
+                                color: Colors.white,
+                                size: 20.00,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 10.00,
+                            ),
+                            Text(
+                              'Contraseña registrada',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )),
+              ),
+            ]),
+          );
+        },
       ),
     );
   }
 
-  void _onChanged(value, input) {
+  void _validar(valor, input) {
+    BlocProvider.of<RegistrarpasswordBloc>(context).add(Validar(
+      valor: valor,
+      input: input,
+    ));
+  }
+
+  void _onChanged(valor, input) {
     setState(() {
-      values[input] = value;
+      values[input] = valor;
     });
   }
 
   void _registrar() {
-    print(values);
-    /* BlocProvider.of<GestionpasswordBloc>(context).add(RegistrarPassword(
-        password: Password(password: password, titulo: titulo))); */
+    BlocProvider.of<RegistrarpasswordBloc>(context)
+        .add(Registrar(context: context));
   }
 
   void _generarPassword() {
@@ -193,5 +252,6 @@ class _PaginaRegistrarPasswordState extends State<PaginaRegistrarPassword> {
     }
 
     _textPasswordController.text = passwordRandom;
+    _validar(passwordRandom, 'password');
   }
 }

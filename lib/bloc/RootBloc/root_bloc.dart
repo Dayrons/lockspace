@@ -1,3 +1,4 @@
+import 'package:app/models/Password.dart';
 import 'package:app/models/Usuario.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
@@ -16,23 +17,18 @@ class RootBloc extends Bloc<RootEvent, RootState> {
     if (event is Init) {
       Usuario usuario = Usuario();
 
-      
       List usuarios = await usuario.obtener();
 
-        
+      SharedPreferences prefs = await SharedPreferences.getInstance();
 
-      if (usuarios.length == 0) {
+      if (!prefs.containsKey('sesion') || usuarios.length == 0) {
         yield IniciandoPorPrimeraVez();
       } else {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
         if (prefs.getBool("sesion")) {
-          
           yield SesionActiva();
-        }else{
+        } else {
           yield SesionInactiva();
         }
-
-        
       }
     }
   }

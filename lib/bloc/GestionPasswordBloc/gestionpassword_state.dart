@@ -1,14 +1,8 @@
 part of 'gestionpassword_bloc.dart';
 
-@immutable
-abstract class GestionpasswordState {}
-
-class ConsultandoPasswords extends GestionpasswordState {}
-
-class PasswordsObtenidas extends GestionpasswordState {
+class GestionpasswordState {
   final List passwords;
+  final bool obteniendoPassword;
 
-  PasswordsObtenidas({this.passwords});
+  GestionpasswordState({this.passwords, this.obteniendoPassword = true});
 }
-
-class SinPasswords extends GestionpasswordState{}

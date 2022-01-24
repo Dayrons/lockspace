@@ -56,7 +56,7 @@ class _PaginaInicioState extends State<PaginaInicio> {
                     onTap: () {
                       Navigator.pop(context);
                     },
-                  ),   
+                  ),
                 ],
               ),
             ),
@@ -87,8 +87,11 @@ class _PaginaInicioState extends State<PaginaInicio> {
         backgroundColor: Color(0XFF1c1d22),
       ),
       body: BlocBuilder<GestionpasswordBloc, GestionpasswordState>(
-        builder: (context, state) {
-          if (state is PasswordsObtenidas) {
+          builder: (context, state) {
+        if (state.obteniendoPassword) {
+          return Text('Obteniendo password');
+        } else {
+          if (state.passwords.length > 0) {
             return Stack(children: [
               ListView.builder(
                 itemCount: state.passwords.length,
@@ -109,7 +112,7 @@ class _PaginaInicioState extends State<PaginaInicio> {
                 child: Notificacion(opacidad: opacidad),
               ),
             ]);
-          } else if (state is SinPasswords) {
+          } else {
             return SizedBox(
               width: double.infinity,
               child: Column(
@@ -131,15 +134,9 @@ class _PaginaInicioState extends State<PaginaInicio> {
                 ],
               ),
             );
-          } else {
-            return Center(
-                child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-              strokeWidth: 2.00,
-            ));
           }
-        },
-      ),
+        }
+      }),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),

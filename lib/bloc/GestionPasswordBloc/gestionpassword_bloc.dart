@@ -1,36 +1,25 @@
 import 'package:app/models/Password.dart';
 import 'package:bloc/bloc.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:meta/meta.dart';
 part 'gestionpassword_event.dart';
 part 'gestionpassword_state.dart';
 
 class GestionpasswordBloc
     extends Bloc<GestionpasswordEvent, GestionpasswordState> {
-  GestionpasswordBloc() : super(ConsultandoPasswords());
+  GestionpasswordBloc() : super(GestionpasswordState());
 
   @override
   Stream<GestionpasswordState> mapEventToState(
     GestionpasswordEvent event,
   ) async* {
-    Password password = Password();
+    if (event is ObtenerPasswords) {
+      Password password = Password();
 
-    List passwords = await password.obtener();
+      List passwords = await password.obtener();
 
-
-    print(passwords);
-    if(passwords.length == 0){
-      yield SinPasswords();
-    }else{
-      yield PasswordsObtenidas(passwords: passwords);
-    }
-
-    
-
-    if (event is RegistrarPassword) {
-      Password password = event.password;
-
-      await password.insertar();
-      yield PasswordsObtenidas(passwords: passwords);
+      yield GestionpasswordState(
+          passwords: passwords, obteniendoPassword: false);
     }
   }
 }

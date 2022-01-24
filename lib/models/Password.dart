@@ -33,6 +33,14 @@ class Password {
     );
   }
 
+  Future<void> clear() async {
+    Database db = await DB().conexion();
+    await db.delete(
+      'tbl_passwords',
+      where: null,
+    );
+  }
+
   Future obtener() async {
     Database db = await DB().conexion();
     List<Map<String, dynamic>> resultado = await db.query('tbl_passwords');
