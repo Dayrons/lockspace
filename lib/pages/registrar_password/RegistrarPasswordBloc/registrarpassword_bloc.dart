@@ -50,6 +50,8 @@ class RegistrarpasswordBloc
         yield RegistrarpasswordState(width: 250.00);
         await Future.delayed(Duration(seconds: 1));
         yield RegistrarpasswordState(width: 0.00);
+      } else {
+        yield RegistrarpasswordState(inputs: datos);
       }
     }
   }

@@ -51,15 +51,16 @@ class _PaginaRegistrarPasswordState extends State<PaginaRegistrarPassword> {
       ),
       body: BlocBuilder<RegistrarpasswordBloc, RegistrarpasswordState>(
         builder: (context, state) {
+          print(state.inputs);
           return Container(
             padding: EdgeInsets.symmetric(horizontal: padding),
             child: Stack(children: [
               ListView(
                 children: [
                   Formulario(
-                    onChange: _validar,
-                    controller: _textPasswordController,
-                  ),
+                      onChange: _validar,
+                      controller: _textPasswordController,
+                      validacion: state.inputs),
                   Generador(
                       onPressed: _generarPassword,
                       onChanged: _onChanged,
