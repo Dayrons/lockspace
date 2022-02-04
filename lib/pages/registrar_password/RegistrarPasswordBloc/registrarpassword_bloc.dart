@@ -4,7 +4,6 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
-
 part 'registrarpassword_event.dart';
 part 'registrarpassword_state.dart';
 
@@ -47,11 +46,18 @@ class RegistrarpasswordBloc
             GestionpasswordState(
                 passwords: passwords, obteniendoPassword: false));
 
+        datos['password']['valor'] = '';
+        datos['titulo']['valor'] = '';
+        datos['titulo']['validacion'] = false;
+        datos['titulo']['validacion'] = false;
         yield RegistrarpasswordState(width: 250.00);
+
         await Future.delayed(Duration(seconds: 1));
         yield RegistrarpasswordState(width: 0.00);
       } else {
         yield RegistrarpasswordState(inputs: datos);
+
+        //Mostrar un mensaje depende del campo que no este validado
       }
     }
   }

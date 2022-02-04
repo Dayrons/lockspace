@@ -7,15 +7,15 @@ class Input extends StatelessWidget {
   final bool validacion;
   final Function onChange;
   final TextEditingController controller;
-  const Input(
-      {Key key,
-      this.texto,
-      this.onChange,
-      this.input,
-      this.controller,
-      this.obscureText = true,
-      this.validacion})
-      : super(key: key);
+  const Input({
+    Key key,
+    this.texto,
+    this.onChange,
+    this.input,
+    this.controller,
+    this.obscureText = false,
+    this.validacion,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
