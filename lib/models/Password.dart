@@ -3,6 +3,7 @@ import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:sqflite/sqflite.dart';
 
 class Password {
+  final int id;
   final String titulo;
   final String password;
 
@@ -15,7 +16,7 @@ class Password {
 
   static final encrypterFernet = encrypt.Encrypter(fernet);
 
-  Password({this.password, this.titulo});
+  Password({this.id, this.password, this.titulo});
 
   Map<String, dynamic> toMap() {
     return {
@@ -41,12 +42,25 @@ class Password {
     );
   }
 
+  Future<void> eliminar() async {
+    Database db = await DB().conexion();
+
+    await db.delete(
+      'tbl_passwords',
+      where: "id = ?",
+      whereArgs: [this.id],
+    );
+  }
+
   Future obtener() async {
     Database db = await DB().conexion();
     List<Map<String, dynamic>> resultado = await db.query('tbl_passwords');
     List<Password> passwords = List.generate(resultado.length, (i) {
       return Password(
-          titulo: resultado[i]["titulo"], password: resultado[i]["password"]);
+        id: resultado[i]["id"],
+        titulo: resultado[i]["titulo"],
+        password: resultado[i]["password"],
+      );
     });
 
     return passwords;

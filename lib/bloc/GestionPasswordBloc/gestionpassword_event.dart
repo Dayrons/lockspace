@@ -10,3 +10,9 @@ class RegistrarPassword extends GestionpasswordEvent {
 
   RegistrarPassword({this.password});
 }
+
+class EliminarPassword extends GestionpasswordEvent {
+  final int id;
+
+  EliminarPassword({this.id});
+}

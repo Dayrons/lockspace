@@ -24,13 +24,16 @@ class PaginaDetallePassword extends StatelessWidget {
           },
         ),
       ),
-      body: Center(
-        child: QrImage(
-          data: password,
-          backgroundColor: Colors.white,
-          version: QrVersions.auto,
-          size: 200.0,
-        ),
+      body: Container(
+        width: double.infinity,
+        child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+          QrImage(
+            data: password,
+            backgroundColor: Colors.white,
+            version: QrVersions.auto,
+            size: 120.0,
+          ),
+        ]),
       ),
     );
   }

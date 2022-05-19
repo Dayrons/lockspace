@@ -20,6 +20,15 @@ class GestionpasswordBloc
 
       yield GestionpasswordState(
           passwords: passwords, obteniendoPassword: false);
+    } else if (event is EliminarPassword) {
+      Password password = Password(id: event.id);
+
+      await password.eliminar();
+
+      List passwords = await password.obtener();
+
+      yield GestionpasswordState(
+          passwords: passwords, obteniendoPassword: false);
     }
   }
 }

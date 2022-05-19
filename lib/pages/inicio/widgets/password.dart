@@ -4,11 +4,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Password extends StatelessWidget {
+  final int id;
   final String password;
   final String titulo;
-  final Function funcion;
+  final List<Function> funciones;
 
-  const Password({Key key, this.password, this.titulo, this.funcion})
+  const Password({Key key, this.id, this.password, this.titulo, this.funciones})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -58,17 +59,33 @@ class Password extends StatelessWidget {
                 style: TextStyle(color: Colors.white, fontSize: 10.00),
               ),
             ]),
-            IconButton(
-              splashRadius: 20.00,
-              iconSize: 16.00,
-              color: const Color(0XFF2CDA9D),
-              icon: Icon(
-                Icons.copy,
-              ),
-              onPressed: () {
-                FlutterClipboard.copy(password).then((value) => funcion());
-              },
-            ),
+            Row(
+              children: [
+                IconButton(
+                  splashRadius: 20.00,
+                  iconSize: 16.00,
+                  color: const Color(0XFF2CDA9D),
+                  icon: Icon(
+                    Icons.copy,
+                  ),
+                  onPressed: () {
+                    FlutterClipboard.copy(password)
+                        .then((value) => funciones[0]());
+                  },
+                ),
+                IconButton(
+                  splashRadius: 20.00,
+                  iconSize: 18.00,
+                  color: const Color(0XFF2CDA9D),
+                  icon: Icon(
+                    Icons.delete_outline,
+                  ),
+                  onPressed: () {
+                    funciones[1](id);
+                  },
+                ),
+              ],
+            )
           ],
         ),
       ),

@@ -51,7 +51,6 @@ class _PaginaRegistrarPasswordState extends State<PaginaRegistrarPassword> {
       ),
       body: BlocBuilder<RegistrarpasswordBloc, RegistrarpasswordState>(
         builder: (context, state) {
-          print(state.inputs);
           return Container(
             padding: EdgeInsets.symmetric(horizontal: padding),
             child: Stack(children: [

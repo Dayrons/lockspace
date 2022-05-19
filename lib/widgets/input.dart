@@ -19,7 +19,6 @@ class Input extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(validacion);
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10.00),
       child: Column(

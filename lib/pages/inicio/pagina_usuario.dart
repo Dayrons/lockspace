@@ -124,9 +124,10 @@ class _PaginaInicioState extends State<PaginaInicio> {
                       itemBuilder: (BuildContext context, int index) {
                         final password = state.passwords[index];
                         return Password(
+                          id: password.id,
                           titulo: password.titulo,
                           password: password.decryptFernet(password.password),
-                          funcion: _notificacion,
+                          funciones: [_notificacion, _eliminarPassword],
                         );
                       },
                     ),
@@ -190,5 +191,9 @@ class _PaginaInicioState extends State<PaginaInicio> {
     setState(() {
       opacidad = 0;
     });
+  }
+
+  void _eliminarPassword(id) {
+    BlocProvider.of<GestionpasswordBloc>(context).add(EliminarPassword(id: id));
   }
 }

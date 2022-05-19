@@ -59,6 +59,7 @@ class _PaginaRegistroUsuarioState extends State<PaginaRegistroUsuario> {
                     texto: 'Password',
                     input: 'password',
                     obscureText: true,
+                    validacion: true,
                     onChange: _onChanged,
                   ),
                   Check(
