@@ -13,22 +13,26 @@ class GestionpasswordBloc
   Stream<GestionpasswordState> mapEventToState(
     GestionpasswordEvent event,
   ) async* {
+    Password password = Password();
     if (event is ObtenerPasswords) {
-      Password password = Password();
-
       List passwords = await password.obtener();
 
       yield GestionpasswordState(
           passwords: passwords, obteniendoPassword: false);
     } else if (event is EliminarPassword) {
-      Password password = Password(id: event.id);
-
       await password.eliminar();
 
       List passwords = await password.obtener();
 
       yield GestionpasswordState(
           passwords: passwords, obteniendoPassword: false);
+    } else if (event is FiltrarPassword) {
+      List passwords = await password.filter(event.search);
+
+      yield GestionpasswordState(
+        passwords: passwords,
+        obteniendoPassword: false,
+      );
     }
   }
 }

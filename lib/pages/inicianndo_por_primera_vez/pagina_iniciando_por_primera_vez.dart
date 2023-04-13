@@ -94,7 +94,7 @@ class _PaginaIniciandoPorPrimeravezState
                         color: Color(detalles),
                         borderRadius: BorderRadius.circular(20)),
                     child: (_pagina == (_paginas.length - 1))
-                        ? FlatButton(
+                        ? TextButton(
                             onPressed: () {
                               Navigator.of(context).pushAndRemoveUntil(
                                   CupertinoPageRoute(

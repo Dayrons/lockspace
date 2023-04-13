@@ -12,7 +12,7 @@ class Boton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric( vertical: 10.00),
-      child: FlatButton(
+      child: MaterialButton(
         padding: EdgeInsets.all(18.00),
         minWidth: double.infinity,
         color: color,

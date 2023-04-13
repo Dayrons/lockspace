@@ -108,7 +108,7 @@ class _PaginaInicioState extends State<PaginaInicio> {
                     Icons.search,
                     color: Colors.white,
                   )),
-              onChanged: (text) {},
+              onChanged: _search,
             ),
           ),
           BlocBuilder<GestionpasswordBloc, GestionpasswordState>(
@@ -177,6 +177,10 @@ class _PaginaInicioState extends State<PaginaInicio> {
         },
       ),
     );
+  }
+
+  void _search(String text){
+    BlocProvider.of<GestionpasswordBloc>(context).add(FiltrarPassword(search: text));
   }
 
   void init(BuildContext context) {

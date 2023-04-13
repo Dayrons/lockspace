@@ -16,3 +16,10 @@ class EliminarPassword extends GestionpasswordEvent {
 
   EliminarPassword({this.id});
 }
+
+
+class FiltrarPassword extends GestionpasswordEvent{
+  final String search;
+
+       FiltrarPassword({this.search});
+}

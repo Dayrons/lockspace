@@ -16,6 +16,20 @@ class Password {
 
   static final encrypterFernet = encrypt.Encrypter(fernet);
 
+  Future<List<Password>> filter(String search) async {
+    Database db = await DB().conexion();
+
+    final resultado = await db.query("tbl_passwords",
+        where: "titulo LIKE ?", whereArgs: ['%$search%']);
+    return List.generate(resultado.length, (i) {
+      return Password(
+        id: resultado[i]["id"],
+        titulo: resultado[i]["titulo"],
+        password: resultado[i]["password"],
+      );
+    });
+  }
+
   Password({this.id, this.password, this.titulo});
 
   Map<String, dynamic> toMap() {
