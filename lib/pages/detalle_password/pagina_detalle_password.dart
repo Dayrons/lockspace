@@ -1,5 +1,9 @@
+import 'package:app/utils/ui.dart';
+import 'package:app/widgets/boton.dart';
+import 'package:app/widgets/input.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:local_auth/local_auth.dart';
 
 class PaginaDetallePassword extends StatelessWidget {
   final String password;
@@ -25,13 +29,31 @@ class PaginaDetallePassword extends StatelessWidget {
         ),
       ),
       body: Container(
+        padding: EdgeInsets.symmetric(horizontal: getHorizontalSpace(context)),
         width: double.infinity,
         child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+          SizedBox(
+            height: 20.00,
+          ),
           QrImage(
             data: password,
             backgroundColor: Colors.white,
             version: QrVersions.auto,
-            size: 120.0,
+            size: 160.0,
+          ),
+          SizedBox(
+            height: 20.00,
+          ),
+          Input(
+            input: 'password',
+            texto: "Actualizar contraseña",
+            validacion: true,
+            // controller: controller,
+            onChange: () {},
+          ),
+          Boton(
+            texto: "Actualizar contraseña",
+            onTap: () {},
           ),
         ]),
       ),

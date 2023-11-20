@@ -16,9 +16,7 @@ class Boton extends StatelessWidget {
         padding: EdgeInsets.all(18.00),
         minWidth: double.infinity,
         color: color,
-        onPressed: () {
-          onTap();
-        },
+        onPressed:onTap,
         child: Text(
           texto.toUpperCase(),
           style: TextStyle(color: textColor, fontWeight: FontWeight.bold, fontSize: 16),

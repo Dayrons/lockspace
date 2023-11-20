@@ -2,6 +2,9 @@ import 'package:app/pages/detalle_password/pagina_detalle_password.dart';
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:local_auth/local_auth.dart';
+import 'package:local_auth_android/local_auth_android.dart';
 
 class Password extends StatelessWidget {
   final int id;
@@ -16,13 +19,34 @@ class Password extends StatelessWidget {
     return InkWell(
       splashColor: Colors.transparent,
       highlightColor: Colors.transparent,
-      onTap: () => {
-        Navigator.push(
-          context,
-          CupertinoPageRoute(
-            builder: (context) => PaginaDetallePassword(password: password),
-          ),
-        )
+      onTap: () async {
+        final LocalAuthentication auth = LocalAuthentication();
+        try {
+          final bool canAuthenticateWithBiometrics =
+              await auth.canCheckBiometrics;
+          final bool canAuthenticate =
+              canAuthenticateWithBiometrics || await auth.isDeviceSupported();
+          final isLogin = await auth.authenticate(
+              authMessages: [
+                AndroidAuthMessages(
+                  signInTitle: "Autenticacion",
+                  biometricHint: ""
+                )
+              ],
+              localizedReason:
+                  'Por favor autenticate para ver la informacion de la contraseña',
+              options: const AuthenticationOptions(
+                useErrorDialogs: false,
+              ));
+          if (isLogin) {
+            Navigator.push(
+              context,
+              CupertinoPageRoute(
+                builder: (context) => PaginaDetallePassword(password: password),
+              ),
+            );
+          }
+        } on PlatformException {}
       },
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 20.00, vertical: 5.00),
@@ -34,15 +58,15 @@ class Password extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            /* IconButton(
-              splashRadius: 20.00,
-              iconSize: 16.00,
-              color: const Color(0XFF2CDA9D),
-              icon: Icon(
-                Icons.more_vert,
-              ),
-              onPressed: () {},
-            ), */
+            // IconButton(
+            //   splashRadius: 20.00,
+            //   iconSize: 16.00,
+            //   color: const Color(0XFF2CDA9D),
+            //   icon: Icon(
+            //     Icons.more_vert,
+            //   ),
+            //   onPressed: () {},
+            // ), 
             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(
                 "$titulo",
