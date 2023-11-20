@@ -34,6 +34,7 @@ class Password {
 
   Map<String, dynamic> toMap() {
     return {
+      'id':this.id,
       'titulo': this.titulo,
       'password': encriptar(this.password),
     };

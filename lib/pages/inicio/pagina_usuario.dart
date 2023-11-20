@@ -1,5 +1,6 @@
 import 'package:app/bloc/GestionPasswordBloc/gestionpassword_bloc.dart';
 import 'package:app/pages/inicio/widgets/notificacion.dart';
+import 'package:app/pages/pagina_sincronizar/pagina_sincronizar.dart';
 import 'package:app/pages/registrar_password/pagina_registrar_password.dart';
 import 'package:app/pages/inicio/widgets/password.dart';
 import 'package:app/utils/ui.dart';
@@ -46,6 +47,20 @@ class _PaginaInicioState extends State<PaginaInicio> {
                     ),
                     onTap: () {
                       Navigator.pop(context);
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.sync, color: Colors.white),
+                    title: Text(
+                      'Sincronizar',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    onTap: () {
+                      Navigator.of(context).pushAndRemoveUntil(
+                          CupertinoPageRoute(
+                              builder: (BuildContext context) =>
+                                  PaginaSincronizar()),
+                          (Route<dynamic> route) => false);
                     },
                   ),
                   ListTile(
@@ -179,8 +194,9 @@ class _PaginaInicioState extends State<PaginaInicio> {
     );
   }
 
-  void _search(String text){
-    BlocProvider.of<GestionpasswordBloc>(context).add(FiltrarPassword(search: text));
+  void _search(String text) {
+    BlocProvider.of<GestionpasswordBloc>(context)
+        .add(FiltrarPassword(search: text));
   }
 
   void init(BuildContext context) {

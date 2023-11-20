@@ -18,5 +18,11 @@
         "titleBar.inactiveBackground": "#2cda9d99",
         "titleBar.inactiveForeground": "#15202b99"
     },
+    "dart.flutterSdkPath": "/home/user/fvm/versions/3.7.10",
+    //Eliminar archivos .fvm de búsqueda
+    "search.exclude": {
+        "**/.fvm": true
+    },
+
     "peacock.color": "#2CDA9D"
 }
