@@ -10,8 +10,8 @@ import 'package:vibration/vibration.dart';
 import 'package:ftpconnect/ftpconnect.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
-import 'package:encrypt/encrypt.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
+import 'package:crypto/crypto.dart';
 import 'dart:convert';
 import 'dart:io';
 
@@ -49,43 +49,46 @@ class _PaginaSincronizarState extends State<PaginaSincronizar> {
   }
 
   String test(String texto, String llave) {
+    
+    final plainText = 'f8:b1:56:af:0f:51';
+
     final key = encrypt.Key.fromUtf8(llave);
 
-    // final iv = encrypt.IV.fromLength(16);
-    final fernet = encrypt.Fernet(key);
-    final encrypterFernet = encrypt.Encrypter(fernet);
+    // Este iv es diferente al que encripta en nodejs
+    final iv = encrypt.IV.fromLength(16);
 
+    final test = encrypt.Encrypter(encrypt.AES(key));
 
+    final encrypted = test.encrypt(plainText, iv: iv);
 
-    // final encrypter = Encrypter(AES(key, mode: AESMode.cbc, padding: 'PKCS7'));
+    final decrypted = test.decrypt(encrypt.Encrypted.fromBase64(texto), iv: iv);
 
-    // final decrypted = encrypter.decrypt(Encrypted.fromBase64(texto), iv: iv);
+    return decrypted;
 
-    // return encrypterFernet.encrypt(texto);
-    return encrypterFernet.decrypt64(texto);
   }
 
   void _connectFtp({jwt, BuildContext context}) async {
+
     final jwtDecode = JwtDecoder.decode(jwt);
 
-    final xx = test(jwtDecode["username"], '1234');
-    print("PRUEBA $xx");
+    // final xx = test(jwtDecode["username"], 'secretkey:hapilyeverafter1234567');
 
-    // final data = await _getPassowrds();
-    // FTPConnect ftpConnect =
-    //     FTPConnect(server, port: 2121, user: 'user', pass: 'password');
-    // final path = await _localPath;
-    // File file = File('$path/password.txt');
-    // file.writeAsString(json.encode(data));
-    // await ftpConnect.connect();
-    // bool response = await ftpConnect.uploadFileWithRetry(file, pRetryCount: 2);
-    // await ftpConnect.disconnect();
-    // if (response) {
-    //   Navigator.of(context).pushAndRemoveUntil(
-    //     CupertinoPageRoute(builder: (BuildContext context) => PaginaInicio()),
-    //     (Route<dynamic> route) => false,
-    //   );
-    // }
+
+    final data = await _getPassowrds();
+    FTPConnect ftpConnect =
+        FTPConnect(jwtDecode["host"], port: 2121, user: jwtDecode["username"], pass: jwtDecode["password"]);
+    final path = await _localPath;
+    File file = File('$path/password.txt');
+    file.writeAsString(json.encode(data));
+    await ftpConnect.connect();
+    bool response = await ftpConnect.uploadFileWithRetry(file, pRetryCount: 2);
+    await ftpConnect.disconnect();
+    if (response) {
+      Navigator.of(context).pushAndRemoveUntil(
+        CupertinoPageRoute(builder: (BuildContext context) => PaginaInicio()),
+        (Route<dynamic> route) => false,
+      );
+    }
 
     setState(() {
       stanbay = false;
