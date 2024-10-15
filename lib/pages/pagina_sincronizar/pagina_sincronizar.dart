@@ -49,7 +49,6 @@ class _PaginaSincronizarState extends State<PaginaSincronizar> {
   }
 
   String test(String texto, String llave) {
-    
     final plainText = 'f8:b1:56:af:0f:51';
 
     final key = encrypt.Key.fromUtf8(llave);
@@ -64,25 +63,24 @@ class _PaginaSincronizarState extends State<PaginaSincronizar> {
     final decrypted = test.decrypt(encrypt.Encrypted.fromBase64(texto), iv: iv);
 
     return decrypted;
-
   }
 
-  void _connectFtp({jwt, BuildContext context}) async {
-
+  Future _connectFtp({jwt, BuildContext context}) async {
+    Vibration.vibrate(duration: 150);
     final jwtDecode = JwtDecoder.decode(jwt);
 
     // final xx = test(jwtDecode["username"], 'secretkey:hapilyeverafter1234567');
 
-
     final data = await _getPassowrds();
-    FTPConnect ftpConnect =
-        FTPConnect(jwtDecode["host"], port: 2121, user: jwtDecode["username"], pass: jwtDecode["password"]);
+
+    FTPConnect ftpConnect = FTPConnect(jwtDecode["host"],
+        port: 2121, user: jwtDecode["username"], pass: jwtDecode["password"]);
     final path = await _localPath;
     File file = File('$path/password.txt');
     file.writeAsString(json.encode(data));
     await ftpConnect.connect();
-    bool response = await ftpConnect.uploadFileWithRetry(file, pRetryCount: 2);
-    await ftpConnect.disconnect();
+    bool response = await ftpConnect.uploadFileWithRetry(file, pRetryCount: 2); 
+    // await ftpConnect.disconnect();
     if (response) {
       Navigator.of(context).pushAndRemoveUntil(
         CupertinoPageRoute(builder: (BuildContext context) => PaginaInicio()),
@@ -115,21 +113,15 @@ class _PaginaSincronizarState extends State<PaginaSincronizar> {
       ),
       body: Stack(
         children: [
-          QRView(
-            key: qrKey,
-            onQRViewCreated: _onQRViewCreated,
-            overlay: QrScannerOverlayShape(
-                borderLength: 20,
-                borderWidth: 10.0,
-                borderRadius: 5.00,
-                borderColor: const Color(0XFF2CDA9D)),
-          ),
           stanbay
               ? Positioned(
-                  bottom: size.height / 8,
+                  // bottom: size.height / 8,
+                  bottom: 0,
+                  top: 0,
                   left: 0,
                   right: 0,
-                  child: SizedBox(
+                  child: Container(
+                    color: Colors.black,
                     child: Center(
                       child: CircularProgressIndicator(
                         valueColor:
@@ -138,7 +130,15 @@ class _PaginaSincronizarState extends State<PaginaSincronizar> {
                     ),
                   ),
                 )
-              : SizedBox()
+              : QRView(
+                  key: qrKey,
+                  onQRViewCreated: _onQRViewCreated,
+                  overlay: QrScannerOverlayShape(
+                      borderLength: 20,
+                      borderWidth: 10.0,
+                      borderRadius: 5.00,
+                      borderColor: const Color(0XFF2CDA9D)),
+                )
         ],
       ),
     );
@@ -151,13 +151,13 @@ class _PaginaSincronizarState extends State<PaginaSincronizar> {
 
   void _onQRViewCreated(QRViewController controller) {
     this.controller = controller;
-    controller.scannedDataStream.listen((scanData) {
+
+    controller.scannedDataStream.listen((scanData) async {
+     
       setState(() {
         stanbay = true;
       });
-
-      _connectFtp(jwt: scanData.code, context: context);
-      Vibration.vibrate(duration: 150);
+      await _connectFtp(jwt: scanData.code, context: context);
     });
   }
 }
