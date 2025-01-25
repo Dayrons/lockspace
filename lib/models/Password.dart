@@ -3,7 +3,7 @@ import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:sqflite/sqflite.dart';
 
 class Password {
-  final int id;
+  int id;
   final String titulo;
   final String password;
 
@@ -59,7 +59,6 @@ class Password {
 
   Future<void> eliminar() async {
     Database db = await DB().conexion();
-
     await db.delete(
       'tbl_passwords',
       where: "id = ?",

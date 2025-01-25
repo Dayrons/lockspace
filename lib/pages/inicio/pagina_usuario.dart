@@ -8,6 +8,8 @@ import 'package:app/widgets/input.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:local_auth/local_auth.dart';
+import 'package:local_auth_android/local_auth_android.dart';
 
 class PaginaInicio extends StatefulWidget {
   @override
@@ -213,7 +215,21 @@ class _PaginaInicioState extends State<PaginaInicio> {
     });
   }
 
-  void _eliminarPassword(id) {
+  void _eliminarPassword(id) async {
+    final LocalAuthentication auth = LocalAuthentication();
+    final isAuth = await auth.authenticate(
+              authMessages: [
+                AndroidAuthMessages(
+                  signInTitle: "Autenticacion",
+                  biometricHint: ""
+                )
+              ],
+              localizedReason:
+                  'Por favor autenticate para eliminar contraseña',
+              options: const AuthenticationOptions(
+                useErrorDialogs: false,
+              ));
+    if(isAuth)
     BlocProvider.of<GestionpasswordBloc>(context).add(EliminarPassword(id: id));
   }
 }
