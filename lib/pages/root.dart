@@ -1,5 +1,5 @@
 import 'package:app/bloc/RootBloc/root_bloc.dart';
-import 'package:app/pages/inicio/pagina_usuario.dart';
+import 'package:app/pages/home_page/home_page.dart';
 // import 'package:app/pages/inicio/pagina_usuario.dart';
 import 'package:app/pages/login/pagina_login.dart';
 import 'package:flutter/cupertino.dart';

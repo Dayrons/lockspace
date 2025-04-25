@@ -1,4 +1,4 @@
-import 'package:app/pages/inicio/pagina_usuario.dart';
+import 'package:app/pages/home_page/home_page.dart';
 import 'package:app/pages/registro_usuario/RegistrarUsuarioBloc/registrarusuario_bloc.dart';
 import 'package:app/utils/ui.dart';
 import 'package:app/widgets/boton.dart';
@@ -38,6 +38,7 @@ class _PaginaRegistroUsuarioState extends State<PaginaRegistroUsuario> {
               padding: const EdgeInsets.symmetric(horizontal: padding),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(
                     height: 40.00,
@@ -49,11 +50,16 @@ class _PaginaRegistroUsuarioState extends State<PaginaRegistroUsuario> {
                     ),
                   ),
                   Text(
-                    'Ingresa una contraseña para autenticarte',
-                    style: TextStyle(color: Colors.white, fontSize: 24),
+                    'Ingresa una contraseña',
+                    style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 10,),
+                  Text(
+                    'Con una sola contraseña gestiona todas las demas  ',
+                    style: TextStyle(color: Colors.white, fontSize: 16),
                   ),
                   SizedBox(
-                    height: 20.00,
+                    height: 30.00,
                   ),
                   Input(
                     texto: 'Password',

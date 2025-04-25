@@ -49,8 +49,8 @@ class Password extends StatelessWidget {
         } on PlatformException {}
       },
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 20.00, vertical: 5.00),
-        padding: EdgeInsets.symmetric(horizontal: 20.00, vertical: 20.00),
+        margin: EdgeInsets.only(bottom: 10.00),
+        padding: EdgeInsets.symmetric(horizontal: 15.00, vertical: 5.00),
         decoration: BoxDecoration(
           color: Color(0XFF2b2e3d).withOpacity(0.5),
           borderRadius: BorderRadius.circular(10),

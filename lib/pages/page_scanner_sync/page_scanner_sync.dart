@@ -1,5 +1,5 @@
 import 'package:app/models/Password.dart';
-import 'package:app/pages/inicio/pagina_usuario.dart';
+import 'package:app/pages/home_page/home_page.dart';
 import 'package:app/utils/ui.dart';
 import 'package:app/utils/ui.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,14 +15,14 @@ import 'package:crypto/crypto.dart';
 import 'dart:convert';
 import 'dart:io';
 
-class PaginaSincronizar extends StatefulWidget {
-  const PaginaSincronizar();
+class ScannerSyncPage extends StatefulWidget {
+  const ScannerSyncPage();
 
   @override
-  State<PaginaSincronizar> createState() => _PaginaSincronizarState();
+  State<ScannerSyncPage> createState() => _ScannerSyncPageState();
 }
 
-class _PaginaSincronizarState extends State<PaginaSincronizar> {
+class _ScannerSyncPageState extends State<ScannerSyncPage> {
   final qrKey = GlobalKey(debugLabel: "QR");
   QRViewController controller;
   Barcode result;
@@ -49,7 +49,6 @@ class _PaginaSincronizarState extends State<PaginaSincronizar> {
   }
 
   String test(String texto, String llave) {
-    
     final plainText = 'f8:b1:56:af:0f:51';
 
     final key = encrypt.Key.fromUtf8(llave);
@@ -64,19 +63,16 @@ class _PaginaSincronizarState extends State<PaginaSincronizar> {
     final decrypted = test.decrypt(encrypt.Encrypted.fromBase64(texto), iv: iv);
 
     return decrypted;
-
   }
 
   void _connectFtp({jwt, BuildContext context}) async {
-
     final jwtDecode = JwtDecoder.decode(jwt);
 
     // final xx = test(jwtDecode["username"], 'secretkey:hapilyeverafter1234567');
 
-
     final data = await _getPassowrds();
-    FTPConnect ftpConnect =
-        FTPConnect(jwtDecode["host"], port: 2121, user: jwtDecode["username"], pass: jwtDecode["password"]);
+    FTPConnect ftpConnect = FTPConnect(jwtDecode["host"],
+        port: 2121, user: jwtDecode["username"], pass: jwtDecode["password"]);
     final path = await _localPath;
     File file = File('$path/password.txt');
     file.writeAsString(json.encode(data));
@@ -98,49 +94,33 @@ class _PaginaSincronizarState extends State<PaginaSincronizar> {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color(0XFF1c1d22),
-        elevation: 0,
-        leading: IconButton(
-          iconSize: 40,
-          icon: Icon(
-            Icons.navigate_before,
-            color: const Color(0XFF2CDA9D),
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+    return Stack(
+      children: [
+        QRView(
+          key: qrKey,
+          onQRViewCreated: _onQRViewCreated,
+          overlay: QrScannerOverlayShape(
+              borderLength: 20,
+              borderWidth: 10.0,
+              borderRadius: 5.00,
+              borderColor: const Color(0XFF2CDA9D)),
         ),
-      ),
-      body: Stack(
-        children: [
-          QRView(
-            key: qrKey,
-            onQRViewCreated: _onQRViewCreated,
-            overlay: QrScannerOverlayShape(
-                borderLength: 20,
-                borderWidth: 10.0,
-                borderRadius: 5.00,
-                borderColor: const Color(0XFF2CDA9D)),
-          ),
-          stanbay
-              ? Positioned(
-                  bottom: size.height / 8,
-                  left: 0,
-                  right: 0,
-                  child: SizedBox(
-                    child: Center(
-                      child: CircularProgressIndicator(
-                        valueColor:
-                            AlwaysStoppedAnimation<Color>(Color(detalles)),
-                      ),
+        stanbay
+            ? Positioned(
+                bottom: size.height / 8,
+                left: 0,
+                right: 0,
+                child: SizedBox(
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      valueColor:
+                          AlwaysStoppedAnimation<Color>(Color(detalles)),
                     ),
                   ),
-                )
-              : SizedBox()
-        ],
-      ),
+                ),
+              )
+            : SizedBox()
+      ],
     );
   }
 

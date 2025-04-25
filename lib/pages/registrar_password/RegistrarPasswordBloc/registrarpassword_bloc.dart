@@ -26,7 +26,7 @@ class RegistrarpasswordBloc
 
       if (event.input == 'password') {
         input['validacion'] = event.valor.isNotEmpty;
-        input['validacion'] = event.valor.length >= 8;
+        input['validacion'] = event.valor.length >= 2;
       }
       if (event.input == 'titulo') {
         input['validacion'] = event.valor.isNotEmpty;

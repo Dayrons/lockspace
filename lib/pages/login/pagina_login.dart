@@ -1,5 +1,5 @@
 import 'package:app/bloc/AuthBloc/login_bloc.dart';
-import 'package:app/pages/inicio/pagina_usuario.dart';
+import 'package:app/pages/home_page/home_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
