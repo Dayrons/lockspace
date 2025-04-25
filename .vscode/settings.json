@@ -19,7 +19,7 @@
         "titleBar.inactiveForeground": "#15202b99",
         "commandCenter.border": "#15202b99"
     },
-    "dart.flutterSdkPath": "/home/user/fvm/versions/3.7.10",
+    "dart.flutterSdkPath": "/home/dayrons/fvm/versions/3.7.10",
     "search.exclude": {
         "**/.fvm": true
     },

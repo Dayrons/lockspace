@@ -65,7 +65,8 @@ class _ScannerSyncPageState extends State<ScannerSyncPage> {
     return decrypted;
   }
 
-  void _connectFtp({jwt, BuildContext context}) async {
+  Future _connectFtp({jwt, BuildContext context}) async {
+    Vibration.vibrate(duration: 150);
     final jwtDecode = JwtDecoder.decode(jwt);
 
     // final xx = test(jwtDecode["username"], 'secretkey:hapilyeverafter1234567');
@@ -77,8 +78,8 @@ class _ScannerSyncPageState extends State<ScannerSyncPage> {
     File file = File('$path/password.txt');
     file.writeAsString(json.encode(data));
     await ftpConnect.connect();
-    bool response = await ftpConnect.uploadFileWithRetry(file, pRetryCount: 2);
-    await ftpConnect.disconnect();
+    bool response = await ftpConnect.uploadFileWithRetry(file, pRetryCount: 2); 
+    // await ftpConnect.disconnect();
     if (response) {
       Navigator.of(context).pushAndRemoveUntil(
         CupertinoPageRoute(builder: (BuildContext context) => PaginaInicio()),
@@ -95,33 +96,35 @@ class _ScannerSyncPageState extends State<ScannerSyncPage> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Stack(
-      children: [
-        QRView(
-          key: qrKey,
-          onQRViewCreated: _onQRViewCreated,
-          overlay: QrScannerOverlayShape(
-              borderLength: 20,
-              borderWidth: 10.0,
-              borderRadius: 5.00,
-              borderColor: const Color(0XFF2CDA9D)),
-        ),
-        stanbay
-            ? Positioned(
-                bottom: size.height / 8,
-                left: 0,
-                right: 0,
-                child: SizedBox(
-                  child: Center(
-                    child: CircularProgressIndicator(
-                      valueColor:
-                          AlwaysStoppedAnimation<Color>(Color(detalles)),
+        children: [
+          stanbay
+              ? Positioned(
+                  // bottom: size.height / 8,
+                  bottom: 0,
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  child: Container(
+                    color: Colors.black,
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(Color(detalles)),
+                      ),
                     ),
                   ),
-                ),
-              )
-            : SizedBox()
-      ],
-    );
+                )
+              : QRView(
+                  key: qrKey,
+                  onQRViewCreated: _onQRViewCreated,
+                  overlay: QrScannerOverlayShape(
+                      borderLength: 20,
+                      borderWidth: 10.0,
+                      borderRadius: 5.00,
+                      borderColor: const Color(0XFF2CDA9D)),
+                )
+        ],
+      );
   }
 
   Widget buildQrView(BuildContext context) => QRView(
@@ -131,13 +134,13 @@ class _ScannerSyncPageState extends State<ScannerSyncPage> {
 
   void _onQRViewCreated(QRViewController controller) {
     this.controller = controller;
-    controller.scannedDataStream.listen((scanData) {
+
+    controller.scannedDataStream.listen((scanData) async {
+     
       setState(() {
         stanbay = true;
       });
-
-      _connectFtp(jwt: scanData.code, context: context);
-      Vibration.vibrate(duration: 150);
+      await _connectFtp(jwt: scanData.code, context: context);
     });
   }
 }
