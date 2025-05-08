@@ -2,8 +2,8 @@ import 'package:app/db.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:sqflite/sqflite.dart';
 
-class Usuario {
-  final String nombre;
+class User {
+  final String name;
   final String password;
 
   //me quede probando encriptado y desencriptado con este modo
@@ -15,33 +15,34 @@ class Usuario {
 
   static final encrypterFernet = encrypt.Encrypter(fernet);
 
-  Usuario({this.nombre, this.password});
+  User({this.name, this.password});
 
   Map<String, dynamic> toMap() {
     return {
-      'usuario': this.nombre,
+      'name': this.name,
       'password': encriptar(this.password),
     };
   }
 
-  Future<void> insertar() async {
+  Future<void> create() async {
     Database db = await DB().conexion();
 
     await db.insert(
-      'tbl_usuario',
+      'users',
       this.toMap(),
     );
   }
 
-  Future obtener() async {
+  Future getAll() async {
     Database db = await DB().conexion();
-    List<Map<String, dynamic>> resultado = await db.query('tbl_usuario');
-    List favoritos = List.generate(resultado.length, (i) {
-      return Usuario(
-          nombre: resultado[i]["usuario"], password: resultado[i]["password"]);
+    List<Map<String, dynamic>> results = await db.query('users');
+    print(results);
+    List<User> users = List.generate(results.length, (i) {
+      return User(
+        name: results[i]["name"], password: results[i]["password"]);
     });
 
-    return favoritos;
+    return users;
   }
 
   encriptar(password) {
@@ -61,7 +62,7 @@ class Usuario {
   Future<void> clear() async {
     Database db = await DB().conexion();
     await db.delete(
-      'tbl_usuario',
+      'users',
       where: null,
     );
   }

@@ -1,28 +1,27 @@
 {
-    "workbench.colorCustomizations": {
-        "activityBar.activeBackground": "#57e2b1",
-        "activityBar.activeBorder": "#b35ce3",
-        "activityBar.background": "#57e2b1",
-        "activityBar.foreground": "#15202b",
-        "activityBar.inactiveForeground": "#15202b99",
-        "activityBarBadge.background": "#b35ce3",
-        "activityBarBadge.foreground": "#15202b",
-        "sash.hoverBorder": "#57e2b1",
-        "statusBar.background": "#2cda9d",
-        "statusBar.foreground": "#15202b",
-        "statusBarItem.hoverBackground": "#1fb480",
-        "statusBarItem.remoteBackground": "#2cda9d",
-        "statusBarItem.remoteForeground": "#15202b",
-        "titleBar.activeBackground": "#2cda9d",
-        "titleBar.activeForeground": "#15202b",
-        "titleBar.inactiveBackground": "#2cda9d99",
-        "titleBar.inactiveForeground": "#15202b99",
-        "commandCenter.border": "#15202b99"
-    },
-    "dart.flutterSdkPath": "/home/dayrons/fvm/versions/3.7.10",
-    "search.exclude": {
-        "**/.fvm": true
-    },
-
-    "peacock.color": "#2CDA9D"
+  "workbench.colorCustomizations": {
+    "activityBar.activeBackground": "#57e2b1",
+    "activityBar.activeBorder": "#b35ce3",
+    "activityBar.background": "#57e2b1",
+    "activityBar.foreground": "#15202b",
+    "activityBar.inactiveForeground": "#15202b99",
+    "activityBarBadge.background": "#b35ce3",
+    "activityBarBadge.foreground": "#15202b",
+    "sash.hoverBorder": "#57e2b1",
+    "statusBar.background": "#2cda9d",
+    "statusBar.foreground": "#15202b",
+    "statusBarItem.hoverBackground": "#1fb480",
+    "statusBarItem.remoteBackground": "#2cda9d",
+    "statusBarItem.remoteForeground": "#15202b",
+    "titleBar.activeBackground": "#2cda9d",
+    "titleBar.activeForeground": "#15202b",
+    "titleBar.inactiveBackground": "#2cda9d99",
+    "titleBar.inactiveForeground": "#15202b99",
+    "commandCenter.border": "#15202b99"
+  },
+  "dart.flutterSdkPath": ".fvm/versions/3.7.10",
+  "search.exclude": {
+    "**/.fvm": true
+  },
+  "peacock.color": "#2CDA9D"
 }

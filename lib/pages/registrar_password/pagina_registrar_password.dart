@@ -23,13 +23,13 @@ class _PaginaRegistrarPasswordState extends State<PaginaRegistrarPassword> {
     'numero': false,
     'caracteres': false,
     'password': '',
-    'titulo': '',
+    'title': '',
     'cantidad': 0
   };
   final TextEditingController _textPasswordController = TextEditingController();
 
   String password;
-  String titulo;
+  String title;
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;

@@ -7,6 +7,6 @@ class RegistrarpasswordState {
       {this.width = 0.00,
       this.inputs = const {
         'password': {'valor': '', 'validacion': true},
-        'titulo': {'valor': '', 'validacion': true}
+        'title': {'valor': '', 'validacion': true}
       }});
 }

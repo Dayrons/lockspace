@@ -17,9 +17,9 @@ class Formulario extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Input(
-            input: 'titulo',
-            texto: "Titulo",
-            validacion: validacion['titulo']['validacion'],
+            input: 'title',
+            texto: "title",
+            validacion: validacion['title']['validacion'],
             onChange: onChange,
           ),
           Input(

@@ -4,6 +4,8 @@ import 'package:app/pages/registrar_password/pagina_registrar_password.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:local_auth/local_auth.dart';
+import 'package:local_auth_android/local_auth_android.dart';
 
 class ListPasswordPage extends StatefulWidget {
   @override
@@ -83,9 +85,8 @@ class _ListPasswordPageState extends State<ListPasswordPage> {
                   final password = state.passwords[index];
                   return Password(
                     id: password.id,
-                    titulo: password.titulo,
+                    title: password.title,
                     password: password.decryptFernet(password.password),
-                    funciones: [_notificacion, _eliminarPassword],
                   );
                   },
                 );
@@ -128,17 +129,7 @@ class _ListPasswordPageState extends State<ListPasswordPage> {
     BlocProvider.of<GestionpasswordBloc>(context).add(ObtenerPasswords());
   }
 
-  void _notificacion() async {
-    setState(() {
-      opacidad = 1;
-    });
-    await Future.delayed(Duration(milliseconds: 600));
-    setState(() {
-      opacidad = 0;
-    });
-  }
 
-  void _eliminarPassword(id) {
-    BlocProvider.of<GestionpasswordBloc>(context).add(EliminarPassword(id: id));
-  }
+
+ 
 }

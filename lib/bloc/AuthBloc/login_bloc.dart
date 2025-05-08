@@ -14,13 +14,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     LoginEvent event,
   ) async* {
     if (event is Sigin) {
-      Usuario usuario = Usuario(nombre: "lennox", password: "123456");
+      User user = User(name: "lennox", password: "123456");
 
-      List usuarios = await usuario.obtener();
+      List users = await user.getAll();
 
-      var password = usuarios[0].password;
+      var password = users[0].password;
 
-      var passwordDecryp = usuario.decryptFernet(password);
+      var passwordDecryp = user.decryptFernet(password);
 
       password = passwordDecryp;
       if (event.password == password) {

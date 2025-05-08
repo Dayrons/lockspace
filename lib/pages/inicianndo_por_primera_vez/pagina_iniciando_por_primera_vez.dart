@@ -17,21 +17,21 @@ class _PaginaIniciandoPorPrimeravezState
   List<Widget> _paginas = [
     Pagina(
       color: Color(fondo),
-      titulo: 'SOLO TU TIENES EL CONTROL',
+      title: 'SOLO TU TIENES EL CONTROL',
       descripcion:
           'LockSpace no tiene conexion a ningun servidor por lo que las contraseñas estaran almacenadas solo en tu  dispositivo',
       img: 'assets/1.png',
     ),
     Pagina(
       color: Color(fondo),
-      titulo: 'FACIL Y RAPIDO',
+      title: 'FACIL Y RAPIDO',
       descripcion:
           'Actualiza, elimina y copia contraseñas en cuestion de segundos',
       img: 'assets/2.png',
     ),
     Pagina(
       color: Color(fondo),
-      titulo: 'UNA SOLA CONTRASEÑA',
+      title: 'UNA SOLA CONTRASEÑA',
       descripcion:
           'Una unica contraseña con la que te autenticaras y con la que seran encriptadas tus contraseñas',
       img: 'assets/3.png',
@@ -127,11 +127,11 @@ class _PaginaIniciandoPorPrimeravezState
 
 class Pagina extends StatelessWidget {
   final Color color;
-  final String titulo;
+  final String title;
   final String descripcion;
   final String img;
 
-  const Pagina({Key key, this.color, this.titulo, this.descripcion, this.img})
+  const Pagina({Key key, this.color, this.title, this.descripcion, this.img})
       : super(key: key);
 
   @override
@@ -154,7 +154,7 @@ class Pagina extends StatelessWidget {
               Container(
                 margin: EdgeInsets.only(top: 40.00),
                 child: Text(
-                  titulo,
+                  title,
                   style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,

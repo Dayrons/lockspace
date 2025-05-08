@@ -4,7 +4,7 @@ import 'package:sqflite/sqflite.dart';
 
 class Password {
   int id;
-  final String titulo;
+  final String title;
   final String password;
 
   //me quede probando encriptado y desencriptado con este modo
@@ -19,23 +19,23 @@ class Password {
   Future<List<Password>> filter(String search) async {
     Database db = await DB().conexion();
 
-    final resultado = await db.query("tbl_passwords",
-        where: "titulo LIKE ?", whereArgs: ['%$search%']);
+    final resultado = await db.query("passwords",
+        where: "title LIKE ?", whereArgs: ['%$search%']);
     return List.generate(resultado.length, (i) {
       return Password(
         id: resultado[i]["id"],
-        titulo: resultado[i]["titulo"],
+        title: resultado[i]["title"],
         password: resultado[i]["password"],
       );
     });
   }
 
-  Password({this.id, this.password, this.titulo});
+  Password({this.id, this.password, this.title});
 
   Map<String, dynamic> toMap() {
     return {
       'id':this.id,
-      'titulo': this.titulo,
+      'title': this.title,
       'password': encriptar(this.password),
     };
   }
@@ -44,7 +44,7 @@ class Password {
     Database db = await DB().conexion();
 
     await db.insert(
-      'tbl_passwords',
+      'passwords',
       this.toMap(),
     );
   }
@@ -52,7 +52,7 @@ class Password {
   Future<void> clear() async {
     Database db = await DB().conexion();
     await db.delete(
-      'tbl_passwords',
+      'passwords',
       where: null,
     );
   }
@@ -60,7 +60,7 @@ class Password {
   Future<void> eliminar() async {
     Database db = await DB().conexion();
     await db.delete(
-      'tbl_passwords',
+      'passwords',
       where: "id = ?",
       whereArgs: [this.id],
     );
@@ -68,11 +68,11 @@ class Password {
 
   Future obtener() async {
     Database db = await DB().conexion();
-    List<Map<String, dynamic>> resultado = await db.query('tbl_passwords');
+    List<Map<String, dynamic>> resultado = await db.query('passwords');
     List<Password> passwords = List.generate(resultado.length, (i) {
       return Password(
         id: resultado[i]["id"],
-        titulo: resultado[i]["titulo"],
+        title: resultado[i]["title"],
         password: resultado[i]["password"],
       );
     });

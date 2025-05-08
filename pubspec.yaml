@@ -35,6 +35,7 @@ dependencies:
   vibration: ^1.8.3
   local_auth:
   jwt_decoder: ^2.0.1
+  fluttertoast: 
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

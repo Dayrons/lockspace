@@ -11,7 +11,7 @@ class RegistrarpasswordBloc
     extends Bloc<RegistrarpasswordEvent, RegistrarpasswordState> {
   final datos = {
     'password': {'valor': '', 'validacion': false},
-    'titulo': {'valor': '', 'validacion': false}
+    'title': {'valor': '', 'validacion': false}
   };
 
   RegistrarpasswordBloc() : super(RegistrarpasswordState());
@@ -28,14 +28,14 @@ class RegistrarpasswordBloc
         input['validacion'] = event.valor.isNotEmpty;
         input['validacion'] = event.valor.length >= 2;
       }
-      if (event.input == 'titulo') {
+      if (event.input == 'title') {
         input['validacion'] = event.valor.isNotEmpty;
       }
     } else if (event is Registrar) {
-      if (datos['password']['validacion'] && datos['titulo']['validacion']) {
+      if (datos['password']['validacion'] && datos['title']['validacion']) {
         Password password = Password(
           password: datos['password']['valor'],
-          titulo: datos['titulo']['valor'],
+          title: datos['title']['valor'],
         );
 
         await password.insertar();
@@ -47,9 +47,9 @@ class RegistrarpasswordBloc
                 passwords: passwords, obteniendoPassword: false));
 
         datos['password']['valor'] = '';
-        datos['titulo']['valor'] = '';
-        datos['titulo']['validacion'] = false;
-        datos['titulo']['validacion'] = false;
+        datos['title']['valor'] = '';
+        datos['title']['validacion'] = false;
+        datos['title']['validacion'] = false;
         yield RegistrarpasswordState(width: 250.00);
 
         await Future.delayed(Duration(seconds: 1));

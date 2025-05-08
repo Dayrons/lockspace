@@ -19,13 +19,13 @@ class RegistrarusuarioBloc
     }
     if (event is Registrar) {
       if (event.datos['password'].length >= 8) {
-        Usuario usuario =
-            Usuario(nombre: "lennox", password: event.datos['password']);
+        User user =
+            User(name: "lennox", password: event.datos['password']);
 
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setBool('sesion', event.datos['sesion']);
 
-        usuario.insertar();
+        user.create();
 
         yield RegistrarusuarioState(registrado: true);
       } else {
