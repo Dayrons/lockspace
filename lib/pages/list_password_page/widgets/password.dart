@@ -1,4 +1,6 @@
 import 'package:app/bloc/GestionPasswordBloc/gestionpassword_bloc.dart';
+import 'package:app/models/Password.dart';
+import 'package:app/pages/details_password_page/details_password_page.dart';
 import 'package:app/utils/ui.dart';
 import 'package:app/widgets/boton.dart';
 import 'package:app/widgets/input.dart';
@@ -12,123 +14,15 @@ import 'package:local_auth_android/local_auth_android.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
-class Password extends StatelessWidget {
-  final int id;
-  final String password;
-  final String title;
-  final List<Function> funciones;
+class PasswordWidget extends StatelessWidget {
+  Password password;
 
-  const Password({Key key, this.id, this.password, this.title, this.funciones})
-      : super(key: key);
+  PasswordWidget({Key key, this.password}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
-    return InkWell(
-      splashColor: Colors.transparent,
-      highlightColor: Colors.transparent,
-      onTap: () async {
-        final LocalAuthentication auth = LocalAuthentication();
-        try {
-          final bool canAuthenticateWithBiometrics =
-              await auth.canCheckBiometrics;
-          final bool canAuthenticate =
-              canAuthenticateWithBiometrics || await auth.isDeviceSupported();
-          final isLogin = await auth.authenticate(
-              authMessages: [
-                AndroidAuthMessages(
-                    signInTitle: "Autenticacion", biometricHint: "")
-              ],
-              localizedReason:
-                  'Por favor autenticate para ver la informacion de la contraseña',
-              options: const AuthenticationOptions(
-                useErrorDialogs: false,
-              ));
-          if (isLogin) {
-            showModalBottomSheet(
-              context: context,
-              backgroundColor: Colors.transparent,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.vertical(
-                  top: Radius.circular(20),
-                ),
-              ),
-              builder: (BuildContext context) {
-                return Container(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  height: size.height * 0.8,
-                  decoration: BoxDecoration(
-                    color: Color(fondo),
-                    borderRadius: BorderRadius.vertical(
-                      top: Radius.circular(20),
-                    ),
-                  ),
-                  child: Stack(
-                    children: [
-                      Positioned(
-                          top: 10,
-                          left: 0,
-                          child: Container(
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Container(
-                                  width: 10,
-                                  height: 10,
-                                  margin: EdgeInsets.only(right: 10),
-                                  decoration: BoxDecoration(
-                                      color: Colors.amber,
-                                      shape: BoxShape.circle),
-                                ),
-                                Text(
-                                  "Actualizacion hace: ${"3 meses"} ",
-                                  style: TextStyle(color: Colors.amber),
-                                )
-                              ],
-                            ),
-                          )),
-                      Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              height: 20.00,
-                            ),
-                            Container(
-                              padding: EdgeInsets.all(5),
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: QrImage(
-                                data: password,
-                                backgroundColor: Colors.white,
-                                version: QrVersions.auto,
-                                size: 160.0,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 20.00,
-                            ),
-                            Input(
-                              input: 'password',
-                              texto: "Nueva contraseña",
-                              validacion: true,
-                              // controller: controller,
-                              onChange: () {},
-                            ),
-                            Boton(
-                              width: size.width,
-                              texto: "Actualizar contraseña",
-                              onTap: () {},
-                            ),
-                          ])
-                    ],
-                  ),
-                );
-              },
-            );
-          }
-        } on PlatformException {}
-      },
+    return GestureDetector(
+      onTap: () => _auth(context),
       child: Container(
         margin: EdgeInsets.only(bottom: 10.00),
         padding: EdgeInsets.symmetric(horizontal: 15.00, vertical: 5.00),
@@ -150,7 +44,7 @@ class Password extends StatelessWidget {
             // ),
             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(
-                "$title",
+                "${password.title}",
                 style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -173,19 +67,7 @@ class Password extends StatelessWidget {
                   icon: Icon(
                     Icons.copy,
                   ),
-                  onPressed: () {
-                    FlutterClipboard.copy(password).then((value) {
-                      Fluttertoast.showToast(
-                        msg: "Copiado en portapaples",
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.CENTER,
-                        timeInSecForIosWeb: 3,
-                        backgroundColor: const Color(detalles),
-                        textColor: Colors.white,
-                        fontSize: 12,
-                      );
-                    });
-                  },
+                  onPressed: () => _copyPassword(context),
                 ),
                 IconButton(
                   splashRadius: 20.00,
@@ -194,22 +76,7 @@ class Password extends StatelessWidget {
                   icon: Icon(
                     Icons.delete_outline,
                   ),
-                  onPressed: () async {
-                    final LocalAuthentication auth = LocalAuthentication();
-                    final isAuth = await auth.authenticate(
-                        authMessages: [
-                          AndroidAuthMessages(
-                              signInTitle: "Autenticacion", biometricHint: "")
-                        ],
-                        localizedReason:
-                            'Por favor autenticate para eliminar contraseña',
-                        options: const AuthenticationOptions(
-                          useErrorDialogs: false,
-                        ));
-                    if (isAuth)
-                      BlocProvider.of<GestionpasswordBloc>(context)
-                          .add(EliminarPassword(id: id));
-                  },
+                  onPressed: () => _deletePassword(context),
                 ),
               ],
             )
@@ -217,5 +84,63 @@ class Password extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _deletePassword(context) async {
+    final LocalAuthentication auth = LocalAuthentication();
+    final isAuth = await auth.authenticate(
+        authMessages: [
+          AndroidAuthMessages(signInTitle: "Autenticacion", biometricHint: "")
+        ],
+        localizedReason: 'Por favor autenticate para eliminar contraseña',
+        options: const AuthenticationOptions(
+          useErrorDialogs: false,
+        ));
+    if (isAuth)
+      BlocProvider.of<GestionpasswordBloc>(context)
+          .add(EliminarPassword(id: password.id));
+  }
+
+  void _copyPassword(BuildContext context) {
+    FlutterClipboard.copy(password.decryptFernet(password.password))
+        .then((value) {
+      Fluttertoast.showToast(
+        msg: "Copiado en portapaples",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 3,
+        backgroundColor: const Color(detalles),
+        textColor: Colors.white,
+        fontSize: 12,
+      );
+    });
+  }
+
+  void _auth(context) async {
+    final LocalAuthentication auth = LocalAuthentication();
+    try {
+      final bool canAuthenticateWithBiometrics = await auth.canCheckBiometrics;
+      final bool canAuthenticate =
+          canAuthenticateWithBiometrics || await auth.isDeviceSupported();
+      final isLogin = await auth.authenticate(
+          authMessages: [
+            AndroidAuthMessages(signInTitle: "Autenticacion", biometricHint: "")
+          ],
+          localizedReason:
+              'Por favor autenticate para ver la informacion de la contraseña',
+          options: const AuthenticationOptions(
+            useErrorDialogs: false,
+          ));
+      if (isLogin) {
+        Navigator.of(context).push(
+          CupertinoPageRoute(
+            builder: (context) => DetailPasswordPage(
+              password: password,
+            ),
+          ),
+        );
+      }
+      ;
+    } on PlatformException {}
   }
 }

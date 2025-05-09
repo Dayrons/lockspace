@@ -1,4 +1,5 @@
 import 'package:app/bloc/GestionPasswordBloc/gestionpassword_bloc.dart';
+import 'package:app/models/Password.dart';
 import 'package:app/pages/list_password_page/widgets/password.dart';
 import 'package:app/pages/registrar_password/pagina_registrar_password.dart';
 import 'package:flutter/cupertino.dart';
@@ -25,7 +26,11 @@ class _ListPasswordPageState extends State<ListPasswordPage> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Container(
-      padding: EdgeInsets.only(left: 20, right: 20, top: 20,),
+      padding: EdgeInsets.only(
+        left: 20,
+        right: 20,
+        top: 20,
+      ),
       child: Column(
         children: [
           Row(
@@ -70,7 +75,9 @@ class _ListPasswordPageState extends State<ListPasswordPage> {
               ),
             ],
           ),
-          SizedBox(height: 20,),
+          SizedBox(
+            height: 20,
+          ),
           Expanded(child:
               BlocBuilder<GestionpasswordBloc, GestionpasswordState>(
                   builder: (context, state) {
@@ -82,12 +89,8 @@ class _ListPasswordPageState extends State<ListPasswordPage> {
                   physics: BouncingScrollPhysics(),
                   itemCount: state.passwords.length,
                   itemBuilder: (BuildContext context, int index) {
-                  final password = state.passwords[index];
-                  return Password(
-                    id: password.id,
-                    title: password.title,
-                    password: password.decryptFernet(password.password),
-                  );
+                    final Password password = state.passwords[index];
+                    return PasswordWidget(password: password);
                   },
                 );
               } else {
@@ -128,8 +131,4 @@ class _ListPasswordPageState extends State<ListPasswordPage> {
   void init(BuildContext context) {
     BlocProvider.of<GestionpasswordBloc>(context).add(ObtenerPasswords());
   }
-
-
-
- 
 }

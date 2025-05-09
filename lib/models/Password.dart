@@ -19,13 +19,13 @@ class Password {
   Future<List<Password>> filter(String search) async {
     Database db = await DB().conexion();
 
-    final resultado = await db.query("passwords",
+    final result = await db.query("passwords",
         where: "title LIKE ?", whereArgs: ['%$search%']);
-    return List.generate(resultado.length, (i) {
+    return List.generate(result.length, (i) {
       return Password(
-        id: resultado[i]["id"],
-        title: resultado[i]["title"],
-        password: resultado[i]["password"],
+        id: result[i]["id"],
+        title: result[i]["title"],
+        password: result[i]["password"],
       );
     });
   }
