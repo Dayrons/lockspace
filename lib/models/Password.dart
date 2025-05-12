@@ -4,9 +4,9 @@ import 'package:sqflite/sqflite.dart';
 
 class Password {
   int id;
-   String title;
-   String password;
-  
+  String title;
+  String password;
+
   final DateTime crecreatedAt;
   final DateTime updatedAt;
 
@@ -22,28 +22,35 @@ class Password {
   Future<List<Password>> filter(String search) async {
     Database db = await DB().conexion();
 
-    final result = await db.query("passwords",
-        where: "title LIKE ?", whereArgs: ['%$search%']);
+    final result = await db
+        .query("passwords", where: "title LIKE ?", whereArgs: ['%$search%']);
     return List.generate(result.length, (i) {
       return Password(
         id: result[i]["id"],
         title: result[i]["title"],
         password: result[i]["password"],
+        crecreatedAt: DateTime.parse(result[i]["created_at"]),
+        updatedAt: DateTime.parse(result[i]["updated_at"]),
       );
     });
   }
 
-  Password({this.id, this.password, this.title, this.crecreatedAt, this.updatedAt});
+  Password({
+    this.id,
+    this.password,
+    this.title,
+    this.crecreatedAt,
+    this.updatedAt,
+  });
 
   Map<String, dynamic> toMap() {
     return {
-      'id':this.id,
+      'id': this.id,
       'title': this.title,
       'password': encriptar(this.password),
       'updated_at': DateTime.now().toString(),
     };
   }
-  
 
   Future<void> insert() async {
     Database db = await DB().conexion();
@@ -53,15 +60,15 @@ class Password {
       this.toMap(),
     );
   }
-  
-  Future<void> update(Map newValues ) async {
+
+  Future<void> update(Map newValues) async {
     Database db = await DB().conexion();
 
     Map<String, dynamic> updatedFields = {};
 
     newValues.forEach((key, value) {
       if (value != null) {
-      updatedFields[key] = key == 'password' ? encriptar(value) : value;
+        updatedFields[key] = key == 'password' ? encriptar(value) : value;
       }
     });
 
@@ -76,7 +83,6 @@ class Password {
       whereArgs: [newValues['id']],
     );
   }
-
 
   Future<void> clear() async {
     Database db = await DB().conexion();
@@ -95,16 +101,16 @@ class Password {
     );
   }
 
-  Future obtener() async {
+  Future<List<Password>> getAll() async {
     Database db = await DB().conexion();
-    List<Map<String, dynamic>> resultado = await db.query('passwords');
-    List<Password> passwords = List.generate(resultado.length, (i) {
+    List<Map<String, dynamic>> result = await db.query('passwords');
+    List<Password> passwords = List.generate(result.length, (i) {
       return Password(
-        id: resultado[i]["id"],
-        title: resultado[i]["title"],
-        password: resultado[i]["password"],
-        crecreatedAt: DateTime.parse(resultado[i]["created_at"]),
-        updatedAt: DateTime.parse(resultado[i]["updated_at"]),
+        id: result[i]["id"],
+        title: result[i]["title"],
+        password: result[i]["password"],
+        crecreatedAt: DateTime.parse(result[i]["created_at"]),
+        updatedAt: DateTime.parse(result[i]["updated_at"]),
       );
     });
 

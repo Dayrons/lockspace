@@ -1,7 +1,7 @@
-import 'package:app/bloc/GestionPasswordBloc/gestionpassword_bloc.dart';
+import 'package:app/bloc/PasswordBloc/password_bloc.dart';
 import 'package:app/models/Password.dart';
 import 'package:app/pages/list_password_page/widgets/password.dart';
-import 'package:app/pages/registrar_password/pagina_registrar_password.dart';
+import 'package:app/pages/register_password_page/register_password_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,7 +14,7 @@ class ListPasswordPage extends StatefulWidget {
 }
 
 class _ListPasswordPageState extends State<ListPasswordPage> {
-  double opacidad = 0;
+
 
   @override
   void initState() {
@@ -69,7 +69,7 @@ class _ListPasswordPageState extends State<ListPasswordPage> {
                 onPressed: () => Navigator.of(context).push(
                   CupertinoPageRoute(
                     builder: (BuildContext context) =>
-                        PaginaRegistrarPassword(),
+                        RegisterPasswordPage(),
                   ),
                 ),
               ),
@@ -79,9 +79,9 @@ class _ListPasswordPageState extends State<ListPasswordPage> {
             height: 20,
           ),
           Expanded(child:
-              BlocBuilder<GestionpasswordBloc, GestionpasswordState>(
+              BlocBuilder<PasswordBloc, PasswordState>(
                   builder: (context, state) {
-            if (state.obteniendoPassword) {
+            if (state.isLoading) {
               return Text('Obteniendo password');
             } else {
               if (state.passwords.length > 0) {
@@ -124,11 +124,10 @@ class _ListPasswordPageState extends State<ListPasswordPage> {
   }
 
   void _search(String text) {
-    BlocProvider.of<GestionpasswordBloc>(context)
-        .add(FiltrarPassword(search: text));
+    BlocProvider.of<PasswordBloc>(context).filterPasswords(text);
   }
 
   void init(BuildContext context) {
-    BlocProvider.of<GestionpasswordBloc>(context).add(ObtenerPasswords());
+    BlocProvider.of<PasswordBloc>(context).init();
   }
 }

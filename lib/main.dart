@@ -1,7 +1,7 @@
 import 'package:app/bloc/AuthBloc/login_bloc.dart';
 import 'package:app/bloc/GestionPasswordBloc/gestionpassword_bloc.dart';
+import 'package:app/bloc/PasswordBloc/password_bloc.dart';
 import 'package:app/bloc/RootBloc/root_bloc.dart';
-import 'package:app/pages/registrar_password/RegistrarPasswordBloc/registrarpassword_bloc.dart';
 import 'package:app/pages/registro_usuario/RegistrarUsuarioBloc/registrarusuario_bloc.dart';
 import 'package:app/pages/root.dart';
 import 'package:flutter/material.dart';
@@ -28,8 +28,8 @@ class AppState extends StatelessWidget {
         BlocProvider<RootBloc>(
           create: (context) => RootBloc(),
         ),
-        BlocProvider<RegistrarpasswordBloc>(
-          create: (context) => RegistrarpasswordBloc(),
+        BlocProvider<PasswordBloc>(
+          create: (context) => PasswordBloc(),
         ),
       ],
       child: App(),

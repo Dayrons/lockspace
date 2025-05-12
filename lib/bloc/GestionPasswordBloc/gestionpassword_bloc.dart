@@ -15,7 +15,7 @@ class GestionpasswordBloc
   ) async* {
     Password password = Password();
     if (event is ObtenerPasswords) {
-      List passwords = await password.obtener();
+      List passwords = await password.getAll();
 
       yield GestionpasswordState(
           passwords: passwords, obteniendoPassword: false);
@@ -24,7 +24,7 @@ class GestionpasswordBloc
       password.id =event.id;
       await password.eliminar();
 
-      List passwords = await password.obtener();
+      List passwords = await password.getAll();
 
       yield GestionpasswordState(
           passwords: passwords, obteniendoPassword: false);
@@ -40,7 +40,7 @@ class GestionpasswordBloc
 
       await password.update(event.values);
 
-      List passwords = await password.obtener();
+      List passwords = await password.getAll();
       yield GestionpasswordState(
         passwords: passwords,
         obteniendoPassword: false,

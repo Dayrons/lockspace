@@ -5,11 +5,7 @@ abstract class GestionpasswordEvent {}
 
 class ObtenerPasswords extends GestionpasswordEvent {}
 
-class RegistrarPassword extends GestionpasswordEvent {
-  final Password password;
 
-  RegistrarPassword({this.password});
-}
 
 class UpdatePassword extends GestionpasswordEvent {
   final Map values;

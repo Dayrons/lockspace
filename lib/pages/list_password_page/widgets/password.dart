@@ -1,4 +1,5 @@
 import 'package:app/bloc/GestionPasswordBloc/gestionpassword_bloc.dart';
+import 'package:app/bloc/PasswordBloc/password_bloc.dart';
 import 'package:app/models/Password.dart';
 import 'package:app/pages/details_password_page/details_password_page.dart';
 import 'package:app/utils/ui.dart';
@@ -132,10 +133,10 @@ class PasswordWidget extends StatelessWidget {
             useErrorDialogs: false,
           ));
       if (isLogin) {
+        BlocProvider.of<PasswordBloc>(context).selectPassword(password);
         Navigator.of(context).push(
           CupertinoPageRoute(
             builder: (context) => DetailPasswordPage(
-              password: password,
             ),
           ),
         );

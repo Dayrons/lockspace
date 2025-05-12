@@ -41,7 +41,7 @@ class _ScannerSyncPageState extends State<ScannerSyncPage> {
 
   Future<List<Map>> _getPassowrds() async {
     Password password = Password();
-    List passwords = await password.obtener();
+    List passwords = await password.getAll();
     return List.generate(passwords.length, (i) {
       final Password password = passwords[i];
       return password.toMap();
