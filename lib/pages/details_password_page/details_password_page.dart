@@ -22,13 +22,19 @@ class DetailPasswordPage extends StatefulWidget {
 class _DetailPasswordPageState extends State<DetailPasswordPage> {
   final TextEditingController _textTitleController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
+  Password password = Password();
   final Map<String, dynamic> _values = {
     'capital_letters': false,
     'numbers': false,
     'special_characters': false,
     'max_length': 8.00,
   };
+
+  @override
+  void initState() {
+    _textTitleController.text = BlocProvider.of<PasswordBloc>(context).state.password.title;
+    super.initState();
+  }
 
   final Map newPasswordValues = {};
   bool validate = false;
@@ -40,7 +46,7 @@ class _DetailPasswordPageState extends State<DetailPasswordPage> {
 
     return BlocBuilder<PasswordBloc, PasswordState>(
       builder: (context, state) {
-        final Password password = state.password;
+        password = state.password;
         return Scaffold(
           backgroundColor: Color(0XFF1c1d22),
           resizeToAvoidBottomInset: false,
