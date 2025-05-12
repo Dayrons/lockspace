@@ -35,6 +35,18 @@ class GestionpasswordBloc
         passwords: passwords,
         obteniendoPassword: false,
       );
+    }else if (event is UpdatePassword) {
+      password = Password();
+
+      await password.update(event.values);
+
+      List passwords = await password.obtener();
+      yield GestionpasswordState(
+        passwords: passwords,
+        obteniendoPassword: false,
+      );
+     
+      
     }
   }
 }

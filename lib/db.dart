@@ -28,7 +28,6 @@ class DB {
       for (var entry in tables.entries) {
         String tableName = entry.key;
         String query = entry.value['create'];
-        print("Creando tabla $tableName con la query: $query");
         await db.execute(query);
       }
     }, onUpgrade: (db, oldVersion, newVersion) async {

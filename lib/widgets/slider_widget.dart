@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 
-class SliderWidget extends StatefulWidget {
-  final String text;
+
+
+class SliderWidget extends StatelessWidget {
+   final String text;
   final double width;
+  final double value;
+  final Function onChanged;
+  final String input;
+   SliderWidget({Key key, this.text, this.width, this.value, this.onChanged, this.input}) : super(key: key);
 
-  const SliderWidget({Key key, this.text, this.width}) : super(key: key);
 
-  @override
-  State<SliderWidget> createState() => _SliderWidgetState();
-}
-
-class _SliderWidgetState extends State<SliderWidget> {
-  double _currentValue = 0.0;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +20,7 @@ class _SliderWidgetState extends State<SliderWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            widget.text,
+            text,
             style: TextStyle(
               color: Colors.white,
               fontSize: 14,
@@ -38,28 +37,41 @@ class _SliderWidgetState extends State<SliderWidget> {
             child: Row(
               children: [
                 Container(
-                  width: widget.width * 0.7,
+                  width: width * 0.5,
                   child: Slider(
                     activeColor: Color(0XFF2CDA9D),
                     inactiveColor: Color(0XFF2b2e3d),
-                    value: _currentValue,
+                    value: value,
                     min: 0.0,
                     max: 100.0,
-                    label: "${_currentValue.round()}",
+                    label: "${value.round()}",
                     onChanged: (double newValue) {
-                      setState(() {
-                        _currentValue = newValue;
-                      });
+                      onChanged(input, newValue);
                     },
                   ),
                 ),
                 Container(
-                  width: widget.width * 0.1,
-                  child: Center(
-                      child: Text(
-                    "${_currentValue.round()}",
-                    style: TextStyle(color: Colors.white),
-                  )),
+                  width:width * 0.35,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(onPressed: ()=>onChanged(input, (value -1)), icon: Icon(Icons.arrow_left, color: Color(0XFF2CDA9D),), splashRadius: 0.1),
+                      
+                      Container(
+                        width: 30,
+                        child: Center(child: Text(
+                          "${value.round()}",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),),
+                      ),
+
+                      IconButton(onPressed: ()=>onChanged(input, (value +1)), icon: Icon(Icons.arrow_right, color: Color(0XFF2CDA9D),), splashRadius: 0.1),
+                    ],
+                  ),
                 )
               ],
             ),

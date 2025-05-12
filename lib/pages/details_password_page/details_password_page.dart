@@ -1,10 +1,14 @@
+import 'package:app/bloc/GestionPasswordBloc/gestionpassword_bloc.dart';
 import 'package:app/models/Password.dart';
+import 'package:app/utils/functions.dart';
 import 'package:app/utils/ui.dart';
 import 'package:app/widgets/boton.dart';
 import 'package:app/widgets/input.dart';
 import 'package:app/widgets/slider_widget.dart';
 import 'package:app/widgets/switch_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class DetailPasswordPage extends StatefulWidget {
@@ -17,7 +21,17 @@ class DetailPasswordPage extends StatefulWidget {
 
 class _DetailPasswordPageState extends State<DetailPasswordPage> {
   final TextEditingController _textTitleController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
+  final Map<String, dynamic> _values = {
+    'capital_letters': false,
+    'numbers': false,
+    'special_characters': false,
+    'max_length': 8.00,
+  };
+
+  final Map newPasswordValues = {};
+  bool validate = false;
   bool _isQrVisible = false;
   @override
   void initState() {
@@ -47,11 +61,14 @@ class _DetailPasswordPageState extends State<DetailPasswordPage> {
                   height: 10,
                   margin: EdgeInsets.only(right: 10),
                   decoration: BoxDecoration(
-                      color: Colors.amber, shape: BoxShape.circle),
+                    color: _detailDateTime()["color"],
+                    shape: BoxShape.circle,
+                  ),
                 ),
                 Text(
-                  "Actualizacion hace: ${"3 meses"} ",
-                  style: TextStyle(color: Colors.amber, fontSize: 12),
+                  "Actualizacion hace: ${_detailDateTime()["date"]} a las ${_detailDateTime()["hour"]}",
+                  style: TextStyle(
+                      color: _detailDateTime()["color"], fontSize: 12),
                 )
               ],
             ),
@@ -130,18 +147,26 @@ class _DetailPasswordPageState extends State<DetailPasswordPage> {
                             texto: "Titulo",
                             validacion: true,
                             controller: _textTitleController,
-                            onChange: () {},
+                            onChange: (value, input) {
+                              // _validate();
+                              newPasswordValues[input] = value;
+                            },
                           ),
                           Input(
-                            input: 'password',
-                            texto: "Nueva contraseña",
-                            validacion: true,
-                            // controller: controller,
-                            onChange: () {},
-                          ),
+                              input: 'password',
+                              texto: "Nueva contraseña",
+                              validacion: true,
+                              controller: _passwordController,
+                              onChange: (value, input) {
+                                // _validate();
+                                newPasswordValues[input] = value;
+                              }),
                           SliderWidget(
                             text: "Cantidad maxima de caracteres",
                             width: size.width,
+                            input: 'max_length',
+                            onChanged: _onChanged,
+                            value: _values['max_length'],
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -149,10 +174,16 @@ class _DetailPasswordPageState extends State<DetailPasswordPage> {
                               SwitchWidget(
                                 width: size.width * 0.42,
                                 text: "Caracteres",
+                                onChanged: _onChanged,
+                                input: 'special_characters',
+                                value: _values['special_characters'],
                               ),
                               SwitchWidget(
                                 width: size.width * 0.42,
                                 text: "Mayusculas",
+                                onChanged: _onChanged,
+                                input: 'capital_letters',
+                                value: _values['capital_letters'],
                               ),
                             ],
                           ),
@@ -165,13 +196,16 @@ class _DetailPasswordPageState extends State<DetailPasswordPage> {
                               SwitchWidget(
                                 width: size.width * 0.42,
                                 text: "Numeros",
+                                onChanged: _onChanged,
+                                input: 'numbers',
+                                value: _values['numbers'],
                               ),
                               Boton(
                                 width: size.width * 0.42,
                                 color: Color(0XFF2CDA9D),
                                 textColor: Colors.white,
                                 texto: "Generar",
-                                onTap: () {},
+                                onTap: _generatePassword,
                               ),
                             ],
                           ),
@@ -183,13 +217,75 @@ class _DetailPasswordPageState extends State<DetailPasswordPage> {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Boton(
-                  width: size.width,
-                  texto: "Actualizar contraseña",
-                  onTap: () {},
-                ),
+                    width: size.width,
+                    texto: "Actualizar contraseña",
+                    onTap:() {
+                            newPasswordValues['id'] = widget.password.id;
+                            BlocProvider.of<GestionpasswordBloc>(context)
+                                .add(UpdatePassword(values: newPasswordValues));
+                            Fluttertoast.showToast(
+                              msg: "Contraseña actualizada",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.CENTER,
+                              timeInSecForIosWeb: 3,
+                              backgroundColor: const Color(detalles),
+                              textColor: Colors.white,
+                              fontSize: 12,
+                            );
+                          }),
               )
             ],
           )),
     );
+  }
+
+  _validate() {
+    if ((_passwordController.text != widget.password.password &&
+            _passwordController.text != "") ||
+        (_textTitleController.text != widget.password.title &&
+            _textTitleController.text != "")) {
+      setState(() {
+        validate = true;
+      });
+    } else {
+      setState(() {
+        validate = false;
+      });
+    }
+  }
+
+  Map _detailDateTime() {
+    DateTime date = widget.password.updatedAt;
+
+    final DateTime now = DateTime.now();
+    final Duration difference = now.difference(date);
+
+    Color color;
+    if (difference.inDays <= 90) {
+      color = Color(detalles);
+    } else if (difference.inDays > 90 && difference.inDays <= 150) {
+      color = Colors.amber;
+    } else {
+      color = Colors.red[400];
+    }
+
+    Map<String, dynamic> dateTimeDetail = {
+      "date": "${date.day}-${date.month}-${date.year}",
+      "hour": "${date.hour > 12 ? date.hour - 12 : date.hour}:${date.minute.toString().padLeft(2, '0')} ${date.hour >= 12 ? 'PM' : 'AM'}",
+      "color": color
+    };
+    return dateTimeDetail;
+  }
+
+  void _onChanged(input, newValue) {
+    setState(() {
+      _values[input] = newValue;
+    });
+  }
+
+  void _generatePassword() {
+    final String newPassword = generarPassword(_values);
+    _passwordController.text = newPassword;
+    newPasswordValues['password'] = newPassword;
   }
 }

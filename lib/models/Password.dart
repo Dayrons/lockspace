@@ -4,8 +4,11 @@ import 'package:sqflite/sqflite.dart';
 
 class Password {
   int id;
-  final String title;
-  final String password;
+   String title;
+   String password;
+  
+  final DateTime crecreatedAt;
+  final DateTime updatedAt;
 
   //me quede probando encriptado y desencriptado con este modo
   // For Fernet Encryption/Decryption
@@ -30,17 +33,19 @@ class Password {
     });
   }
 
-  Password({this.id, this.password, this.title});
+  Password({this.id, this.password, this.title, this.crecreatedAt, this.updatedAt});
 
   Map<String, dynamic> toMap() {
     return {
       'id':this.id,
       'title': this.title,
       'password': encriptar(this.password),
+      'updated_at': DateTime.now().toString(),
     };
   }
+  
 
-  Future<void> insertar() async {
+  Future<void> insert() async {
     Database db = await DB().conexion();
 
     await db.insert(
@@ -48,6 +53,30 @@ class Password {
       this.toMap(),
     );
   }
+  
+  Future<void> update(Map newValues ) async {
+    Database db = await DB().conexion();
+
+    Map<String, dynamic> updatedFields = {};
+
+    newValues.forEach((key, value) {
+      if (value != null) {
+      updatedFields[key] = key == 'password' ? encriptar(value) : value;
+      }
+    });
+
+    updatedFields['updated_at'] = DateTime.now().toString();
+
+    print("$updatedFields");
+
+    await db.update(
+      'passwords',
+      updatedFields,
+      where: "id = ?",
+      whereArgs: [newValues['id']],
+    );
+  }
+
 
   Future<void> clear() async {
     Database db = await DB().conexion();
@@ -74,6 +103,8 @@ class Password {
         id: resultado[i]["id"],
         title: resultado[i]["title"],
         password: resultado[i]["password"],
+        crecreatedAt: DateTime.parse(resultado[i]["created_at"]),
+        updatedAt: DateTime.parse(resultado[i]["updated_at"]),
       );
     });
 
@@ -92,5 +123,10 @@ class Password {
     encrypterFernet.decrypt64(password);
 
     return encrypterFernet.decrypt64(password);
+  }
+
+  @override
+  String toString() {
+    return 'Password{id: $id, title: $title, password: $password}';
   }
 }

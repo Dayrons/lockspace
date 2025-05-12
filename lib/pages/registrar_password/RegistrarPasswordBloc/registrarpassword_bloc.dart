@@ -32,13 +32,14 @@ class RegistrarpasswordBloc
         input['validacion'] = event.valor.isNotEmpty;
       }
     } else if (event is Registrar) {
+
       if (datos['password']['validacion'] && datos['title']['validacion']) {
         Password password = Password(
           password: datos['password']['valor'],
           title: datos['title']['valor'],
         );
 
-        await password.insertar();
+        await password.insert();
 
         final List passwords = await password.obtener();
 

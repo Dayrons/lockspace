@@ -1,22 +1,19 @@
 import 'package:flutter/material.dart';
 
-class SwitchWidget extends StatefulWidget {
+class SwitchWidget extends StatelessWidget {
   final String text;
   final double width;
+  final Function onChanged;
+  final bool value;
+  final String input;
 
-  SwitchWidget({this.width, this.text, Key key}) : super(key: key);
-
-  @override
-  State<SwitchWidget> createState() => _SwitchWidgetState();
-}
-
-class _SwitchWidgetState extends State<SwitchWidget> {
-  bool value;
+  SwitchWidget({this.width, this.text, this.onChanged, this.value, this.input, Key key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: widget.width,
+      width: width,
       padding: EdgeInsets.all(5),
       decoration: BoxDecoration(
         color: Color(0XFF2b2e3d).withOpacity(0.5),
@@ -26,16 +23,17 @@ class _SwitchWidgetState extends State<SwitchWidget> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           Text(
-            widget.text,
-            style: TextStyle(color: Color(0XFF2CDA9D), fontWeight: FontWeight.bold, fontSize: 12),
+            text,
+            style: TextStyle(
+                color: Color(0XFF2CDA9D),
+                fontWeight: FontWeight.bold,
+                fontSize: 12),
           ),
           Switch(
             value: value,
             activeColor: Color(0XFF2CDA9D),
             onChanged: (bool newValue) {
-              setState(() {
-          value = newValue;
-              });
+              onChanged(input,newValue);
             },
           ),
         ],

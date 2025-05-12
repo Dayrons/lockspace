@@ -36,7 +36,6 @@ class User {
   Future getAll() async {
     Database db = await DB().conexion();
     List<Map<String, dynamic>> results = await db.query('users');
-    print(results);
     List<User> users = List.generate(results.length, (i) {
       return User(
         name: results[i]["name"], password: results[i]["password"]);

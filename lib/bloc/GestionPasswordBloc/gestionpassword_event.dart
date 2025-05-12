@@ -11,6 +11,12 @@ class RegistrarPassword extends GestionpasswordEvent {
   RegistrarPassword({this.password});
 }
 
+class UpdatePassword extends GestionpasswordEvent {
+  final Map values;
+
+  UpdatePassword({this.values});
+}
+
 class EliminarPassword extends GestionpasswordEvent {
   final int id;
 
