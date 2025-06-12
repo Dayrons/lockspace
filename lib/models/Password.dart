@@ -61,26 +61,16 @@ class Password {
     );
   }
 
-  Future<void> update(Map newValues) async {
+ 
+
+  Future<void> update() async {
     Database db = await DB().conexion();
-
-    Map<String, dynamic> updatedFields = {};
-
-    newValues.forEach((key, value) {
-      if (value != null) {
-        updatedFields[key] = key == 'password' ? encriptar(value) : value;
-      }
-    });
-
-    updatedFields['updated_at'] = DateTime.now().toString();
-
-    print("$updatedFields");
 
     await db.update(
       'passwords',
-      updatedFields,
+      this.toMap(),
       where: "id = ?",
-      whereArgs: [newValues['id']],
+      whereArgs: [this.id],
     );
   }
 
@@ -92,7 +82,7 @@ class Password {
     );
   }
 
-  Future<void> eliminar() async {
+  Future<void> delete() async {
     Database db = await DB().conexion();
     await db.delete(
       'passwords',

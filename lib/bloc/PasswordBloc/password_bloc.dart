@@ -32,9 +32,24 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
     add(PasswordEvent(passwords: passwords, isLoading: false));
   }
 
-  void addPassword(Password password) {}
-  void removePassword(Password password) {}
-  void updatePassword(Password password) {}
+  void addPassword(Password password) async{
+    add(PasswordEvent(isLoading: true));
+    password.insert();
+    List<Password> passwords = await password.getAll();
+    add(PasswordEvent(passwords: passwords, isLoading: false));
+  }
+  void removePassword(Password password) async{
+    add(PasswordEvent(isLoading: true));
+    password.delete();
+    List<Password> passwords = await password.getAll();
+    add(PasswordEvent(passwords: passwords, isLoading: false));
+  }
+  void updatePassword(Password password) {
+    add(PasswordEvent(isLoading: true));
+    password.update();
+    add(PasswordEvent(isLoading: false));
+    init();
+  }
 
   void filterPasswords(String search) async {
     add(PasswordEvent(isLoading: true));

@@ -1,8 +1,7 @@
 import 'dart:math';
-
-import 'package:app/bloc/GestionPasswordBloc/gestionpassword_bloc.dart';
+import 'package:app/bloc/PasswordBloc/password_bloc.dart';
 import 'package:app/models/Password.dart';
-
+import 'package:app/utils/functions.dart';
 
 import 'package:app/utils/ui.dart';
 import 'package:app/widgets/boton.dart';
@@ -14,13 +13,11 @@ import 'package:app/widgets/input.dart';
 
 class RegisterPasswordPage extends StatefulWidget {
   @override
-  _RegisterPasswordPageState createState() =>
-      _RegisterPasswordPageState();
+  _RegisterPasswordPageState createState() => _RegisterPasswordPageState();
 }
 
 class _RegisterPasswordPageState extends State<RegisterPasswordPage> {
-
-   final TextEditingController _textTitleController = TextEditingController();
+  final TextEditingController _textTitleController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   final Map<String, dynamic> _values = {
@@ -30,13 +27,10 @@ class _RegisterPasswordPageState extends State<RegisterPasswordPage> {
     'max_length': 8.00,
   };
 
-  final Map<String, dynamic> registerValues = {
-    
-  };
+  final Map<String, dynamic> registerValues = {};
 
   bool validate = false;
 
-  
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -46,7 +40,6 @@ class _RegisterPasswordPageState extends State<RegisterPasswordPage> {
       appBar: AppBar(
         backgroundColor: Color(0XFF1c1d22),
         elevation: 0,
-       
         leading: IconButton(
           iconSize: 40,
           icon: Icon(
@@ -71,7 +64,6 @@ class _RegisterPasswordPageState extends State<RegisterPasswordPage> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                         
                           Input(
                             input: 'title',
                             texto: "Titulo",
@@ -88,7 +80,6 @@ class _RegisterPasswordPageState extends State<RegisterPasswordPage> {
                               validacion: true,
                               controller: _passwordController,
                               onChange: (value, input) {
-                         
                                 registerValues[input] = value;
                               }),
                           SliderWidget(
@@ -135,7 +126,7 @@ class _RegisterPasswordPageState extends State<RegisterPasswordPage> {
                                 color: Color(0XFF2CDA9D),
                                 textColor: Colors.white,
                                 texto: "Generar",
-                                onTap: ()=>{},
+                                onTap: _generatePassword,
                               ),
                             ],
                           ),
@@ -147,28 +138,34 @@ class _RegisterPasswordPageState extends State<RegisterPasswordPage> {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Boton(
-                    width: size.width,
-                    texto: "Registrar contraseña",
-                    onTap:() {
-                            
-                          }),
+                  width: size.width,
+                  texto: "Registrar contraseña",
+                  onTap: () {
+                    BlocProvider.of<PasswordBloc>(context).addPassword(
+                      Password(
+                        title:registerValues['title'],
+                        password: registerValues['password'],
+                      ),
+                    );
+                  },
+                ),
               )
             ],
           )),
     );
   }
 
-  void _validar(valor, input) {
-    
-  }
+  void _validar(valor, input) {}
 
-  void _onChanged(valor, input) {
+  void _onChanged(input, newValue) {
     setState(() {
-      _values[input] = valor;
+      _values[input] = newValue;
     });
   }
 
-
-
-
+  void _generatePassword() {
+    final String randomPassword = generarPassword(_values);
+    _passwordController.text = randomPassword;
+    registerValues['password'] = randomPassword;
+  }
 }

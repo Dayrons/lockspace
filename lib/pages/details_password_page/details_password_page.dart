@@ -1,4 +1,3 @@
-import 'package:app/bloc/GestionPasswordBloc/gestionpassword_bloc.dart';
 import 'package:app/bloc/PasswordBloc/password_bloc.dart';
 import 'package:app/models/Password.dart';
 import 'package:app/utils/functions.dart';
@@ -231,8 +230,12 @@ class _DetailPasswordPageState extends State<DetailPasswordPage> {
                         texto: "Actualizar contraseña",
                         onTap: () {
                           newPasswordValues['id'] = password.id;
-                          BlocProvider.of<GestionpasswordBloc>(context)
-                              .add(UpdatePassword(values: newPasswordValues));
+                          BlocProvider.of<PasswordBloc>(context)
+                              .updatePassword(Password(
+                              id: newPasswordValues['id'],
+                              title: newPasswordValues['title'],
+                              password: newPasswordValues['password'] ,
+                              ));
                           Fluttertoast.showToast(
                             msg: "Contraseña actualizada",
                             toastLength: Toast.LENGTH_SHORT,

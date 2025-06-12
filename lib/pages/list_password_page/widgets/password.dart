@@ -1,4 +1,3 @@
-import 'package:app/bloc/GestionPasswordBloc/gestionpassword_bloc.dart';
 import 'package:app/bloc/PasswordBloc/password_bloc.dart';
 import 'package:app/models/Password.dart';
 import 'package:app/pages/details_password_page/details_password_page.dart';
@@ -98,8 +97,8 @@ class PasswordWidget extends StatelessWidget {
           useErrorDialogs: false,
         ));
     if (isAuth)
-      BlocProvider.of<GestionpasswordBloc>(context)
-          .add(EliminarPassword(id: password.id));
+      BlocProvider.of<PasswordBloc>(context)
+          .removePassword(password);
   }
 
   void _copyPassword(BuildContext context) {
