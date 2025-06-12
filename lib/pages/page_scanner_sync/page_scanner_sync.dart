@@ -16,7 +16,11 @@ import 'dart:convert';
 import 'dart:io';
 
 class ScannerSyncPage extends StatefulWidget {
-  const ScannerSyncPage();
+  final PageController controller;
+  const ScannerSyncPage({
+    Key key,
+    this.controller,
+  }) : super(key: key);
 
   @override
   State<ScannerSyncPage> createState() => _ScannerSyncPageState();
@@ -44,6 +48,7 @@ class _ScannerSyncPageState extends State<ScannerSyncPage> {
     List passwords = await password.getAll();
     return List.generate(passwords.length, (i) {
       final Password password = passwords[i];
+      print("Password: ${password.password}");
       return password.toMap();
     });
   }
@@ -72,18 +77,21 @@ class _ScannerSyncPageState extends State<ScannerSyncPage> {
     // final xx = test(jwtDecode["username"], 'secretkey:hapilyeverafter1234567');
 
     final data = await _getPassowrds();
+
+    print("Datos a enviar: $data");
     FTPConnect ftpConnect = FTPConnect(jwtDecode["host"],
         port: 2121, user: jwtDecode["username"], pass: jwtDecode["password"]);
     final path = await _localPath;
     File file = File('$path/password.txt');
     file.writeAsString(json.encode(data));
     await ftpConnect.connect();
-    bool response = await ftpConnect.uploadFileWithRetry(file, pRetryCount: 2); 
+    bool response = await ftpConnect.uploadFileWithRetry(file, pRetryCount: 2);
     // await ftpConnect.disconnect();
     if (response) {
-      Navigator.of(context).pushAndRemoveUntil(
-        CupertinoPageRoute(builder: (BuildContext context) => PaginaInicio()),
-        (Route<dynamic> route) => false,
+      widget.controller.animateToPage(
+        1,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
       );
     }
 
@@ -96,35 +104,35 @@ class _ScannerSyncPageState extends State<ScannerSyncPage> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Stack(
-        children: [
-          stanbay
-              ? Positioned(
-                  // bottom: size.height / 8,
-                  bottom: 0,
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  child: Container(
-                    color: Colors.black,
-                    child: Center(
-                      child: CircularProgressIndicator(
-                        valueColor:
-                            AlwaysStoppedAnimation<Color>(Color(detalles)),
-                      ),
+      children: [
+        stanbay
+            ? Positioned(
+                // bottom: size.height / 8,
+                bottom: 0,
+                top: 0,
+                left: 0,
+                right: 0,
+                child: Container(
+                  color: Colors.black,
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      valueColor:
+                          AlwaysStoppedAnimation<Color>(Color(detalles)),
                     ),
                   ),
-                )
-              : QRView(
-                  key: qrKey,
-                  onQRViewCreated: _onQRViewCreated,
-                  overlay: QrScannerOverlayShape(
-                      borderLength: 20,
-                      borderWidth: 10.0,
-                      borderRadius: 5.00,
-                      borderColor: const Color(0XFF2CDA9D)),
-                )
-        ],
-      );
+                ),
+              )
+            : QRView(
+                key: qrKey,
+                onQRViewCreated: _onQRViewCreated,
+                overlay: QrScannerOverlayShape(
+                    borderLength: 20,
+                    borderWidth: 10.0,
+                    borderRadius: 5.00,
+                    borderColor: const Color(0XFF2CDA9D)),
+              )
+      ],
+    );
   }
 
   Widget buildQrView(BuildContext context) => QRView(
@@ -136,7 +144,6 @@ class _ScannerSyncPageState extends State<ScannerSyncPage> {
     this.controller = controller;
 
     controller.scannedDataStream.listen((scanData) async {
-     
       setState(() {
         stanbay = true;
       });

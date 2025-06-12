@@ -102,7 +102,7 @@ class PasswordWidget extends StatelessWidget {
   }
 
   void _copyPassword(BuildContext context) {
-    FlutterClipboard.copy(password.decryptFernet(password.password))
+    FlutterClipboard.copy(password.passwordDecrypt())
         .then((value) {
       Fluttertoast.showToast(
         msg: "Copiado en portapaples",

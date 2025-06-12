@@ -20,7 +20,7 @@ class PaginaInicio extends StatelessWidget {
             child: PageView(
               controller: controller,
               physics: NeverScrollableScrollPhysics(),
-              children: [ScannerSyncPage(), ListPasswordPage(), SettingsPage()],
+              children: [ScannerSyncPage(controller: controller,), ListPasswordPage(), SettingsPage()],
             ),
           ),
           BottomBar(controller: controller,)

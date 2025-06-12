@@ -22,7 +22,7 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
   }
 
   void selectPassword(Password password) {
-    add(PasswordEvent(password: password));
+    add(PasswordEvent(password: password, isLoading: false));
   }
 
   void init() async {

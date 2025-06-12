@@ -22,20 +22,22 @@ class _DetailPasswordPageState extends State<DetailPasswordPage> {
   final TextEditingController _textTitleController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   Password password = Password();
+
   final Map<String, dynamic> _values = {
     'capital_letters': false,
     'numbers': false,
     'special_characters': false,
     'max_length': 8.00,
   };
-
+   final Map newPasswordValues = {};
   @override
   void initState() {
     _textTitleController.text = BlocProvider.of<PasswordBloc>(context).state.password.title;
+    newPasswordValues['password'] = BlocProvider.of<PasswordBloc>(context).state.password.passwordDecrypt();
     super.initState();
   }
 
-  final Map newPasswordValues = {};
+ 
   bool validate = false;
   bool _isQrVisible = false;
 
@@ -120,7 +122,7 @@ class _DetailPasswordPageState extends State<DetailPasswordPage> {
                                               BorderRadius.circular(10)),
                                       child: QrImage(
                                         data: password
-                                            .decryptFernet(password.password),
+                                            .passwordDecrypt(),
                                         backgroundColor: Colors.white,
                                         version: QrVersions.auto,
                                         size: 160.0,

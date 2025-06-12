@@ -82,7 +82,9 @@ class _ListPasswordPageState extends State<ListPasswordPage> {
               BlocBuilder<PasswordBloc, PasswordState>(
                   builder: (context, state) {
             if (state.isLoading) {
-              return Text('Obteniendo password');
+              return Center(child: CircularProgressIndicator(
+                color: Color(0XFF2CDA9D),
+              ));
             } else {
               if (state.passwords.length > 0) {
                 return ListView.builder(

@@ -47,14 +47,14 @@ class Password {
     return {
       'id': this.id,
       'title': this.title,
-      'password': encriptar(this.password),
+      'password':this.password,
       'updated_at': DateTime.now().toString(),
     };
   }
 
   Future<void> insert() async {
     Database db = await DB().conexion();
-
+    this.password = this.passwordDecrypt();
     await db.insert(
       'passwords',
       this.toMap(),
@@ -65,7 +65,7 @@ class Password {
 
   Future<void> update() async {
     Database db = await DB().conexion();
-
+    this.password = this.passwordEncrypt();
     await db.update(
       'passwords',
       this.toMap(),
@@ -107,19 +107,19 @@ class Password {
     return passwords;
   }
 
-  encriptar(password) {
-    final encrypted = encrypterFernet.encrypt(password);
+  passwordEncrypt() {
+    final encrypted = encrypterFernet.encrypt(this.password);
 
     // print(fernet.extractTimestamp(encrypted.bytes));
     // unix timestamp
     return encrypted.base64;
   }
-
-  decryptFernet(password) {
-    encrypterFernet.decrypt64(password);
-
-    return encrypterFernet.decrypt64(password);
+  passwordDecrypt() {
+    
+    return encrypterFernet.decrypt64(this.password);
   }
+
+
 
   @override
   String toString() {
