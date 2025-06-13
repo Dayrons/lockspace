@@ -55,9 +55,11 @@ class Password {
   Future<void> insert() async {
     Database db = await DB().conexion();
     this.password = this.passwordDecrypt();
+    final data = this.toMap();
+    data['created_at'] = DateTime.now().toString();
     await db.insert(
       'passwords',
-      this.toMap(),
+      data,
     );
   }
 
