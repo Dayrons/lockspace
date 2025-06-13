@@ -19,6 +19,14 @@ class Password {
 
   static final encrypterFernet = encrypt.Encrypter(fernet);
 
+    Password({
+    this.id,
+    this.password,
+    this.title,
+    this.crecreatedAt,
+    this.updatedAt,
+  });
+
   Future<List<Password>> filter(String search) async {
     Database db = await DB().conexion();
 
@@ -35,14 +43,6 @@ class Password {
     });
   }
 
-  Password({
-    this.id,
-    this.password,
-    this.title,
-    this.crecreatedAt,
-    this.updatedAt,
-  });
-
   Map<String, dynamic> toMap() {
     return {
       'id': this.id,
@@ -52,9 +52,9 @@ class Password {
     };
   }
 
-  Future<void> insert() async {
+  Future<void> create() async {
     Database db = await DB().conexion();
-    this.password = this.passwordDecrypt();
+    this.password = this.passwordEncrypt();
     final data = this.toMap();
     data['created_at'] = DateTime.now().toString();
     await db.insert(
@@ -62,8 +62,6 @@ class Password {
       data,
     );
   }
-
- 
 
   Future<void> update() async {
     Database db = await DB().conexion();
@@ -119,6 +117,7 @@ class Password {
   passwordDecrypt() {
     
     return encrypterFernet.decrypt64(this.password);
+
   }
 
 

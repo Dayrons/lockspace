@@ -22,7 +22,11 @@ class PasswordWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => _auth(context),
+      onTap: () {
+        _auth(context, () {
+          _viewPassword(context);
+        });
+      },
       child: Container(
         margin: EdgeInsets.only(bottom: 10.00),
         padding: EdgeInsets.symmetric(horizontal: 15.00, vertical: 5.00),
@@ -76,7 +80,9 @@ class PasswordWidget extends StatelessWidget {
                   icon: Icon(
                     Icons.delete_outline,
                   ),
-                  onPressed: () => _deletePassword(context),
+                  onPressed: () => _auth(context, () {
+                    _viewPassword(context);
+                  }),
                 ),
               ],
             )
@@ -86,24 +92,21 @@ class PasswordWidget extends StatelessWidget {
     );
   }
 
+  void _viewPassword(BuildContext context) {
+    BlocProvider.of<PasswordBloc>(context).selectPassword(password);
+    Navigator.of(context).push(
+      CupertinoPageRoute(
+        builder: (context) => DetailPasswordPage(),
+      ),
+    );
+  }
+
   void _deletePassword(context) async {
-    final LocalAuthentication auth = LocalAuthentication();
-    final isAuth = await auth.authenticate(
-        authMessages: [
-          AndroidAuthMessages(signInTitle: "Autenticacion", biometricHint: "")
-        ],
-        localizedReason: 'Por favor autenticate para eliminar contraseña',
-        options: const AuthenticationOptions(
-          useErrorDialogs: false,
-        ));
-    if (isAuth)
-      BlocProvider.of<PasswordBloc>(context)
-          .removePassword(password);
+    BlocProvider.of<PasswordBloc>(context).removePassword(password);
   }
 
   void _copyPassword(BuildContext context) {
-    FlutterClipboard.copy(password.passwordDecrypt())
-        .then((value) {
+    FlutterClipboard.copy(password.passwordDecrypt()).then((value) {
       Fluttertoast.showToast(
         msg: "Copiado en portapaples",
         toastLength: Toast.LENGTH_SHORT,
@@ -116,31 +119,36 @@ class PasswordWidget extends StatelessWidget {
     });
   }
 
-  void _auth(context) async {
+  void _auth(context, Function function) async {
     final LocalAuthentication auth = LocalAuthentication();
-    try {
-      final bool canAuthenticateWithBiometrics = await auth.canCheckBiometrics;
-      final bool canAuthenticate =
-          canAuthenticateWithBiometrics || await auth.isDeviceSupported();
-      final isLogin = await auth.authenticate(
-          authMessages: [
-            AndroidAuthMessages(signInTitle: "Autenticacion", biometricHint: "")
-          ],
-          localizedReason:
-              'Por favor autenticate para ver la informacion de la contraseña',
-          options: const AuthenticationOptions(
-            useErrorDialogs: false,
-          ));
-      if (isLogin) {
-        BlocProvider.of<PasswordBloc>(context).selectPassword(password);
-        Navigator.of(context).push(
-          CupertinoPageRoute(
-            builder: (context) => DetailPasswordPage(
-            ),
-          ),
-        );
-      }
-      ;
-    } on PlatformException {}
+    final bool canAuthenticateWithBiometrics = await auth.canCheckBiometrics;
+    print("Can authenticate with biometrics: $canAuthenticateWithBiometrics");
+    bool isAuth = false;
+
+    if (canAuthenticateWithBiometrics) {
+      isAuth = await auth.authenticate(
+        authMessages: [
+          AndroidAuthMessages(signInTitle: "Authentication", biometricHint: "")
+        ],
+        localizedReason: 'Please authenticate to delete password',
+        options: const AuthenticationOptions(
+          useErrorDialogs: false,
+        ),
+      );
+    } else {
+      print("Cannot authenticate with biometrics");
+      isAuth = await auth.authenticate(
+        localizedReason:
+            'Please enter your device password to delete password',
+        options: const AuthenticationOptions(
+          biometricOnly: false,
+          useErrorDialogs: false,
+        ),
+      );
+    }
+
+    if (isAuth) {
+      function();
+    }
   }
 }

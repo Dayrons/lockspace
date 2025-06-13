@@ -34,7 +34,7 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
 
   void addPassword(Password password) async{
     add(PasswordEvent(isLoading: true));
-    password.insert();
+    password.create();
     List<Password> passwords = await password.getAll();
     add(PasswordEvent(passwords: passwords, isLoading: false));
   }
