@@ -14,10 +14,13 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
   ) async* {
     if (event is PasswordEvent) {
       yield state.copyWith(
-        isLoading: event.isLoading,
-        passwords: event.passwords,
-        password: event.password,
-      );
+          isLoading: event.isLoading,
+          passwords: event.passwords,
+          password: event.password,
+          registerError: event.registerError,
+          registerSuccess: event.registerSuccess,
+          updateSuccess: event.updateSuccess,
+          updateError: event.updateError);
     }
   }
 
@@ -32,23 +35,35 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
     add(PasswordEvent(passwords: passwords, isLoading: false));
   }
 
-  void addPassword(Password password) async{
+  void addPassword(Password password) async {
     add(PasswordEvent(isLoading: true));
-    password.create();
-    List<Password> passwords = await password.getAll();
-    add(PasswordEvent(passwords: passwords, isLoading: false));
+    try {
+      password.create();
+      List<Password> passwords = await password.getAll();
+      add(PasswordEvent(
+          passwords: passwords, isLoading: false, registerSuccess: true));
+    } catch (e) {
+      add(PasswordEvent(isLoading: false, registerError: true));
+    }
   }
-  void removePassword(Password password) async{
+
+  void removePassword(Password password) async {
     add(PasswordEvent(isLoading: true));
     password.delete();
     List<Password> passwords = await password.getAll();
     add(PasswordEvent(passwords: passwords, isLoading: false));
   }
-  void updatePassword(Password password) {
-    add(PasswordEvent(isLoading: true));
-    password.update();
-    add(PasswordEvent(isLoading: false));
-    init();
+
+  void updatePassword(Password password) async {
+    try {
+      add(PasswordEvent(isLoading: true));
+      password.update();
+      List<Password> passwords = await password.getAll();
+      add(PasswordEvent(
+          isLoading: false, passwords: passwords, updateSuccess: true));
+    } catch (e) {
+      add(PasswordEvent(isLoading: false, updateError: true));
+    }
   }
 
   void filterPasswords(String search) async {

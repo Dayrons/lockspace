@@ -10,6 +10,7 @@ import 'package:app/widgets/switch_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:app/widgets/input.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class RegisterPasswordPage extends StatefulWidget {
   @override
@@ -35,124 +36,151 @@ class _RegisterPasswordPageState extends State<RegisterPasswordPage> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Color(0XFF1c1d22),
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
         backgroundColor: Color(0XFF1c1d22),
-        elevation: 0,
-        leading: IconButton(
-          iconSize: 40,
-          icon: Icon(
-            Icons.navigate_before,
-            color: const Color(0XFF2CDA9D),
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          backgroundColor: Color(0XFF1c1d22),
+          elevation: 0,
+          leading: IconButton(
+            iconSize: 40,
+            icon: Icon(
+              Icons.navigate_before,
+              color: const Color(0XFF2CDA9D),
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
           ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
         ),
-      ),
-      body: Container(
-          padding: EdgeInsets.symmetric(
-              horizontal: getHorizontalSpace(context), vertical: 20.00),
-          child: Stack(
-            children: [
-              Container(
-                height: size.height * 0.75,
-                child: SingleChildScrollView(
-                    physics: BouncingScrollPhysics(),
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Input(
-                            input: 'title',
-                            texto: "Titulo",
-                            validacion: true,
-                            controller: _textTitleController,
-                            onChange: (value, input) {
-                              // _validate();
-                              registerValues[input] = value;
-                            },
-                          ),
-                          Input(
-                              input: 'password',
-                              texto: "Contraseña",
-                              validacion: true,
-                              controller: _passwordController,
-                              onChange: (value, input) {
-                                registerValues[input] = value;
-                              }),
-                          SliderWidget(
-                            text: "Cantidad maxima de caracteres",
-                            width: size.width,
-                            input: 'max_length',
-                            onChanged: _onChanged,
-                            value: _values['max_length'],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        body: BlocListener<PasswordBloc, PasswordState>(
+          listener: (context, state) {
+            if (state.registerSuccess) {
+              Fluttertoast.showToast(
+                msg: "Contraseña registrada",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.CENTER,
+                timeInSecForIosWeb: 3,
+                backgroundColor: const Color(detalles),
+                textColor: Colors.white,
+                fontSize: 12,
+              );
+            }
+            if(state.registerError){
+                 Fluttertoast.showToast(
+                msg: "Error al registrar contraseña",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.CENTER,
+                timeInSecForIosWeb: 3,
+                backgroundColor:  Colors.red ,
+                textColor: Colors.white,
+                fontSize: 12,
+              );
+            }
+          },
+          child: Container(
+              padding: EdgeInsets.symmetric(
+                  horizontal: getHorizontalSpace(context), vertical: 20.00),
+              child: Stack(
+                children: [
+                  Container(
+                    height: size.height * 0.75,
+                    child: SingleChildScrollView(
+                        physics: BouncingScrollPhysics(),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              SwitchWidget(
-                                width: size.width * 0.42,
-                                text: "Caracteres",
+                              Input(
+                                input: 'title',
+                                texto: "Titulo",
+                                validacion: true,
+                                controller: _textTitleController,
+                                onChange: (value, input) {
+                                  // _validate();
+                                  registerValues[input] = value;
+                                },
+                              ),
+                              Input(
+                                  input: 'password',
+                                  texto: "Contraseña",
+                                  validacion: true,
+                                  controller: _passwordController,
+                                  onChange: (value, input) {
+                                    registerValues[input] = value;
+                                  }),
+                              SliderWidget(
+                                text: "Cantidad maxima de caracteres",
+                                width: size.width,
+                                input: 'max_length',
                                 onChanged: _onChanged,
-                                input: 'special_characters',
-                                value: _values['special_characters'],
+                                value: _values['max_length'],
                               ),
-                              SwitchWidget(
-                                width: size.width * 0.42,
-                                text: "Mayusculas",
-                                onChanged: _onChanged,
-                                input: 'capital_letters',
-                                value: _values['capital_letters'],
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  SwitchWidget(
+                                    width: size.width * 0.42,
+                                    text: "Caracteres",
+                                    onChanged: _onChanged,
+                                    input: 'special_characters',
+                                    value: _values['special_characters'],
+                                  ),
+                                  SwitchWidget(
+                                    width: size.width * 0.42,
+                                    text: "Mayusculas",
+                                    onChanged: _onChanged,
+                                    input: 'capital_letters',
+                                    value: _values['capital_letters'],
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              SwitchWidget(
-                                width: size.width * 0.42,
-                                text: "Numeros",
-                                onChanged: _onChanged,
-                                input: 'numbers',
-                                value: _values['numbers'],
+                              SizedBox(
+                                height: 10,
                               ),
-                              Boton(
-                                width: size.width * 0.42,
-                                color: Color(0XFF2CDA9D),
-                                textColor: Colors.white,
-                                texto: "Generar",
-                                onTap: _generatePassword,
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  SwitchWidget(
+                                    width: size.width * 0.42,
+                                    text: "Numeros",
+                                    onChanged: _onChanged,
+                                    input: 'numbers',
+                                    value: _values['numbers'],
+                                  ),
+                                  Boton(
+                                    width: size.width * 0.42,
+                                    color: Color(0XFF2CDA9D),
+                                    textColor: Colors.white,
+                                    texto: "Generar",
+                                    onTap: _generatePassword,
+                                  ),
+                                ],
                               ),
-                            ],
+                              SizedBox(
+                                height: 10,
+                              ),
+                            ])),
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Boton(
+                      width: size.width,
+                      texto: "Registrar contraseña",
+                      onTap: () {
+                        BlocProvider.of<PasswordBloc>(context).addPassword(
+                          Password(
+                            title: registerValues['title'],
+                            password: registerValues['password'],
                           ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                        ])),
-              ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Boton(
-                  width: size.width,
-                  texto: "Registrar contraseña",
-                  onTap: () {
-                    BlocProvider.of<PasswordBloc>(context).addPassword(
-                      Password(
-                        title:registerValues['title'],
-                        password: registerValues['password'],
-                      ),
-                    );
-                  },
-                ),
-              )
-            ],
-          )),
-    );
+                        );
+                      },
+                    ),
+                  )
+                ],
+              )),
+        ));
   }
 
   void _validar(valor, input) {}

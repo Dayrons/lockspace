@@ -81,7 +81,7 @@ class PasswordWidget extends StatelessWidget {
                     Icons.delete_outline,
                   ),
                   onPressed: () => _auth(context, () {
-                    _viewPassword(context);
+                    _deletePassword(context);
                   }),
                 ),
               ],

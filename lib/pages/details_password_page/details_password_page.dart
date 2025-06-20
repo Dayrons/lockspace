@@ -29,15 +29,16 @@ class _DetailPasswordPageState extends State<DetailPasswordPage> {
     'special_characters': false,
     'max_length': 8.00,
   };
-   final Map newPasswordValues = {};
+  final Map newPasswordValues = {};
   @override
   void initState() {
-    _textTitleController.text = BlocProvider.of<PasswordBloc>(context).state.password.title;
-    newPasswordValues['password'] = BlocProvider.of<PasswordBloc>(context).state.password.passwordDecrypt();
+    _textTitleController.text =
+        BlocProvider.of<PasswordBloc>(context).state.password.title;
+    newPasswordValues['password'] =
+        BlocProvider.of<PasswordBloc>(context).state.password.passwordDecrypt();
     super.initState();
   }
 
- 
   bool validate = false;
   bool _isQrVisible = false;
 
@@ -49,209 +50,225 @@ class _DetailPasswordPageState extends State<DetailPasswordPage> {
       builder: (context, state) {
         password = state.password;
         return Scaffold(
-          backgroundColor: Color(0XFF1c1d22),
-          resizeToAvoidBottomInset: false,
-          appBar: AppBar(
             backgroundColor: Color(0XFF1c1d22),
-            elevation: 0,
-            title: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(),
-                  Container(
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 10,
-                          height: 10,
-                          margin: EdgeInsets.only(right: 10),
-                          decoration: BoxDecoration(
-                            color: _detailDateTime(password)["color"],
-                            shape: BoxShape.circle,
-                          ),
-                        ),
-                        Text(
-                          "Actualizacion hace: ${_detailDateTime(password)["date"]} a las ${_detailDateTime(password)["hour"]}",
-                          style: TextStyle(
+            resizeToAvoidBottomInset: false,
+            appBar: AppBar(
+              backgroundColor: Color(0XFF1c1d22),
+              elevation: 0,
+              title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(),
+                    Container(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 10,
+                            height: 10,
+                            margin: EdgeInsets.only(right: 10),
+                            decoration: BoxDecoration(
                               color: _detailDateTime(password)["color"],
-                              fontSize: 12),
-                        )
-                      ],
-                    ),
-                  )
-                ]),
-            leading: IconButton(
-              iconSize: 40,
-              icon: Icon(
-                Icons.navigate_before,
-                color: const Color(0XFF2CDA9D),
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                          Text(
+                            "Actualizacion hace: ${_detailDateTime(password)["date"]} a las ${_detailDateTime(password)["hour"]}",
+                            style: TextStyle(
+                                color: _detailDateTime(password)["color"],
+                                fontSize: 12),
+                          )
+                        ],
+                      ),
+                    )
+                  ]),
+              leading: IconButton(
+                iconSize: 40,
+                icon: Icon(
+                  Icons.navigate_before,
+                  color: const Color(0XFF2CDA9D),
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
               ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
             ),
-          ),
-          body: Container(
-              padding: EdgeInsets.symmetric(
-                  horizontal: getHorizontalSpace(context), vertical: 20.00),
-              child: Stack(
-                children: [
-                  Container(
-                    height: size.height * 0.75,
-                    child: SingleChildScrollView(
-                        physics: BouncingScrollPhysics(),
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    _isQrVisible = !_isQrVisible;
-                                  });
-                                },
-                                child: Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    Container(
-                                      padding: EdgeInsets.all(5),
-                                      decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
-                                      child: QrImage(
-                                        data: password
-                                            .passwordDecrypt(),
-                                        backgroundColor: Colors.white,
-                                        version: QrVersions.auto,
-                                        size: 160.0,
-                                      ),
-                                    ),
-                                    if (!_isQrVisible)
-                                      Container(
-                                        width: 160.0,
-                                        height: 160.0,
-                                        decoration: BoxDecoration(
-                                          color: Colors.black.withOpacity(0.6),
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                        child: Center(
-                                          child: Icon(
-                                            Icons.visibility,
-                                            color: Colors.white,
-                                            size: 40,
+            body: BlocListener<PasswordBloc, PasswordState>(
+              listener: (context, state) {
+                if (state.updateSuccess) {
+                  Fluttertoast.showToast(
+                    msg: "Contraseña actualizada",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIosWeb: 3,
+                    backgroundColor: const Color(detalles),
+                    textColor: Colors.white,
+                    fontSize: 12,
+                  );
+                }
+                if (state.updateError) {
+                  Fluttertoast.showToast(
+                    msg: "Error al actualziar contraseña",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIosWeb: 3,
+                    backgroundColor: Colors.red,
+                    textColor: Colors.white,
+                    fontSize: 12,
+                  );
+                }
+              },
+              child: Container(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: getHorizontalSpace(context), vertical: 20.00),
+                  child: Stack(
+                    children: [
+                      Container(
+                        height: size.height * 0.75,
+                        child: SingleChildScrollView(
+                            physics: BouncingScrollPhysics(),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        _isQrVisible = !_isQrVisible;
+                                      });
+                                    },
+                                    child: Stack(
+                                      alignment: Alignment.center,
+                                      children: [
+                                        Container(
+                                          padding: EdgeInsets.all(5),
+                                          decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          child: QrImage(
+                                            data: password.passwordDecrypt(),
+                                            backgroundColor: Colors.white,
+                                            version: QrVersions.auto,
+                                            size: 160.0,
                                           ),
                                         ),
+                                        if (!_isQrVisible)
+                                          Container(
+                                            width: 160.0,
+                                            height: 160.0,
+                                            decoration: BoxDecoration(
+                                              color:
+                                                  Colors.black.withOpacity(0.6),
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            child: Center(
+                                              child: Icon(
+                                                Icons.visibility,
+                                                color: Colors.white,
+                                                size: 40,
+                                              ),
+                                            ),
+                                          ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 20.00,
+                                  ),
+                                  Input(
+                                    input: 'title',
+                                    texto: "Titulo",
+                                    validacion: true,
+                                    controller: _textTitleController,
+                                    onChange: (value, input) {
+                                      // _validate();
+                                      newPasswordValues[input] = value;
+                                    },
+                                  ),
+                                  Input(
+                                      input: 'password',
+                                      texto: "Nueva contraseña",
+                                      validacion: true,
+                                      controller: _passwordController,
+                                      onChange: (value, input) {
+                                        // _validate();
+                                        newPasswordValues[input] = value;
+                                      }),
+                                  SliderWidget(
+                                    text: "Cantidad maxima de caracteres",
+                                    width: size.width,
+                                    input: 'max_length',
+                                    onChanged: _onChanged,
+                                    value: _values['max_length'],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      SwitchWidget(
+                                        width: size.width * 0.42,
+                                        text: "Caracteres",
+                                        onChanged: _onChanged,
+                                        input: 'special_characters',
+                                        value: _values['special_characters'],
                                       ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                height: 20.00,
-                              ),
-                              Input(
-                                input: 'title',
-                                texto: "Titulo",
-                                validacion: true,
-                                controller: _textTitleController,
-                                onChange: (value, input) {
-                                  // _validate();
-                                  newPasswordValues[input] = value;
-                                },
-                              ),
-                              Input(
-                                  input: 'password',
-                                  texto: "Nueva contraseña",
-                                  validacion: true,
-                                  controller: _passwordController,
-                                  onChange: (value, input) {
-                                    // _validate();
-                                    newPasswordValues[input] = value;
-                                  }),
-                              SliderWidget(
-                                text: "Cantidad maxima de caracteres",
-                                width: size.width,
-                                input: 'max_length',
-                                onChanged: _onChanged,
-                                value: _values['max_length'],
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  SwitchWidget(
-                                    width: size.width * 0.42,
-                                    text: "Caracteres",
-                                    onChanged: _onChanged,
-                                    input: 'special_characters',
-                                    value: _values['special_characters'],
+                                      SwitchWidget(
+                                        width: size.width * 0.42,
+                                        text: "Mayusculas",
+                                        onChanged: _onChanged,
+                                        input: 'capital_letters',
+                                        value: _values['capital_letters'],
+                                      ),
+                                    ],
                                   ),
-                                  SwitchWidget(
-                                    width: size.width * 0.42,
-                                    text: "Mayusculas",
-                                    onChanged: _onChanged,
-                                    input: 'capital_letters',
-                                    value: _values['capital_letters'],
+                                  SizedBox(
+                                    height: 10,
                                   ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  SwitchWidget(
-                                    width: size.width * 0.42,
-                                    text: "Numeros",
-                                    onChanged: _onChanged,
-                                    input: 'numbers',
-                                    value: _values['numbers'],
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      SwitchWidget(
+                                        width: size.width * 0.42,
+                                        text: "Numeros",
+                                        onChanged: _onChanged,
+                                        input: 'numbers',
+                                        value: _values['numbers'],
+                                      ),
+                                      Boton(
+                                        width: size.width * 0.42,
+                                        color: Color(0XFF2CDA9D),
+                                        textColor: Colors.white,
+                                        texto: "Generar",
+                                        onTap: _generatePassword,
+                                      ),
+                                    ],
                                   ),
-                                  Boton(
-                                    width: size.width * 0.42,
-                                    color: Color(0XFF2CDA9D),
-                                    textColor: Colors.white,
-                                    texto: "Generar",
-                                    onTap: _generatePassword,
+                                  SizedBox(
+                                    height: 10,
                                   ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                            ])),
-                  ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Boton(
-                        width: size.width,
-                        texto: "Actualizar contraseña",
-                        onTap: () {
-                          newPasswordValues['id'] = password.id;
-                          BlocProvider.of<PasswordBloc>(context)
-                              .updatePassword(Password(
-                              id: newPasswordValues['id'],
-                              title: newPasswordValues['title'],
-                              password: newPasswordValues['password'] ,
+                                ])),
+                      ),
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Boton(
+                            width: size.width,
+                            texto: "Actualizar contraseña",
+                            onTap: () {
+                              newPasswordValues['id'] = password.id;
+                              BlocProvider.of<PasswordBloc>(context)
+                                  .updatePassword(Password(
+                                id: newPasswordValues['id'],
+                                title: newPasswordValues['title'],
+                                password: newPasswordValues['password'],
                               ));
-                          Fluttertoast.showToast(
-                            msg: "Contraseña actualizada",
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.CENTER,
-                            timeInSecForIosWeb: 3,
-                            backgroundColor: const Color(detalles),
-                            textColor: Colors.white,
-                            fontSize: 12,
-                          );
-                        }),
-                  )
-                ],
-              )),
-        );
+                            }),
+                      )
+                    ],
+                  )),
+            ));
         ;
       },
     );
