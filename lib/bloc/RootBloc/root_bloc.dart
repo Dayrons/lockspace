@@ -16,7 +16,7 @@ class RootBloc extends Bloc<RootEvent, RootState> {
     if (event is Init) {
       User user = User();
 
-      List<User> users = await user.getAll();
+      List<User> users = await user.get();
 
       SharedPreferences prefs = await SharedPreferences.getInstance();
 

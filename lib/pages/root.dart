@@ -1,7 +1,7 @@
 import 'package:app/bloc/RootBloc/root_bloc.dart';
 import 'package:app/pages/home_page/home_page.dart';
 // import 'package:app/pages/inicio/pagina_usuario.dart';
-import 'package:app/pages/login/pagina_login.dart';
+import 'package:app/pages/sign_in_page/sign_in_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,12 +33,12 @@ class _RootState extends State<Root> {
         } else if (state is SesionActiva) {
           Navigator.of(context).pushAndRemoveUntil(
               CupertinoPageRoute(
-                  builder: (BuildContext context) => PaginaInicio()),
+                  builder: (BuildContext context) => HomePage()),
               (Route<dynamic> route) => false);
         } else if (state is SesionInactiva) {
           Navigator.of(context).pushAndRemoveUntil(
               CupertinoPageRoute(
-                  builder: (BuildContext context) => PaginaLogin()),
+                  builder: (BuildContext context) => SignInPage()),
               (Route<dynamic> route) => false);
         }
       },

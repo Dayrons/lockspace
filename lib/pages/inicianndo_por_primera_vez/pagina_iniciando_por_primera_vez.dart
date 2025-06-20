@@ -1,4 +1,4 @@
-import 'package:app/pages/registro_usuario/pagina_registro.dart';
+import 'package:app/pages/sign_up_page/sign_up_page.dart';
 import 'package:app/utils/ui.dart';
 import 'package:app/widgets/input.dart';
 import 'package:flutter/cupertino.dart';
@@ -99,7 +99,7 @@ class _PaginaIniciandoPorPrimeravezState
                               Navigator.of(context).pushAndRemoveUntil(
                                   CupertinoPageRoute(
                                       builder: (BuildContext context) =>
-                                          PaginaRegistroUsuario()),
+                                          SignUpPage()),
                                   (Route<dynamic> route) => false);
                             },
                             child: Text(

@@ -4,6 +4,7 @@ import 'package:app/models/Password.dart';
 import 'package:app/utils/functions.dart';
 
 import 'package:app/utils/ui.dart';
+import 'package:app/widgets/%20expiration_selector_widget.dart';
 import 'package:app/widgets/boton.dart';
 import 'package:app/widgets/slider_widget.dart';
 import 'package:app/widgets/switch_widget.dart';
@@ -20,12 +21,15 @@ class RegisterPasswordPage extends StatefulWidget {
 class _RegisterPasswordPageState extends State<RegisterPasswordPage> {
   final TextEditingController _textTitleController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _expirationController = TextEditingController();
 
   final Map<String, dynamic> _values = {
     'capital_letters': false,
     'numbers': false,
     'special_characters': false,
     'max_length': 8.00,
+    'expiration_unit': 'never',
+    'expiration': 0,
   };
 
   final Map<String, dynamic> registerValues = {};
@@ -51,6 +55,10 @@ class _RegisterPasswordPageState extends State<RegisterPasswordPage> {
               Navigator.pop(context);
             },
           ),
+          title: Text(
+            "Nueva contraseña",
+            style: TextStyle(fontSize: 18),
+          ),
         ),
         body: BlocListener<PasswordBloc, PasswordState>(
           listener: (context, state) {
@@ -65,13 +73,13 @@ class _RegisterPasswordPageState extends State<RegisterPasswordPage> {
                 fontSize: 12,
               );
             }
-            if(state.registerError){
-                 Fluttertoast.showToast(
+            if (state.registerError) {
+              Fluttertoast.showToast(
                 msg: "Error al registrar contraseña",
                 toastLength: Toast.LENGTH_SHORT,
                 gravity: ToastGravity.CENTER,
                 timeInSecForIosWeb: 3,
-                backgroundColor:  Colors.red ,
+                backgroundColor: Colors.red,
                 textColor: Colors.white,
                 fontSize: 12,
               );
@@ -108,6 +116,17 @@ class _RegisterPasswordPageState extends State<RegisterPasswordPage> {
                                   onChange: (value, input) {
                                     registerValues[input] = value;
                                   }),
+                              SizedBox(height: 16),
+                              ExpirationSelectorWidget(
+                                  text: "Expiración",
+                                  valueExpiration: _values["expiration"],
+                                  valueExpirationUnit:
+                                      _values["expiration_unit"],
+                                  inputExpiration: "expiration",
+                                  inputExpirationUnit: "expiration_unit",
+                                  onChanged: _onChanged,
+                                  controller: _expirationController),
+                              SizedBox(height: 16),
                               SliderWidget(
                                 text: "Cantidad maxima de caracteres",
                                 width: size.width,

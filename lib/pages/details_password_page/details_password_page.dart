@@ -147,7 +147,7 @@ class _DetailPasswordPageState extends State<DetailPasswordPage> {
                                               borderRadius:
                                                   BorderRadius.circular(10)),
                                           child: QrImage(
-                                            data: password.passwordDecrypt(),
+                                            data: password.password,
                                             backgroundColor: Colors.white,
                                             version: QrVersions.auto,
                                             size: 160.0,
@@ -159,7 +159,7 @@ class _DetailPasswordPageState extends State<DetailPasswordPage> {
                                             height: 160.0,
                                             decoration: BoxDecoration(
                                               color:
-                                                  Colors.black.withOpacity(0.6),
+                                                  Colors.black.withOpacity(0.95),
                                               borderRadius:
                                                   BorderRadius.circular(10),
                                             ),

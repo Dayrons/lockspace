@@ -1,30 +1,21 @@
-import 'package:app/bloc/AuthBloc/login_bloc.dart';
+import 'package:app/bloc/AuthBloc/auth_bloc.dart';
 import 'package:app/pages/home_page/home_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:app/pages/login/widgets/Input.dart';
-import 'package:app/pages/login/widgets/boton.dart';
+import 'package:app/pages/sign_in_page/widgets/Input.dart';
+import 'package:app/pages/sign_in_page/widgets/boton.dart';
 import 'package:flutter/material.dart';
 
 //QUE MUESTRE UNA PANTALLA LA PRIMERA VEZ QUE SE INICIE LA APP
 //https://es.stackoverflow.com/questions/3243/saber-cuando-la-app-es-lanzada-por-primera-vez-en-android
 
-class PaginaLogin extends StatelessWidget {
+class SignInPage extends StatelessWidget {
   String password;
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<LoginBloc, LoginState>(
-      listener: (context, state) {
-        if (state is Logeado) {
-          Navigator.of(context).pushAndRemoveUntil(
-              CupertinoPageRoute(
-                  builder: (BuildContext context) => PaginaInicio()),
-              (Route<dynamic> route) => false);
-        }
-      },
-      child: Scaffold(
+    return Scaffold(
         backgroundColor: Color(0XFF1c1d22),
         body: Center(
           child: Form(
@@ -47,23 +38,26 @@ class PaginaLogin extends StatelessWidget {
                 SizedBox(
                   height: 20.00,
                 ),
+                  Input(
+                  text: "Usuario",
+                  changePassword: changePassword,
+                ),
                 Input(
                   text: "Contraseña",
                   changePassword: changePassword,
                 ),
                 Boton(
-                  onTap: siging,
+                  onTap: _signIn,
                 ),
               ],
             ),
           ),
         ),
-      ),
-    );
+      );
   }
 
-  void siging(context) {
-    BlocProvider.of<LoginBloc>(context).add(Sigin(password: password));
+  void _signIn(context) {
+  //  BlocProvider.of<AuthBloc>(context).signIn();
   }
 
   void changePassword(text) {

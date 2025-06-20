@@ -5,7 +5,7 @@ import 'package:app/pages/home_page/widgets/bottom_bar.dart';
 import 'package:flutter/material.dart';
 
 
-class PaginaInicio extends StatelessWidget {
+class HomePage extends StatelessWidget {
   final PageController controller = PageController(initialPage: 1);
 
   @override

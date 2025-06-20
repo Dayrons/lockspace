@@ -1,7 +1,6 @@
-import 'package:app/bloc/AuthBloc/login_bloc.dart';
+import 'package:app/bloc/AuthBloc/auth_bloc.dart';
 import 'package:app/bloc/PasswordBloc/password_bloc.dart';
 import 'package:app/bloc/RootBloc/root_bloc.dart';
-import 'package:app/pages/registro_usuario/RegistrarUsuarioBloc/registrarusuario_bloc.dart';
 import 'package:app/pages/root.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,11 +14,8 @@ class AppState extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<LoginBloc>(
-          create: (context) => LoginBloc(),
-        ),
-        BlocProvider<RegistrarusuarioBloc>(
-          create: (context) => RegistrarusuarioBloc(),
+        BlocProvider<AuthBloc>(
+          create: (context) => AuthBloc(),
         ),
         BlocProvider<RootBloc>(
           create: (context) => RootBloc(),

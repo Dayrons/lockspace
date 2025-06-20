@@ -1,61 +1,61 @@
 import 'package:app/db.dart';
+import 'package:app/models/Password.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:sqflite/sqflite.dart';
+import 'package:bcrypt/bcrypt.dart';
 
 class User {
+  int id;
   final String name;
   final String password;
+  List<Password> passwords;
 
-  //me quede probando encriptado y desencriptado con este modo
-  // For Fernet Encryption/Decryption
-  static final keyFernet =
-      encrypt.Key.fromUtf8('TechWithVPIsBestTechWithVPIsBest');
-  // if you need to use the ttl feature, you'll need to use APIs in the algorithm itself
-  static final fernet = encrypt.Fernet(keyFernet);
-
-  static final encrypterFernet = encrypt.Encrypter(fernet);
+  encrypt.Encrypter encrypterFernet;
 
   User({this.name, this.password});
 
   Map<String, dynamic> toMap() {
     return {
       'name': this.name,
-      'password': encriptar(this.password),
+      'password': this.password,
     };
+  }
+
+  List<Password> _getPasswords() {
+    return [];
   }
 
   Future<void> create() async {
     Database db = await DB().conexion();
 
+    String hash = BCrypt.hashpw(this.password, BCrypt.gensalt());
     await db.insert(
       'users',
-      this.toMap(),
+      {
+        "name": this.name,
+        "password": hash,
+      },
     );
   }
 
-  Future getAll() async {
+  
+
+
+  Future<List<User>> get() async {
     Database db = await DB().conexion();
-    List<Map<String, dynamic>> results = await db.query('users');
+    List<Map<String, dynamic>> results = await db.query(
+      'users',
+      where: 'name = ?',
+      whereArgs: [this.name],
+    );
     List<User> users = List.generate(results.length, (i) {
       return User(
-        name: results[i]["name"], password: results[i]["password"]);
+        name: results[i]["name"],
+        password: results[i]["password"],
+      );
     });
 
     return users;
-  }
-
-  encriptar(password) {
-    final encrypted = encrypterFernet.encrypt(password);
-
-    // print(fernet.extractTimestamp(encrypted.bytes));
-    // unix timestamp
-    return encrypted.base64;
-  }
-
-  decryptFernet(password) {
-    encrypterFernet.decrypt64(password);
-
-    return encrypterFernet.decrypt64(password);
   }
 
   Future<void> clear() async {
