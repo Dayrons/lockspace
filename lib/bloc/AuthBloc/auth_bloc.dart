@@ -22,22 +22,20 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           isError: event.isError,
           errorMessage: event.errorMessage,
           isLoading: event.isLoading,
-          
         );
       }
-      if(event.isSignUp){
-         yield AuthSignUpState(
+      if (event.isSignUp) {
+        yield AuthSignUpState(
           isError: event.isError,
           errorMessage: event.errorMessage,
           isLoading: event.isLoading,
-          
         );
       }
     }
   }
 
   signUp(Map values) async {
-      add(AuthEvent(isSignUp: true, isLoading: true));
+    add(AuthEvent(isSignUp: true, isLoading: true));
     try {
       // con el injectable en un solo lugar llamaria al metodo init y le pasaria el  _userPreferences a todos los bloc necesarios
       await _userPreferences.init();
@@ -45,19 +43,26 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       await user.create();
       await _userPreferences.setUser(user.toMap());
       add(AuthEvent(isSignUp: true, isLoading: false, isError: false));
-
     } catch (e) {
-      add(AuthEvent(isSignUp: true, isLoading: false, isError: true, errorMessage: "$e"));
-
+      add(AuthEvent(
+          isSignUp: true, isLoading: false, isError: true, errorMessage: "$e"));
     }
   }
 
-  signIn(Map values) {
-     final user =  User(name: values["name"], password:values["password"]);
-
-     print(user);
-
-      // return BCrypt.checkpw(passwordPlano, hashGuardado);
-   
+  signIn(Map values) async {
+    add(AuthEvent(isSignIn: true, isLoading: true));
+    try {
+      User user = User(name: values["name"], password: values["password"]);
+      user = await user.get();
+      if (user != null) {
+        await _userPreferences.setUser(user.toMap());
+        add(AuthEvent(isSignIn: true, isLoading: false, isError: false));
+      }else{
+        add(AuthEvent(isSignIn: true, isLoading: false, isError: true, errorMessage: "Usuario o contraseña invalida"));
+      }
+    } catch (e) {
+        add(AuthEvent(isSignIn: true, isLoading: false, isError: true, errorMessage: "$e"));
+      
+    }
   }
 }
