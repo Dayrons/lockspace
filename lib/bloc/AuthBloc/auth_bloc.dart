@@ -42,6 +42,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final user = User(name: values["name"], password: values["password"]);
       await user.create();
       await _userPreferences.setUser(user.toMap());
+    
+      await _userPreferences.setSesion(values["sesion"]);
+
       add(AuthEvent(isSignUp: true, isLoading: false, isError: false));
     } catch (e) {
       add(AuthEvent(
@@ -56,13 +59,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       user = await user.get();
       if (user != null) {
         await _userPreferences.setUser(user.toMap());
+        await _userPreferences.setSesion(values["sesion"]);
         add(AuthEvent(isSignIn: true, isLoading: false, isError: false));
-      }else{
-        add(AuthEvent(isSignIn: true, isLoading: false, isError: true, errorMessage: "Usuario o contraseña invalida"));
+      } else {
+        add(AuthEvent(
+            isSignIn: true,
+            isLoading: false,
+            isError: true,
+            errorMessage: "Usuario o contraseña invalida"));
       }
     } catch (e) {
-        add(AuthEvent(isSignIn: true, isLoading: false, isError: true, errorMessage: "$e"));
-      
+      add(AuthEvent(
+          isSignIn: true, isLoading: false, isError: true, errorMessage: "$e"));
     }
   }
 }

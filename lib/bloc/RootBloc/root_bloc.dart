@@ -19,12 +19,12 @@ class RootBloc extends Bloc<RootEvent, RootState> {
       await _userPreferences.init();
       final User user =_userPreferences.getUser();
 
- 
-
-      if (user.id == null) {
+      final sesionIsActive = await _userPreferences.getSesion();
+  
+      if (user?.id == null) {
         yield IniciandoPorPrimeraVez();
       } else {
-        if (false) {
+        if (sesionIsActive) {
           yield SesionActiva();
         } else {
           yield SesionInactiva();

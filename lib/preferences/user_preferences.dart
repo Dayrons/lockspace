@@ -21,6 +21,13 @@ class UserSharedPrefs {
     final jsonString = jsonEncode(user);
     await _prefs.setString('user', jsonString);
   }
+  Future<void> setSesion(bool sesion) async {
+    await _prefs.setBool('sesion', sesion);
+  }
+    Future<bool> getSesion() async {
+      // esta trayendo null
+    return  _prefs.getBool('sesion');
+  }
 
   User getUser() {
     final jsonString = _prefs?.getString('user');

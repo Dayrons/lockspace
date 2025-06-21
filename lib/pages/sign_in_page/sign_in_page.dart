@@ -2,6 +2,7 @@ import 'package:app/bloc/AuthBloc/auth_bloc.dart';
 import 'package:app/pages/home_page/home_page.dart';
 import 'package:app/utils/ui.dart';
 import 'package:app/widgets/boton.dart';
+import 'package:app/widgets/check.dart';
 import 'package:app/widgets/input.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +30,6 @@ class _SignInPageState extends State<SignInPage> {
       backgroundColor: Color(0XFF1c1d22),
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
-   
           if (state is AuthSignInState) {
             if (state.isLoading == false && !state.isError) {
               Navigator.of(context).pushAndRemoveUntil(
@@ -37,17 +37,16 @@ class _SignInPageState extends State<SignInPage> {
                       builder: (BuildContext context) => HomePage()),
                   (Route<dynamic> route) => false);
             }
-            if(state.isError){
-               Fluttertoast.showToast(
-                    msg: state.errorMessage,
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.CENTER,
-                    timeInSecForIosWeb: 3,
-                    backgroundColor: Colors.red,
-                    textColor: Colors.white,
-                    fontSize: 12,
-                  );
-
+            if (state.isError) {
+              Fluttertoast.showToast(
+                msg: state.errorMessage,
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.CENTER,
+                timeInSecForIosWeb: 3,
+                backgroundColor: Colors.red,
+                textColor: Colors.white,
+                fontSize: 12,
+              );
             }
           }
         },
@@ -87,13 +86,17 @@ class _SignInPageState extends State<SignInPage> {
                     validacion: true,
                     onChange: _onChanged,
                   ),
+                  Check(
+                    texto: 'Mantener sesion activa',
+                    input: 'sesion',
+                    value: values['sesion'],
+                    onChanged: _onChanged,
+                  ),
                   BlocBuilder<AuthBloc, AuthState>(
                     builder: (context, state) {
-                      if(state is AuthSignInState){
-                        if(state.isLoading){
-
+                      if (state is AuthSignInState) {
+                        if (state.isLoading) {
                           return CircularProgressIndicator();
-
                         }
                       }
                       return Boton(
