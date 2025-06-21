@@ -12,10 +12,11 @@ class User {
 
   encrypt.Encrypter encrypterFernet;
 
-  User({this.name, this.password});
+  User({this.id,this.name, this.password});
 
   Map<String, dynamic> toMap() {
     return {
+      'id':this.id,
       'name': this.name,
       'password': this.password,
     };
@@ -29,13 +30,14 @@ class User {
     Database db = await DB().conexion();
 
     String hash = BCrypt.hashpw(this.password, BCrypt.gensalt());
-    await db.insert(
+    final int userId = await db.insert(
       'users',
       {
         "name": this.name,
         "password": hash,
       },
     );
+    this.id = userId;
   }
 
   

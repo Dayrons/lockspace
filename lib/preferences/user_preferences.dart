@@ -1,11 +1,40 @@
+import 'package:app/models/User.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 class UserSharedPrefs {
-  static const String _tokenKey = 'token';
-  static const String _tokenExpiresIn = 'expires_in';
+  static final UserSharedPrefs _instance = UserSharedPrefs._internal();
 
+  factory UserSharedPrefs() {
+    return _instance;
+  }
 
-  
+  UserSharedPrefs._internal();
 
+  SharedPreferences _prefs;
+
+  Future<void> init() async {
+    _prefs = await SharedPreferences.getInstance();
+  }
+
+  Future<void> setUser(Map<String, dynamic> user) async {
+    final jsonString = jsonEncode(user);
+    await _prefs.setString('user', jsonString);
+  }
+
+  User getUser() {
+    final jsonString = _prefs?.getString('user');
+    if (jsonString == null) return null;
+    final Map userDecode = jsonDecode(jsonString) as Map<String, dynamic>;
+    print("userdecode $userDecode");
+    return User(
+      id:userDecode["id"],
+      name: userDecode["name"],
+      password: userDecode["password"]
+    );
+  }
+
+  Future<void> clearUser() async {
+    await _prefs.remove('user');
+  }
 }

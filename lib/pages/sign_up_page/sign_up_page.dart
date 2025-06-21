@@ -1,5 +1,5 @@
 import 'package:app/bloc/AuthBloc/auth_bloc.dart';
-import 'package:app/models/Usuario.dart';
+import 'package:app/models/User.dart';
 import 'package:app/pages/home_page/home_page.dart';
 import 'package:app/utils/ui.dart';
 import 'package:app/widgets/boton.dart';
@@ -16,7 +16,7 @@ class SignUpPage extends StatefulWidget {
 
 class _SignUpPageState extends State<SignUpPage> {
   final Map values = {
-    'username': '',
+    'name': '',
     'password': '',
     'sesion': false,
   };
@@ -63,8 +63,8 @@ class _SignUpPageState extends State<SignUpPage> {
               ),
               Input(
                 texto: 'Nombre de usuario',
-                input: 'username',
-                obscureText: true,
+                input: 'name',
+                obscureText: false,
                 validacion: true,
                 onChange: _onChanged,
               ),

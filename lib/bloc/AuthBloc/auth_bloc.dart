@@ -1,5 +1,6 @@
 import 'package:app/bloc/PasswordBloc/password_bloc.dart';
-import 'package:app/models/Usuario.dart';
+import 'package:app/models/User.dart';
+import 'package:app/preferences/user_preferences.dart';
 import 'package:bcrypt/bcrypt.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
@@ -9,6 +10,7 @@ part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc() : super(AuthInitial());
+  final _userPreferences = UserSharedPrefs();
 
   @override
   Stream<AuthState> mapEventToState(
@@ -37,9 +39,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   signUp(Map values) async {
       add(AuthEvent(isSignUp: true, isLoading: true));
     try {
-      
-      final user = User(name: values["username"], password: values["password"]);
+      // con el injectable en un solo lugar llamaria al metodo init y le pasaria el  _userPreferences a todos los bloc necesarios
+      await _userPreferences.init();
+      final user = User(name: values["name"], password: values["password"]);
       await user.create();
+      await _userPreferences.setUser(user.toMap());
       add(AuthEvent(isSignUp: true, isLoading: false, isError: false));
 
     } catch (e) {
@@ -49,7 +53,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   signIn(Map values) {
-     final user =  User(name: values["username"], password:values["password"]);
+     final user =  User(name: values["name"], password:values["password"]);
 
      print(user);
 

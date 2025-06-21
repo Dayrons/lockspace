@@ -74,13 +74,13 @@ class _ScannerSyncPageState extends State<ScannerSyncPage> {
     Vibration.vibrate(duration: 150);
     final jwtDecode = JwtDecoder.decode(jwt);
 
-    // final xx = test(jwtDecode["username"], 'secretkey:hapilyeverafter1234567');
+    // final xx = test(jwtDecode["name"], 'secretkey:hapilyeverafter1234567');
 
     final data = await _getPassowrds();
 
     print("Datos a enviar: $data");
     FTPConnect ftpConnect = FTPConnect(jwtDecode["host"],
-        port: 2121, user: jwtDecode["username"], pass: jwtDecode["password"]);
+        port: 2121, user: jwtDecode["name"], pass: jwtDecode["password"]);
     final path = await _localPath;
     File file = File('$path/password.txt');
     file.writeAsString(json.encode(data));

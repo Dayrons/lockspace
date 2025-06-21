@@ -1,4 +1,5 @@
-import 'package:app/models/Usuario.dart';
+import 'package:app/models/User.dart';
+import 'package:app/preferences/user_preferences.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -7,6 +8,7 @@ part 'root_event.dart';
 part 'root_state.dart';
 
 class RootBloc extends Bloc<RootEvent, RootState> {
+  final _userPreferences = UserSharedPrefs();
   RootBloc() : super(RootInitial());
 
   @override
@@ -14,16 +16,15 @@ class RootBloc extends Bloc<RootEvent, RootState> {
     RootEvent event,
   ) async* {
     if (event is Init) {
-      User user = User();
+      await _userPreferences.init();
+      final User user =_userPreferences.getUser();
 
-      List<User> users = await user.get();
+ 
 
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-
-      if (!prefs.containsKey('sesion') || users.length == 0) {
+      if (user.id == null) {
         yield IniciandoPorPrimeraVez();
       } else {
-        if (prefs.getBool("sesion")) {
+        if (false) {
           yield SesionActiva();
         } else {
           yield SesionInactiva();
