@@ -12,11 +12,11 @@ class User {
 
   encrypt.Encrypter encrypterFernet;
 
-  User({this.id,this.name, this.password});
+  User({this.id, this.name, this.password});
 
   Map<String, dynamic> toMap() {
     return {
-      'id':this.id,
+      'id': this.id,
       'name': this.name,
       'password': this.password,
     };
@@ -33,22 +33,21 @@ class User {
     final int userId = await db.insert(
       'users',
       {
-        "name": this.name,
+        "name": this.name.toLowerCase(),
         "password": hash,
       },
     );
     this.id = userId;
   }
 
-
   Future<User> get() async {
     Database db = await DB().conexion();
-    List<Map<String, dynamic>> results = await db.query(
-      'users',
-      where: 'name = ?',
-      whereArgs: [this.name],
-      limit: 1
-    );
+    List<Map<String, dynamic>> results = await db.query('users',
+        where: 'name = ?',
+        whereArgs: [
+          this.name.toLowerCase(),
+        ],
+        limit: 1);
 
     List<User> users = List.generate(results.length, (i) {
       return User(
@@ -57,15 +56,14 @@ class User {
         password: results[i]["password"],
       );
     });
-    if(users.length > 0){
-      final hasCheck =BCrypt.checkpw(this.password, users[0].password);
-      if(hasCheck){
+    if (users.length > 0) {
+      final hasCheck = BCrypt.checkpw(this.password, users[0].password);
+      if (hasCheck) {
         return users[0];
       }
-      
     }
 
-    return  null;
+    return null;
   }
 
   Future<void> clear() async {

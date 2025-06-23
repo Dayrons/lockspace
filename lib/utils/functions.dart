@@ -1,6 +1,9 @@
 
 import 'dart:math';
+import 'package:encrypt/encrypt.dart' as encrypt;
 
+import 'package:device_info_plus/device_info_plus.dart';
+import 'dart:io';
 String generarPassword(Map<String, dynamic> values) {
   //https://stackoverflow.com/questions/11674820/how-do-i-generate-random-numbers-in-dart
   //https://api.dart.dev/stable/2.15.1/dart-math/Random-class.html
@@ -117,4 +120,25 @@ String generarPassword(Map<String, dynamic> values) {
   passwordRandom += selectedCharacters.join();
 
   return passwordRandom;
+}
+
+
+Future<String> getDeviceId() async{
+  final deviceInfo = DeviceInfoPlugin();
+    String deviceId = '';
+
+    if (Platform.isAndroid) {
+      final androidInfo = await deviceInfo.androidInfo;
+      deviceId = androidInfo.id;
+    } else if (Platform.isIOS) {
+      final iosInfo = await deviceInfo.iosInfo;
+      deviceId = iosInfo.identifierForVendor;
+    } else {
+      deviceId = 'unsupported_platform';
+    }
+
+  
+    String keyString = deviceId.padRight(32, '0').substring(0, 32);
+   
+    return keyString;
 }

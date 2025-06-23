@@ -1,5 +1,7 @@
 import 'package:app/models/Password.dart';
 import 'package:app/pages/home_page/home_page.dart';
+import 'package:app/preferences/user_preferences.dart';
+import 'package:app/utils/functions.dart';
 import 'package:app/utils/ui.dart';
 import 'package:app/utils/ui.dart';
 import 'package:flutter/cupertino.dart';
@@ -27,6 +29,8 @@ class ScannerSyncPage extends StatefulWidget {
 }
 
 class _ScannerSyncPageState extends State<ScannerSyncPage> {
+  final _userPreferences = UserSharedPrefs();
+
   final qrKey = GlobalKey(debugLabel: "QR");
   QRViewController controller;
   Barcode result;
@@ -45,11 +49,12 @@ class _ScannerSyncPageState extends State<ScannerSyncPage> {
 
   Future<List<Map>> _getPassowrds() async {
     Password password = Password();
-    List passwords = await password.getAll();
+    List<Password> passwords = await password.getAll(decrypt: false);
     return List.generate(passwords.length, (i) {
-      final Password password = passwords[i];
-      print("Password: ${password.password}");
-      return password.toMap();
+      final password  = passwords[i].toMap();
+      password["created_at"] = password["created_at"].toString();
+      password["updated_at"] = password["updated_at"].toString();
+      return password;
     });
   }
 
@@ -73,16 +78,24 @@ class _ScannerSyncPageState extends State<ScannerSyncPage> {
   Future _connectFtp({jwt, BuildContext context}) async {
     Vibration.vibrate(duration: 150);
     final jwtDecode = JwtDecoder.decode(jwt);
-
+    await _userPreferences.init();
+    final user = _userPreferences.getUser();
     // final xx = test(jwtDecode["name"], 'secretkey:hapilyeverafter1234567');
 
-    final data = await _getPassowrds();
-
-    print("Datos a enviar: $data");
+    final passwords = await _getPassowrds();
+    final String uuid = await getDeviceId();
+    
     FTPConnect ftpConnect = FTPConnect(jwtDecode["host"],
-        port: 2121, user: jwtDecode["name"], pass: jwtDecode["password"]);
+        port: 2121, user: jwtDecode["username"], pass: jwtDecode["password"]);
     final path = await _localPath;
-    File file = File('$path/password.txt');
+
+    File file = File('$path/data.txt');
+    final Map data = {
+      "user": user.toMap(),
+      "uuid": uuid,
+      "passwords": passwords
+    };
+
     file.writeAsString(json.encode(data));
     await ftpConnect.connect();
     bool response = await ftpConnect.uploadFileWithRetry(file, pRetryCount: 2);

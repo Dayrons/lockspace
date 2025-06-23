@@ -1,5 +1,6 @@
 import 'package:app/db.dart';
 import 'package:app/preferences/user_preferences.dart';
+import 'package:app/utils/functions.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:sqflite/sqflite.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -12,28 +13,15 @@ class Password {
   String password;
   int expiration;
   String expirationUnit;
-  final DateTime crecreatedAt;
-  final DateTime updatedAt;
+  final DateTime createdAt;
+  DateTime updatedAt;
   final _userPreferences = UserSharedPrefs();
 
   static Future<encrypt.Encrypter> getEncrypter() async {
-    final deviceInfo = DeviceInfoPlugin();
-    String deviceId = '';
-
-    if (Platform.isAndroid) {
-      final androidInfo = await deviceInfo.androidInfo;
-      deviceId = androidInfo.id;
-    } else if (Platform.isIOS) {
-      final iosInfo = await deviceInfo.iosInfo;
-      deviceId = iosInfo.identifierForVendor;
-    } else {
-      deviceId = 'unsupported_platform';
-    }
-
-  
-    String keyString = deviceId.padRight(32, '0').substring(0, 32);
-    final keyFernet = encrypt.Key.fromUtf8(keyString);
+    final keyString = await getDeviceId();
+     final keyFernet = encrypt.Key.fromUtf8(keyString);
     final fernet = encrypt.Fernet(keyFernet);
+
     return encrypt.Encrypter(fernet);
   }
 
@@ -45,7 +33,7 @@ class Password {
     this.title,
     this.expiration,
     this.expirationUnit,
-    this.crecreatedAt,
+    this.createdAt,
     this.updatedAt,
   });
 
@@ -64,7 +52,7 @@ class Password {
         expiration: result[i]["expiration"] ,
         expirationUnit: result[i]["expiration_unit"],
         password: result[i]["password"],
-        crecreatedAt: DateTime.parse(result[i]["created_at"]),
+        createdAt: DateTime.parse(result[i]["created_at"]),
         updatedAt: DateTime.parse(result[i]["updated_at"]),
       );
     });
@@ -78,7 +66,7 @@ class Password {
       'password':this.password,
       'expiration':this.expiration,
       'expiration_unit':this.expirationUnit,
-      'updated_at': DateTime.now().toString(),
+      'updated_at': this.updatedAt,
     };
   }
 
@@ -90,6 +78,7 @@ class Password {
     this.password = await this.passwordEncrypt();
     final data = this.toMap();
     data['created_at'] = DateTime.now().toString();
+    data['updated_at'] = DateTime.now().toString();
     await db.insert(
       'passwords',
       data,
@@ -99,6 +88,8 @@ class Password {
   Future<void> update() async {
     Database db = await DB().conexion();
     this.password = await  this.passwordEncrypt();
+    final data  = this.toMap();
+    data['updated_at'] = DateTime.now().toString();
     await db.update(
       'passwords',
       this.toMap(),
@@ -124,7 +115,7 @@ class Password {
     );
   }
 
-  Future<List<Password>> getAll() async {
+  Future<List<Password>> getAll({decrypt = true}) async {
     await _userPreferences.init();
     final user = _userPreferences.getUser();
     Database db = await DB().conexion();
@@ -142,10 +133,13 @@ class Password {
         password: item["password"],
         expiration: item["expiration"],
         expirationUnit: item["expiration_unit"],
-        crecreatedAt: DateTime.parse(item["created_at"]),
+        createdAt: DateTime.parse(item["created_at"]),
         updatedAt: DateTime.parse(item["updated_at"]),
       );
-      pwd.password = await pwd.passwordDecrypt();
+      if(decrypt){
+        pwd.password = await pwd.passwordDecrypt();
+
+      }
       passwords.add(pwd);
     }
     return passwords;

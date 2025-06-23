@@ -158,8 +158,8 @@ class _DetailPasswordPageState extends State<DetailPasswordPage> {
                                             width: 160.0,
                                             height: 160.0,
                                             decoration: BoxDecoration(
-                                              color:
-                                                  Colors.black.withOpacity(0.95),
+                                              color: Colors.black
+                                                  .withOpacity(0.95),
                                               borderRadius:
                                                   BorderRadius.circular(10),
                                             ),
@@ -261,6 +261,11 @@ class _DetailPasswordPageState extends State<DetailPasswordPage> {
                               BlocProvider.of<PasswordBloc>(context)
                                   .updatePassword(Password(
                                 id: newPasswordValues['id'],
+                                userId:  password.userId,
+                                createdAt: password.createdAt,
+                                updatedAt: password.updatedAt,
+                                expiration: password.expiration,
+                                expirationUnit: password.expirationUnit,
                                 title: newPasswordValues['title'],
                                 password: newPasswordValues['password'],
                               ));
