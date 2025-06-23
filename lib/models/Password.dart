@@ -50,10 +50,12 @@ class Password {
   });
 
   Future<List<Password>> filter(String search) async {
+    await _userPreferences.init();
+    final user = _userPreferences.getUser();
     Database db = await DB().conexion();
 
     final result = await db
-        .query("passwords", where: "title LIKE ?", whereArgs: ['%$search%']);
+        .query("passwords", where: "title LIKE ?  AND user_id = ?", whereArgs: ['%$search%', user.id]);
     return List.generate(result.length, (i) {
       return Password(
         id: result[i]["id"],

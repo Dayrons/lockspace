@@ -25,7 +25,6 @@ class UserSharedPrefs {
     await _prefs.setBool('sesion', sesion);
   }
     Future<bool> getSesion() async {
-      // esta trayendo null
     return  _prefs.getBool('sesion');
   }
 
@@ -33,7 +32,6 @@ class UserSharedPrefs {
     final jsonString = _prefs?.getString('user');
     if (jsonString == null) return null;
     final Map userDecode = jsonDecode(jsonString) as Map<String, dynamic>;
-    print("userdecode $userDecode");
     return User(
       id:userDecode["id"],
       name: userDecode["name"],

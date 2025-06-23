@@ -15,13 +15,14 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
   ) async* {
     if (event is PasswordEvent) {
       yield state.copyWith(
-          isLoading: event.isLoading,
-          passwords: event.passwords,
-          password: event.password,
-          registerError: event.registerError,
-          registerSuccess: event.registerSuccess,
-          updateSuccess: event.updateSuccess,
-          updateError: event.updateError);
+        isLoading: event.isLoading,
+        passwords: event.passwords,
+        password: event.password,
+        registerError: event.registerError,
+        registerSuccess: event.registerSuccess,
+        updateSuccess: event.updateSuccess,
+        updateError: event.updateError,
+      );
     }
   }
 
@@ -39,8 +40,9 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
   void addPassword(Password password) async {
     add(PasswordEvent(isLoading: true));
     try {
-      password.create();
+      await password.create();
       List<Password> passwords = await password.getAll();
+      print("Passwords $passwords");
       add(PasswordEvent(
           passwords: passwords, isLoading: false, registerSuccess: true));
     } catch (e) {
