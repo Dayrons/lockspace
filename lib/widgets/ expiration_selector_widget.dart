@@ -55,7 +55,7 @@ class ExpirationSelectorWidget extends StatelessWidget {
                       hintText: "0",
                       hintStyle: TextStyle(color: Colors.white54),
                     ),
-                    onChanged: (value) => onChanged(inputExpiration, value),
+                    onChanged: (value) => onChanged(inputExpiration, int.parse(value)),
                   ),
                 ),
               ),

@@ -192,6 +192,8 @@ class _RegisterPasswordPageState extends State<RegisterPasswordPage> {
                           Password(
                             title: registerValues['title'],
                             password: registerValues['password'],
+                            expiration: registerValues['expiration'],
+                            expirationUnit: registerValues["expiration_unit"]
                           ),
                         );
                       },

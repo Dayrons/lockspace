@@ -1,3 +1,4 @@
+import 'package:app/preferences/user_preferences.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:app/models/Password.dart';
