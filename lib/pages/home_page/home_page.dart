@@ -1,5 +1,5 @@
 import 'package:app/pages/list_password_page/list_password_page.dart';
-import 'package:app/pages/page_scanner_sync/page_scanner_sync.dart';
+import 'package:app/pages/scanner_sync_page/scanner_sync_page.dart';
 import 'package:app/pages/settings_page/settings_page.dart';
 import 'package:app/pages/home_page/widgets/bottom_bar.dart';
 import 'package:flutter/material.dart';

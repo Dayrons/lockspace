@@ -42,7 +42,6 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
     try {
       await password.create();
       List<Password> passwords = await password.getAll();
-      print("Passwords $passwords");
       add(PasswordEvent(
           passwords: passwords, isLoading: false, registerSuccess: true));
     } catch (e) {

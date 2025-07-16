@@ -76,6 +76,8 @@ class _ScannerSyncPageState extends State<ScannerSyncPage> {
   }
 
   Future _connectFtp({jwt, BuildContext context}) async {
+
+
     Vibration.vibrate(duration: 150);
     final jwtDecode = JwtDecoder.decode(jwt);
     await _userPreferences.init();
@@ -83,6 +85,7 @@ class _ScannerSyncPageState extends State<ScannerSyncPage> {
     // final xx = test(jwtDecode["name"], 'secretkey:hapilyeverafter1234567');
 
     final passwords = await _getPassowrds();
+
     final String uuid = await getDeviceId();
     
     FTPConnect ftpConnect = FTPConnect(jwtDecode["host"],
@@ -99,7 +102,7 @@ class _ScannerSyncPageState extends State<ScannerSyncPage> {
     file.writeAsString(json.encode(data));
     await ftpConnect.connect();
     bool response = await ftpConnect.uploadFileWithRetry(file, pRetryCount: 2);
-    // await ftpConnect.disconnect();
+    await ftpConnect.disconnect();
     if (response) {
       widget.controller.animateToPage(
         1,

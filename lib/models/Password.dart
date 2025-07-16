@@ -19,7 +19,7 @@ class Password {
 
   static Future<encrypt.Encrypter> getEncrypter() async {
     final keyString = await getDeviceId();
-     final keyFernet = encrypt.Key.fromUtf8(keyString);
+    final keyFernet = encrypt.Key.fromUtf8(keyString);
     final fernet = encrypt.Fernet(keyFernet);
 
     return encrypt.Encrypter(fernet);

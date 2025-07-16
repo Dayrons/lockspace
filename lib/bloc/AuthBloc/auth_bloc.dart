@@ -37,12 +37,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   signUp(Map values) async {
     add(AuthEvent(isSignUp: true, isLoading: true));
     try {
-      // con el injectable en un solo lugar llamaria al metodo init y le pasaria el  _userPreferences a todos los bloc necesarios
       await _userPreferences.init();
+      // con el injectable en un solo lugar llamaria al metodo init y le pasaria el  _userPreferences a todos los bloc necesarios
       final user = User(name: values["name"], password: values["password"]);
       await user.create();
       await _userPreferences.setUser(user.toMap());
-    
       await _userPreferences.setSesion(values["sesion"]);
 
       add(AuthEvent(isSignUp: true, isLoading: false, isError: false));

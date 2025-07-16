@@ -7,7 +7,7 @@ import 'package:bcrypt/bcrypt.dart';
 class User {
   int id;
   final String name;
-  final String password;
+  String password;
   List<Password> passwords;
 
   encrypt.Encrypter encrypterFernet;
@@ -30,11 +30,12 @@ class User {
     Database db = await DB().conexion();
 
     String hash = BCrypt.hashpw(this.password, BCrypt.gensalt());
+    this.password = hash;
     final int userId = await db.insert(
       'users',
       {
         "name": this.name.toLowerCase(),
-        "password": hash,
+        "password": this.password,
       },
     );
     this.id = userId;
