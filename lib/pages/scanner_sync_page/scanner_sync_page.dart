@@ -99,6 +99,8 @@ class _ScannerSyncPageState extends State<ScannerSyncPage> {
       "passwords": passwords
     };
 
+    print("DATA A ENVIAR $data");
+
     file.writeAsString(json.encode(data));
     await ftpConnect.connect();
     bool response = await ftpConnect.uploadFileWithRetry(file, pRetryCount: 2);

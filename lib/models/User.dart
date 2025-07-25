@@ -3,20 +3,23 @@ import 'package:app/models/Password.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:sqflite/sqflite.dart';
 import 'package:bcrypt/bcrypt.dart';
+import 'package:uuid/uuid.dart';
 
 class User {
   int id;
+   String uuid;
   final String name;
   String password;
   List<Password> passwords;
 
   encrypt.Encrypter encrypterFernet;
 
-  User({this.id, this.name, this.password});
+  User({this.id,this.uuid ,this.name, this.password});
 
   Map<String, dynamic> toMap() {
     return {
       'id': this.id,
+      'uuid':this.uuid,
       'name': this.name,
       'password': this.password,
     };
@@ -31,13 +34,16 @@ class User {
 
     String hash = BCrypt.hashpw(this.password, BCrypt.gensalt());
     this.password = hash;
+    final uuid = Uuid().v4();
     final int userId = await db.insert(
       'users',
       {
+        "uuid":uuid,
         "name": this.name.toLowerCase(),
         "password": this.password,
       },
     );
+    this.uuid =uuid;
     this.id = userId;
   }
 
@@ -53,6 +59,7 @@ class User {
     List<User> users = List.generate(results.length, (i) {
       return User(
         id: results[i]["id"],
+        uuid: results[i]["uuid"],
         name: results[i]["name"],
         password: results[i]["password"],
       );

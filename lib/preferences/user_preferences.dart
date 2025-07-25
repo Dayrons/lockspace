@@ -34,6 +34,7 @@ class UserSharedPrefs {
     final Map userDecode = jsonDecode(jsonString) as Map<String, dynamic>;
     return User(
       id:userDecode["id"],
+      uuid: userDecode["uuid"],
       name: userDecode["name"],
       password: userDecode["password"]
     );

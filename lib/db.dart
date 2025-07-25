@@ -6,7 +6,7 @@ class DB {
   Map tables = {
     "users": {
       "create":
-          "CREATE TABLE users (id INTEGER NOT NULL UNIQUE, name TEXT NOT NULL, password TEXT NOT NULL, PRIMARY KEY(id AUTOINCREMENT))",
+          "CREATE TABLE users (id INTEGER NOT NULL UNIQUE,uuid TEXT NOT NULL UNIQUE ,name TEXT NOT NULL, password TEXT NOT NULL, PRIMARY KEY(id AUTOINCREMENT))",
       "drop": "DROP TABLE IF EXISTS users",
       "update": []
     },
