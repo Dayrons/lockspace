@@ -5,10 +5,11 @@ import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:sqflite/sqflite.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'dart:io';
-
+import 'package:uuid/uuid.dart';
 class Password {
   int userId;
   int id;
+  String uuid;
   String title;
   String password;
   int expiration;
@@ -28,6 +29,7 @@ class Password {
 
     Password({
     this.id,
+    this.uuid,
     this.userId,
     this.password,
     this.title,
@@ -47,6 +49,7 @@ class Password {
     return List.generate(result.length, (i) {
       return Password(
         id: result[i]["id"],
+        uuid: result[i]["uuid"],
         userId: result[i]["user_id"],
         title: result[i]["title"],
         expiration: result[i]["expiration"] ,
@@ -61,6 +64,7 @@ class Password {
   Map<String, dynamic> toMap() {
     return {
       'id': this.id,
+      'uuid': this.uuid,
       'user_id':this.userId,
       'title': this.title,
       'password':this.password,
@@ -76,6 +80,7 @@ class Password {
     this.userId = user.id;
     Database db = await DB().conexion();
     this.password = await this.passwordEncrypt();
+    this.uuid =Uuid().v4();
     final data = this.toMap();
     data['created_at'] = DateTime.now().toString();
     data['updated_at'] = DateTime.now().toString();
@@ -128,6 +133,7 @@ class Password {
     for (var item in result) {
       Password pwd = Password(
         id: item["id"],
+        uuid: item["uuid"],
         userId: item["user_id"],
         title: item["title"],
         password: item["password"],
