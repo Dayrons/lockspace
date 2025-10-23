@@ -1,3 +1,5 @@
+import 'package:app/models/Password.dart';
+import 'package:app/models/User.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart' as p;
 
@@ -6,14 +8,16 @@ class DB {
   Map tables = {
     "users": {
       "create":
-          "CREATE TABLE users (id INTEGER NOT NULL UNIQUE,uuid TEXT NOT NULL UNIQUE ,name TEXT NOT NULL, password TEXT NOT NULL, PRIMARY KEY(id AUTOINCREMENT))",
-      "drop": "DROP TABLE IF EXISTS users",
-      "update": []
+          "CREATE TABLE ${User.table_name} (id INTEGER NOT NULL UNIQUE,uuid TEXT NOT NULL UNIQUE ,name TEXT NOT NULL, password TEXT NOT NULL, PRIMARY KEY(id AUTOINCREMENT))",
+      "drop": "DROP TABLE IF EXISTS ${User.table_name}",
+      "update": [
+        //  'ALTER TABLE ${User.table_name} ADD COLUMN field INTEGER;',
+      ]
     },
     "passwords": {
       "create":
-      "CREATE TABLE passwords (id INTEGER NOT NULL UNIQUE, uuid TEXT NOT NULL UNIQUE, user_id INTEGER NOT NULL, password TEXT NOT NULL, title TEXT NOT NULL, expiration INTEGER, expiration_unit TEXT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY(id AUTOINCREMENT), FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE)",
-      "drop": "DROP TABLE IF EXISTS passwords",
+      "CREATE TABLE ${Password.table_name} (id INTEGER NOT NULL UNIQUE, uuid TEXT NOT NULL UNIQUE, user_id INTEGER NOT NULL, password TEXT NOT NULL, title TEXT NOT NULL, expiration INTEGER, expiration_unit TEXT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY(id AUTOINCREMENT), FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE)",
+      "drop": "DROP TABLE IF EXISTS ${Password.table_name}",
       "update": []
     }
   };

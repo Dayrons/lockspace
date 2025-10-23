@@ -13,7 +13,7 @@ class User {
   List<Password> passwords;
 
   encrypt.Encrypter encrypterFernet;
-
+  static String table_name = 'users';
   User({this.id,this.uuid ,this.name, this.password});
 
   Map<String, dynamic> toMap() {

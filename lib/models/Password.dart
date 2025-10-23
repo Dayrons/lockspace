@@ -17,6 +17,7 @@ class Password {
   final DateTime createdAt;
   DateTime updatedAt;
   final _userPreferences = UserSharedPrefs();
+  static String table_name = 'password';
 
   static Future<encrypt.Encrypter> getEncrypter() async {
     final keyString = await getDeviceId();
