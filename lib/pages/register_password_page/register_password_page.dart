@@ -198,6 +198,11 @@ class _RegisterPasswordPageState extends State<RegisterPasswordPage> {
                               expirationUnit:registerValues["expiration_unit"]),
                         );
                         FlutterClipboard.copy(password);
+                        _textTitleController.text="";
+                        _passwordController.text="";
+                        _expirationController.text="";
+                        registerValues.clear();
+                       
                       },
                     ),
                   )
