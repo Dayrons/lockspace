@@ -36,7 +36,7 @@ class User {
     this.password = hash;
     final uuid = Uuid().v4();
     final int userId = await db.insert(
-      'users',
+      User.table_name,
       {
         "uuid":uuid,
         "name": this.name.toLowerCase(),
@@ -49,7 +49,7 @@ class User {
 
   Future<User> get() async {
     Database db = await DB().conexion();
-    List<Map<String, dynamic>> results = await db.query('users',
+    List<Map<String, dynamic>> results = await db.query(User.table_name,
         where: 'name = ?',
         whereArgs: [
           this.name.toLowerCase(),
@@ -77,7 +77,7 @@ class User {
   Future<void> clear() async {
     Database db = await DB().conexion();
     await db.delete(
-      'users',
+      User.table_name,
       where: null,
     );
   }

@@ -17,7 +17,7 @@ class Password {
   final DateTime createdAt;
   DateTime updatedAt;
   final _userPreferences = UserSharedPrefs();
-  static String table_name = 'password';
+  static String table_name = 'passwords';
 
   static Future<encrypt.Encrypter> getEncrypter() async {
     final keyString = await getDeviceId();
@@ -81,12 +81,12 @@ class Password {
     this.userId = user.id;
     Database db = await DB().conexion();
     this.password = await this.passwordEncrypt();
-    this.uuid =Uuid().v4();
+    this.uuid=Uuid().v4();
     final data = this.toMap();
     data['created_at'] = DateTime.now().toString();
     data['updated_at'] = DateTime.now().toString();
     await db.insert(
-      'passwords',
+      Password.table_name,
       data,
     );
   }
@@ -97,8 +97,8 @@ class Password {
     final data  = this.toMap();
     data['updated_at'] = DateTime.now().toString();
     await db.update(
-      'passwords',
-      this.toMap(),
+      Password.table_name,
+      data,
       where: "id = ?",
       whereArgs: [this.id],
     );
@@ -107,7 +107,7 @@ class Password {
   Future<void> clear() async {
     Database db = await DB().conexion();
     await db.delete(
-      'passwords',
+      Password.table_name,
       where: null,
     );
   }
@@ -115,7 +115,7 @@ class Password {
   Future<void> delete() async {
     Database db = await DB().conexion();
     await db.delete(
-      'passwords',
+      Password.table_name,
       where: "id = ?",
       whereArgs: [this.id],
     );
@@ -126,7 +126,7 @@ class Password {
     final user = _userPreferences.getUser();
     Database db = await DB().conexion();
     List<Map<String, dynamic>> result = await db.query(
-      'passwords',
+      Password.table_name,
       where: 'user_id = ?',
       whereArgs: [user.id],
     );

@@ -20,7 +20,7 @@ class DetailPasswordPage extends StatefulWidget {
 
 class _DetailPasswordPageState extends State<DetailPasswordPage> {
   final TextEditingController _textTitleController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _textPasswordController = TextEditingController();
   Password password = Password();
 
   final Map<String, dynamic> _values = {
@@ -34,8 +34,7 @@ class _DetailPasswordPageState extends State<DetailPasswordPage> {
   void initState() {
     _textTitleController.text =
         BlocProvider.of<PasswordBloc>(context).state.password.title;
-    newPasswordValues['password'] =
-        BlocProvider.of<PasswordBloc>(context).state.password.passwordDecrypt();
+    _textPasswordController.text= BlocProvider.of<PasswordBloc>(context).state.password.password;
     super.initState();
   }
 
@@ -191,7 +190,7 @@ class _DetailPasswordPageState extends State<DetailPasswordPage> {
                                       input: 'password',
                                       texto: "Nueva contraseña",
                                       validacion: true,
-                                      controller: _passwordController,
+                                      controller: _textPasswordController,
                                       onChange: (value, input) {
                                         // _validate();
                                         newPasswordValues[input] = value;
@@ -257,18 +256,10 @@ class _DetailPasswordPageState extends State<DetailPasswordPage> {
                             width: size.width,
                             texto: "Actualizar contraseña",
                             onTap: () {
-                              newPasswordValues['id'] = password.id;
+                              password.title = _textTitleController.text;
+                              password.password = _textPasswordController.text;
                               BlocProvider.of<PasswordBloc>(context)
-                                  .updatePassword(Password(
-                                id: newPasswordValues['id'],
-                                userId:  password.userId,
-                                createdAt: password.createdAt,
-                                updatedAt: password.updatedAt,
-                                expiration: password.expiration,
-                                expirationUnit: password.expirationUnit,
-                                title: newPasswordValues['title'],
-                                password: newPasswordValues['password'],
-                              ));
+                                  .updatePassword(state.password);
                             }),
                       )
                     ],
@@ -280,8 +271,8 @@ class _DetailPasswordPageState extends State<DetailPasswordPage> {
   }
 
   _validate(password) {
-    if ((_passwordController.text != password.password &&
-            _passwordController.text != "") ||
+    if ((_textPasswordController.text != password.password &&
+            _textPasswordController.text != "") ||
         (_textTitleController.text != password.title &&
             _textTitleController.text != "")) {
       setState(() {
@@ -326,7 +317,7 @@ class _DetailPasswordPageState extends State<DetailPasswordPage> {
 
   void _generatePassword() {
     final String newPassword = generarPassword(_values);
-    _passwordController.text = newPassword;
+    _textPasswordController.text = newPassword;
     newPasswordValues['password'] = newPassword;
   }
 }

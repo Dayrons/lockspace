@@ -6,7 +6,7 @@ import 'package:path/path.dart' as p;
 class DB {
   // esto debe de ser un map con el key el nombre de la tabla
   Map tables = {
-    "users": {
+    User.table_name: {
       "create":
           "CREATE TABLE ${User.table_name} (id INTEGER NOT NULL UNIQUE,uuid TEXT NOT NULL UNIQUE ,name TEXT NOT NULL, password TEXT NOT NULL, PRIMARY KEY(id AUTOINCREMENT))",
       "drop": "DROP TABLE IF EXISTS ${User.table_name}",
@@ -14,7 +14,7 @@ class DB {
         //  'ALTER TABLE ${User.table_name} ADD COLUMN field INTEGER;',
       ]
     },
-    "passwords": {
+    Password.table_name: {
       "create":
       "CREATE TABLE ${Password.table_name} (id INTEGER NOT NULL UNIQUE, uuid TEXT NOT NULL UNIQUE, user_id INTEGER NOT NULL, password TEXT NOT NULL, title TEXT NOT NULL, expiration INTEGER, expiration_unit TEXT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY(id AUTOINCREMENT), FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE)",
       "drop": "DROP TABLE IF EXISTS ${Password.table_name}",
