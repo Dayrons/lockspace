@@ -8,6 +8,7 @@ import 'package:app/widgets/%20expiration_selector_widget.dart';
 import 'package:app/widgets/boton.dart';
 import 'package:app/widgets/slider_widget.dart';
 import 'package:app/widgets/switch_widget.dart';
+import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:app/widgets/input.dart';
@@ -188,14 +189,15 @@ class _RegisterPasswordPageState extends State<RegisterPasswordPage> {
                       width: size.width,
                       texto: "Registrar contraseña",
                       onTap: () {
+                        final password = registerValues['password'];
                         BlocProvider.of<PasswordBloc>(context).addPassword(
                           Password(
-                            title: registerValues['title'],
-                            password: registerValues['password'],
-                            expiration: registerValues['expiration'],
-                            expirationUnit: registerValues["expiration_unit"]
-                          ),
+                              title: registerValues['title'],
+                              password: password,
+                              expiration: registerValues['expiration'],
+                              expirationUnit:registerValues["expiration_unit"]),
                         );
+                        FlutterClipboard.copy(password);
                       },
                     ),
                   )

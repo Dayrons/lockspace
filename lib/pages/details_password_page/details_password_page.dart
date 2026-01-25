@@ -6,6 +6,7 @@ import 'package:app/widgets/boton.dart';
 import 'package:app/widgets/input.dart';
 import 'package:app/widgets/slider_widget.dart';
 import 'package:app/widgets/switch_widget.dart';
+import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -34,7 +35,8 @@ class _DetailPasswordPageState extends State<DetailPasswordPage> {
   void initState() {
     _textTitleController.text =
         BlocProvider.of<PasswordBloc>(context).state.password.title;
-    _textPasswordController.text= BlocProvider.of<PasswordBloc>(context).state.password.password;
+    _textPasswordController.text =
+        BlocProvider.of<PasswordBloc>(context).state.password.password;
     super.initState();
   }
 
@@ -258,8 +260,8 @@ class _DetailPasswordPageState extends State<DetailPasswordPage> {
                             onTap: () {
                               password.title = _textTitleController.text;
                               password.password = _textPasswordController.text;
-                              BlocProvider.of<PasswordBloc>(context)
-                                  .updatePassword(state.password);
+                              BlocProvider.of<PasswordBloc>(context).updatePassword(state.password);
+                              FlutterClipboard.copy(password.password);
                             }),
                       )
                     ],
