@@ -2,12 +2,11 @@ import 'package:app/widgets/input.dart';
 import 'package:flutter/material.dart';
 
 class Formulario extends StatelessWidget {
-  final Function onChange;
-  final TextEditingController controller;
-  final Map validacion;
+  final Function(String, String)? onChange;
+  final TextEditingController? controller;
+  final Map<String, dynamic> validacion;
 
-  const Formulario({Key key, this.onChange, this.controller, this.validacion})
-      : super(key: key);
+  const Formulario({super.key, this.onChange, this.controller, required this.validacion});
 
   @override
   Widget build(BuildContext context) {
@@ -19,21 +18,16 @@ class Formulario extends StatelessWidget {
           Input(
             input: 'title',
             texto: "title",
-            validacion: validacion['title']['validacion'],
+            validacion: validacion['title']?['validacion'] ?? true,
             onChange: onChange,
           ),
           Input(
             input: 'password',
             texto: "Password",
-            validacion: validacion['password']['validacion'],
+            validacion: validacion['password']?['validacion'] ?? true,
             controller: controller,
             onChange: onChange,
           ),
-          /* Input(
-            input: 'cantidad',
-            texto: "Cantidad de caracteres",
-            onChange: onChange,
-          ), */
         ],
       ),
     );

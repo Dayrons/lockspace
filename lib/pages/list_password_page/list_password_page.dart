@@ -5,17 +5,15 @@ import 'package:app/pages/register_password_page/register_password_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:local_auth/local_auth.dart';
-import 'package:local_auth_android/local_auth_android.dart';
 
 class ListPasswordPage extends StatefulWidget {
+  const ListPasswordPage({super.key});
+
   @override
   State<ListPasswordPage> createState() => _ListPasswordPageState();
 }
 
 class _ListPasswordPageState extends State<ListPasswordPage> {
-
-
   @override
   void initState() {
     super.initState();
@@ -26,7 +24,7 @@ class _ListPasswordPageState extends State<ListPasswordPage> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Container(
-      padding: EdgeInsets.only(
+      padding: const EdgeInsets.only(
         left: 20,
         right: 20,
         top: 20,
@@ -40,12 +38,12 @@ class _ListPasswordPageState extends State<ListPasswordPage> {
                 width: size.width * 0.7,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
-                  color: Color(0XFF2b2e3d).withOpacity(0.5),
+                  color: const Color(0XFF2b2e3d).withOpacity(0.5),
                 ),
                 child: TextField(
-                  style: TextStyle(color: Colors.white),
-                  cursorColor: Color(0XFF2CDA9D),
-                  decoration: InputDecoration(
+                  style: const TextStyle(color: Colors.white),
+                  cursorColor: const Color(0XFF2CDA9D),
+                  decoration: const InputDecoration(
                     fillColor: Colors.white,
                     border: InputBorder.none,
                     hintText: "Buscar",
@@ -60,35 +58,32 @@ class _ListPasswordPageState extends State<ListPasswordPage> {
               ),
               IconButton(
                 iconSize: 28,
-                splashRadius:
-                    25, // Reduced splash radius based on container height
-                icon: Icon(
+                splashRadius: 25,
+                icon: const Icon(
                   Icons.add,
                   color: Colors.white,
                 ),
                 onPressed: () => Navigator.of(context).push(
                   CupertinoPageRoute(
                     builder: (BuildContext context) =>
-                        RegisterPasswordPage(),
+                        const RegisterPasswordPage(),
                   ),
                 ),
               ),
             ],
           ),
-          SizedBox(
-            height: 20,
-          ),
+          const SizedBox(height: 20),
           Expanded(child:
               BlocBuilder<PasswordBloc, PasswordState>(
                   builder: (context, state) {
             if (state.isLoading) {
-              return Center(child: CircularProgressIndicator(
+              return const Center(child: CircularProgressIndicator(
                 color: Color(0XFF2CDA9D),
               ));
             } else {
-              if (state.passwords.length > 0) {
+              if (state.passwords.isNotEmpty) {
                 return ListView.builder(
-                  physics: BouncingScrollPhysics(),
+                  physics: const BouncingScrollPhysics(),
                   itemCount: state.passwords.length,
                   itemBuilder: (BuildContext context, int index) {
                     final Password password = state.passwords[index];
@@ -104,10 +99,8 @@ class _ListPasswordPageState extends State<ListPasswordPage> {
                       'assets/4.png',
                       width: 140,
                     ),
-                    SizedBox(
-                      height: 20.00,
-                    ),
-                    Text(
+                    const SizedBox(height: 20.00),
+                    const Text(
                       'No tienes ninguna contraseña',
                       style: TextStyle(
                         color: Colors.white,

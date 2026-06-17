@@ -53,10 +53,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   signIn(Map values) async {
     add(AuthEvent(isSignIn: true, isLoading: true));
     try {
-      User user = User(name: values["name"], password: values["password"]);
-      user = await user.get();
-      if (user != null) {
-        await _userPreferences.setUser(user.toMap());
+      final user = User(name: values["name"], password: values["password"]);
+      final User? userResult = await user.get();
+      if (userResult != null) {
+        await _userPreferences.setUser(userResult.toMap());
         await _userPreferences.setSesion(values["sesion"]);
         add(AuthEvent(isSignIn: true, isLoading: false, isError: false));
       } else {

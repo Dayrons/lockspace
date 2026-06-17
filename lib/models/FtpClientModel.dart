@@ -1,4 +1,3 @@
-
-class FtpClientModel{
-
+class FtpClientModel {
+  FtpClientModel();
 }

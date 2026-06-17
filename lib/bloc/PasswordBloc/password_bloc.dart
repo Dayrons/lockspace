@@ -1,6 +1,5 @@
 import 'package:app/preferences/user_preferences.dart';
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
 import 'package:app/models/Password.dart';
 
 part 'password_event.dart';
@@ -10,9 +9,7 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
   PasswordBloc() : super(PasswordState());
 
   @override
-  Stream<PasswordState> mapEventToState(
-    PasswordEvent event,
-  ) async* {
+  Stream<PasswordState> mapEventToState(PasswordEvent event) async* {
     if (event is PasswordEvent) {
       yield state.copyWith(
         isLoading: event.isLoading,
@@ -42,8 +39,7 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
     try {
       await password.create();
       List<Password> passwords = await password.getAll();
-      add(PasswordEvent(
-          passwords: passwords, isLoading: false, registerSuccess: true));
+      add(PasswordEvent(passwords: passwords, isLoading: false, registerSuccess: true));
     } catch (e) {
       add(PasswordEvent(isLoading: false, registerError: true));
     }
@@ -61,8 +57,7 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
       add(PasswordEvent(isLoading: true));
       await password.update();
       List<Password> passwords = await password.getAll();
-      add(PasswordEvent(
-          isLoading: false, passwords: passwords, updateSuccess: true));
+      add(PasswordEvent(isLoading: false, passwords: passwords, updateSuccess: true));
     } catch (e) {
       add(PasswordEvent(isLoading: false, updateError: true));
     }
@@ -71,7 +66,7 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
   void filterPasswords(String search) async {
     add(PasswordEvent(isLoading: true));
     final Password password = Password();
-    List passwords = await password.filter(search);
+    List<Password> passwords = await password.filter(search);
     add(PasswordEvent(passwords: passwords, isLoading: false));
   }
 

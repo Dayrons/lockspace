@@ -3,20 +3,19 @@ import 'package:flutter/material.dart';
 class SwitchWidget extends StatelessWidget {
   final String text;
   final double width;
-  final Function onChanged;
+  final dynamic Function(String, dynamic) onChanged;
   final bool value;
   final String input;
 
-  SwitchWidget({this.width, this.text, this.onChanged, this.value, this.input, Key key})
-      : super(key: key);
+  SwitchWidget({super.key, required this.width, required this.text, required this.onChanged, required this.value, required this.input});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: width,
-      padding: EdgeInsets.all(5),
+      padding: const EdgeInsets.all(5),
       decoration: BoxDecoration(
-        color: Color(0XFF2b2e3d).withOpacity(0.5),
+        color: const Color(0XFF2b2e3d).withOpacity(0.5),
         borderRadius: BorderRadius.circular(5),
       ),
       child: Row(
@@ -24,16 +23,16 @@ class SwitchWidget extends StatelessWidget {
         children: <Widget>[
           Text(
             text,
-            style: TextStyle(
+            style: const TextStyle(
                 color: Color(0XFF2CDA9D),
                 fontWeight: FontWeight.bold,
                 fontSize: 12),
           ),
           Switch(
             value: value,
-            activeColor: Color(0XFF2CDA9D),
+            activeColor: const Color(0XFF2CDA9D),
             onChanged: (bool newValue) {
-              onChanged(input,newValue);
+              onChanged(input, newValue);
             },
           ),
         ],

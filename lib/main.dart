@@ -6,10 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() {
-  runApp(AppState());
+  runApp(const AppState());
 }
 
 class AppState extends StatelessWidget {
+  const AppState({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -24,19 +26,21 @@ class AppState extends StatelessWidget {
           create: (context) => PasswordBloc(),
         ),
       ],
-      child: App(),
+      child: const App(),
     );
   }
 }
 
 class App extends StatelessWidget {
+  const App({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Root(),
+      home: const Root(),
       theme: ThemeData(
-        primaryColor: Color(0XFF1c1d22),
+        primaryColor: const Color(0XFF1c1d22),
       ),
     );
   }

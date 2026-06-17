@@ -9,17 +9,13 @@ class AuthSignInState extends AuthState {
   final bool isError;
   final String errorMessage;
 
-  AuthSignInState({this.isLoading = false, this.isError, this.errorMessage});
-
- 
+  AuthSignInState({this.isLoading = false, this.isError = false, this.errorMessage = ""});
 }
 
 class AuthSignUpState extends AuthState {
   final bool isLoading;
-   final bool isError;
+  final bool isError;
   final String errorMessage;
 
-  AuthSignUpState({this.isLoading = false, this.isError, this.errorMessage});
-
- 
+  AuthSignUpState({this.isLoading = false, this.isError = false, this.errorMessage = ""});
 }

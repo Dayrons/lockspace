@@ -1,6 +1,5 @@
 part of 'password_bloc.dart';
 
-
 class PasswordState {
   final List<Password> passwords;
   final bool isLoading;
@@ -8,26 +7,26 @@ class PasswordState {
   final bool registerSuccess;
   final bool updateSuccess;
   final bool registerError;
-  final bool  updateError;
+  final bool updateError;
 
   PasswordState({
     this.passwords = const [],
     this.isLoading = true,
-    this.password = null,
+    Password? password,
     this.registerSuccess = false,
     this.updateSuccess = false,
     this.registerError = false,
     this.updateError = false,
-  });
+  }) : password = password ?? Password();
 
   PasswordState copyWith({
-    List<Password> passwords,
-    bool isLoading,
-    Password password,
-    bool registerSuccess,
-    bool updateSuccess,
-    bool registerError,
-    bool updateError,
+    List<Password>? passwords,
+    bool? isLoading,
+    Password? password,
+    bool? registerSuccess,
+    bool? updateSuccess,
+    bool? registerError,
+    bool? updateError,
   }) {
     return PasswordState(
       passwords: passwords ?? this.passwords,
@@ -39,5 +38,4 @@ class PasswordState {
       updateError: updateError ?? this.updateError,
     );
   }
- 
 }

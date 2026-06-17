@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class SettingsPage extends StatefulWidget {
+  const SettingsPage({super.key});
+
   @override
   State<SettingsPage> createState() => _SettingsPageState();
 }
@@ -11,7 +13,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(
+      padding: const EdgeInsets.only(
         left: 20,
         right: 20,
         top: 20,
@@ -19,13 +21,13 @@ class _SettingsPageState extends State<SettingsPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
+          const Text(
             'Configuraciónes',
             style: TextStyle(
                 fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
           ),
-          SizedBox(height: 20),
-          Text(
+          const SizedBox(height: 20),
+          const Text(
             "General",
             style: TextStyle(
               color: Colors.white,
@@ -33,11 +35,11 @@ class _SettingsPageState extends State<SettingsPage> {
               fontSize: 18,
             ),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Row(
+              const Row(
                 children: [
                   Icon(
                     Icons.notifications,
@@ -55,7 +57,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               Switch(
                 value: _notificationsEnabled,
-                activeColor: Color(0XFF2CDA9D),
+                activeColor: const Color(0XFF2CDA9D),
                 onChanged: (bool newValue) {
                   setState(() {
                     _notificationsEnabled = newValue;
@@ -64,11 +66,11 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ],
           ),
-          SizedBox(height: 10,),
+          const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Row(
+              const Row(
                 children: [
                   Icon(
                     Icons.lock,
@@ -86,7 +88,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               Switch(
                 value: _notificationsEnabled,
-                activeColor: Color(0XFF2CDA9D),
+                activeColor: const Color(0XFF2CDA9D),
                 onChanged: (bool newValue) {
                   setState(() {
                     _notificationsEnabled = newValue;
@@ -95,12 +97,11 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ],
           ),
-           SizedBox(height: 10,),
+           const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              
-              Row(
+              const Row(
                 children: [
                   Icon(
                     Icons.router,
@@ -118,7 +119,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               Switch(
                 value: _notificationsEnabled,
-                activeColor: Color(0XFF2CDA9D),
+                activeColor: const Color(0XFF2CDA9D),
                 onChanged: (bool newValue) {
                   setState(() {
                     _notificationsEnabled = newValue;

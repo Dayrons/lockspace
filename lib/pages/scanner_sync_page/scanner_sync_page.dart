@@ -1,28 +1,23 @@
 import 'package:app/models/Password.dart';
-import 'package:app/pages/home_page/home_page.dart';
 import 'package:app/preferences/user_preferences.dart';
 import 'package:app/utils/functions.dart';
 import 'package:app/utils/ui.dart';
-import 'package:app/utils/ui.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:vibration/vibration.dart';
 import 'package:ftpconnect/ftpconnect.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
-import 'package:encrypt/encrypt.dart' as encrypt;
-import 'package:crypto/crypto.dart';
 import 'dart:convert';
 import 'dart:io';
 
 class ScannerSyncPage extends StatefulWidget {
   final PageController controller;
   const ScannerSyncPage({
-    Key key,
-    this.controller,
-  }) : super(key: key);
+    super.key,
+    required this.controller,
+  });
 
   @override
   State<ScannerSyncPage> createState() => _ScannerSyncPageState();
@@ -30,17 +25,7 @@ class ScannerSyncPage extends StatefulWidget {
 
 class _ScannerSyncPageState extends State<ScannerSyncPage> {
   final _userPreferences = UserSharedPrefs();
-
-  final qrKey = GlobalKey(debugLabel: "QR");
-  QRViewController controller;
-  Barcode result;
   bool stanbay = false;
-
-  @override
-  void dispose() {
-    controller?.dispose();
-    super.dispose();
-  }
 
   Future<String> get _localPath async {
     final directory = await getApplicationDocumentsDirectory();
@@ -51,55 +36,38 @@ class _ScannerSyncPageState extends State<ScannerSyncPage> {
     Password password = Password();
     List<Password> passwords = await password.getAll(decrypt: false);
     return List.generate(passwords.length, (i) {
-      final password  = passwords[i].toMap();
-      password["created_at"] = password["created_at"].toString();
-      password["updated_at"] = password["updated_at"].toString();
-      return password;
+      final pwdMap = passwords[i].toMap();
+      pwdMap["created_at"] = pwdMap["created_at"].toString();
+      pwdMap["updated_at"] = pwdMap["updated_at"].toString();
+      return pwdMap;
     });
   }
 
-  String test(String texto, String llave) {
-    final plainText = 'f8:b1:56:af:0f:51';
+  Future _connectFtp({String? jwt, BuildContext? context}) async {
+    if (jwt == null) return;
 
-    final key = encrypt.Key.fromUtf8(llave);
+    try {
+      await Vibration.vibrate(duration: 150);
+    } catch (_) {}
 
-    // Este iv es diferente al que encripta en nodejs
-    final iv = encrypt.IV.fromLength(16);
-
-    final test = encrypt.Encrypter(encrypt.AES(key));
-
-    final encrypted = test.encrypt(plainText, iv: iv);
-
-    final decrypted = test.decrypt(encrypt.Encrypted.fromBase64(texto), iv: iv);
-
-    return decrypted;
-  }
-
-  Future _connectFtp({jwt, BuildContext context}) async {
-
-
-    Vibration.vibrate(duration: 150);
     final jwtDecode = JwtDecoder.decode(jwt);
     await _userPreferences.init();
     final user = _userPreferences.getUser();
-    // final xx = test(jwtDecode["name"], 'secretkey:hapilyeverafter1234567');
+    if (user == null) return;
 
     final passwords = await _getPassowrds();
+    final String uuid = getDeviceId();
 
-    final String uuid = await getDeviceId();
-    
-    FTPConnect ftpConnect = FTPConnect(jwtDecode["host"],
-        port: 2121, user: jwtDecode["username"], pass: jwtDecode["password"]);
+    FTPConnect ftpConnect = FTPConnect(jwtDecode["host"] as String,
+        port: 2121, user: jwtDecode["username"] as String, pass: jwtDecode["password"] as String);
     final path = await _localPath;
 
     File file = File('$path/data.txt');
-    final Map data = {
+    final Map<String, dynamic> data = {
       "user": user.toMap(),
       "uuid": uuid,
-      "passwords": passwords
+      "passwords": passwords,
     };
-
-    print("DATA A ENVIAR $data");
 
     file.writeAsString(json.encode(data));
     await ftpConnect.connect();
@@ -120,12 +88,10 @@ class _ScannerSyncPageState extends State<ScannerSyncPage> {
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
     return Stack(
       children: [
         stanbay
             ? Positioned(
-                // bottom: size.height / 8,
                 bottom: 0,
                 top: 0,
                 left: 0,
@@ -135,37 +101,24 @@ class _ScannerSyncPageState extends State<ScannerSyncPage> {
                   child: Center(
                     child: CircularProgressIndicator(
                       valueColor:
-                          AlwaysStoppedAnimation<Color>(Color(detalles)),
+                          AlwaysStoppedAnimation<Color>(const Color(detalles)),
                     ),
                   ),
                 ),
               )
-            : QRView(
-                key: qrKey,
-                onQRViewCreated: _onQRViewCreated,
-                overlay: QrScannerOverlayShape(
-                    borderLength: 20,
-                    borderWidth: 10.0,
-                    borderRadius: 5.00,
-                    borderColor: const Color(0XFF2CDA9D)),
+            : MobileScanner(
+                onDetect: (capture) async {
+                  final barcode = capture.barcodes.firstOrNull;
+                  if (barcode?.rawValue != null) {
+                    setState(() {
+                      stanbay = true;
+                    });
+                    await _connectFtp(
+                        jwt: barcode!.rawValue, context: context);
+                  }
+                },
               )
       ],
     );
-  }
-
-  Widget buildQrView(BuildContext context) => QRView(
-        key: qrKey,
-        onQRViewCreated: _onQRViewCreated,
-      );
-
-  void _onQRViewCreated(QRViewController controller) {
-    this.controller = controller;
-
-    controller.scannedDataStream.listen((scanData) async {
-      setState(() {
-        stanbay = true;
-      });
-      await _connectFtp(jwt: scanData.code, context: context);
-    });
   }
 }

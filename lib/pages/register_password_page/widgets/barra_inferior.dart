@@ -2,9 +2,9 @@ import 'package:app/widgets/boton.dart';
 import 'package:flutter/material.dart';
 
 class BarraInferio extends StatelessWidget {
-  final Function onTap;
+  final VoidCallback? onTap;
 
-  const BarraInferio({Key key, this.onTap}) : super(key: key);
+  const BarraInferio({super.key, this.onTap});
   @override
   Widget build(BuildContext context) {
     return Boton(

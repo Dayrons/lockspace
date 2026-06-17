@@ -13,7 +13,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class DetailPasswordPage extends StatefulWidget {
-  const DetailPasswordPage({Key key}) : super(key: key);
+  const DetailPasswordPage({super.key});
 
   @override
   State<DetailPasswordPage> createState() => _DetailPasswordPageState();
@@ -22,7 +22,7 @@ class DetailPasswordPage extends StatefulWidget {
 class _DetailPasswordPageState extends State<DetailPasswordPage> {
   final TextEditingController _textTitleController = TextEditingController();
   final TextEditingController _textPasswordController = TextEditingController();
-  Password password = Password();
+  late Password password;
 
   final Map<String, dynamic> _values = {
     'capital_letters': false,
@@ -30,14 +30,13 @@ class _DetailPasswordPageState extends State<DetailPasswordPage> {
     'special_characters': false,
     'max_length': 8.00,
   };
-  final Map newPasswordValues = {};
+  final Map<String, dynamic> newPasswordValues = {};
   @override
   void initState() {
-    _textTitleController.text =
-        BlocProvider.of<PasswordBloc>(context).state.password.title;
-    _textPasswordController.text =
-        BlocProvider.of<PasswordBloc>(context).state.password.password;
     super.initState();
+    password = BlocProvider.of<PasswordBloc>(context).state.password;
+    _textTitleController.text = password.title;
+    _textPasswordController.text = password.password;
   }
 
   bool validate = false;
@@ -51,15 +50,15 @@ class _DetailPasswordPageState extends State<DetailPasswordPage> {
       builder: (context, state) {
         password = state.password;
         return Scaffold(
-            backgroundColor: Color(0XFF1c1d22),
+            backgroundColor: const Color(0XFF1c1d22),
             resizeToAvoidBottomInset: false,
             appBar: AppBar(
-              backgroundColor: Color(0XFF1c1d22),
+              backgroundColor: const Color(0XFF1c1d22),
               elevation: 0,
               title: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    SizedBox(),
+                    const SizedBox(),
                     Container(
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -67,7 +66,7 @@ class _DetailPasswordPageState extends State<DetailPasswordPage> {
                           Container(
                             width: 10,
                             height: 10,
-                            margin: EdgeInsets.only(right: 10),
+                            margin: const EdgeInsets.only(right: 10),
                             decoration: BoxDecoration(
                               color: _detailDateTime(password)["color"],
                               shape: BoxShape.circle,
@@ -85,9 +84,9 @@ class _DetailPasswordPageState extends State<DetailPasswordPage> {
                   ]),
               leading: IconButton(
                 iconSize: 40,
-                icon: Icon(
+                icon: const Icon(
                   Icons.navigate_before,
-                  color: const Color(0XFF2CDA9D),
+                  color: Color(0XFF2CDA9D),
                 ),
                 onPressed: () {
                   Navigator.pop(context);
@@ -127,7 +126,7 @@ class _DetailPasswordPageState extends State<DetailPasswordPage> {
                       Container(
                         height: size.height * 0.75,
                         child: SingleChildScrollView(
-                            physics: BouncingScrollPhysics(),
+                            physics: const BouncingScrollPhysics(),
                             child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -142,7 +141,7 @@ class _DetailPasswordPageState extends State<DetailPasswordPage> {
                                       alignment: Alignment.center,
                                       children: [
                                         Container(
-                                          padding: EdgeInsets.all(5),
+                                          padding: const EdgeInsets.all(5),
                                           decoration: BoxDecoration(
                                               color: Colors.white,
                                               borderRadius:
@@ -164,7 +163,7 @@ class _DetailPasswordPageState extends State<DetailPasswordPage> {
                                               borderRadius:
                                                   BorderRadius.circular(10),
                                             ),
-                                            child: Center(
+                                            child: const Center(
                                               child: Icon(
                                                 Icons.visibility,
                                                 color: Colors.white,
@@ -175,16 +174,13 @@ class _DetailPasswordPageState extends State<DetailPasswordPage> {
                                       ],
                                     ),
                                   ),
-                                  SizedBox(
-                                    height: 20.00,
-                                  ),
+                                  const SizedBox(height: 20.00),
                                   Input(
                                     input: 'title',
                                     texto: "Titulo",
                                     validacion: true,
                                     controller: _textTitleController,
                                     onChange: (value, input) {
-                                      // _validate();
                                       newPasswordValues[input] = value;
                                     },
                                   ),
@@ -194,7 +190,6 @@ class _DetailPasswordPageState extends State<DetailPasswordPage> {
                                       validacion: true,
                                       controller: _textPasswordController,
                                       onChange: (value, input) {
-                                        // _validate();
                                         newPasswordValues[input] = value;
                                       }),
                                   SliderWidget(
@@ -202,7 +197,7 @@ class _DetailPasswordPageState extends State<DetailPasswordPage> {
                                     width: size.width,
                                     input: 'max_length',
                                     onChanged: _onChanged,
-                                    value: _values['max_length'],
+                                    value: _values['max_length'] as double,
                                   ),
                                   Row(
                                     mainAxisAlignment:
@@ -213,20 +208,18 @@ class _DetailPasswordPageState extends State<DetailPasswordPage> {
                                         text: "Caracteres",
                                         onChanged: _onChanged,
                                         input: 'special_characters',
-                                        value: _values['special_characters'],
+                                        value: _values['special_characters'] as bool,
                                       ),
                                       SwitchWidget(
                                         width: size.width * 0.42,
                                         text: "Mayusculas",
                                         onChanged: _onChanged,
                                         input: 'capital_letters',
-                                        value: _values['capital_letters'],
+                                        value: _values['capital_letters'] as bool,
                                       ),
                                     ],
                                   ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
+                                  const SizedBox(height: 10),
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -236,20 +229,18 @@ class _DetailPasswordPageState extends State<DetailPasswordPage> {
                                         text: "Numeros",
                                         onChanged: _onChanged,
                                         input: 'numbers',
-                                        value: _values['numbers'],
+                                        value: _values['numbers'] as bool,
                                       ),
                                       Boton(
                                         width: size.width * 0.42,
-                                        color: Color(0XFF2CDA9D),
+                                        color: const Color(0XFF2CDA9D),
                                         textColor: Colors.white,
                                         texto: "Generar",
                                         onTap: _generatePassword,
                                       ),
                                     ],
                                   ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
+                                  const SizedBox(height: 10),
                                 ])),
                       ),
                       Align(
@@ -267,53 +258,13 @@ class _DetailPasswordPageState extends State<DetailPasswordPage> {
                     ],
                   )),
             ));
-        ;
       },
     );
   }
 
-  _validate(password) {
-    if ((_textPasswordController.text != password.password &&
-            _textPasswordController.text != "") ||
-        (_textTitleController.text != password.title &&
-            _textTitleController.text != "")) {
-      setState(() {
-        validate = true;
-      });
-    } else {
-      setState(() {
-        validate = false;
-      });
-    }
-  }
-
-  Map _detailDateTime(password) {
-    DateTime date = password.updatedAt;
-
-    final DateTime now = DateTime.now();
-    final Duration difference = now.difference(date);
-
-    Color color;
-    if (difference.inDays <= 90) {
-      color = Color(detalles);
-    } else if (difference.inDays > 90 && difference.inDays <= 150) {
-      color = Colors.amber;
-    } else {
-      color = Colors.red[400];
-    }
-
-    Map<String, dynamic> dateTimeDetail = {
-      "date": "${date.day}-${date.month}-${date.year}",
-      "hour":
-          "${date.hour > 12 ? date.hour - 12 : date.hour}:${date.minute.toString().padLeft(2, '0')} ${date.hour >= 12 ? 'PM' : 'AM'}",
-      "color": color
-    };
-    return dateTimeDetail;
-  }
-
-  void _onChanged(input, newValue) {
+  void _onChanged(dynamic input, dynamic newValue) {
     setState(() {
-      _values[input] = newValue;
+      _values[input as String] = newValue;
     });
   }
 
@@ -321,5 +272,28 @@ class _DetailPasswordPageState extends State<DetailPasswordPage> {
     final String newPassword = generarPassword(_values);
     _textPasswordController.text = newPassword;
     newPasswordValues['password'] = newPassword;
+  }
+
+  Map _detailDateTime(Password password) {
+    DateTime date = password.updatedAt;
+
+    final DateTime now = DateTime.now();
+    final Duration difference = now.difference(date);
+
+    Color color;
+    if (difference.inDays <= 90) {
+      color = const Color(detalles);
+    } else if (difference.inDays > 90 && difference.inDays <= 150) {
+      color = Colors.amber;
+    } else {
+      color = Colors.red[400]!;
+    }
+
+    return {
+      "date": "${date.day}-${date.month}-${date.year}",
+      "hour":
+          "${date.hour > 12 ? date.hour - 12 : date.hour}:${date.minute.toString().padLeft(2, '0')} ${date.hour >= 12 ? 'PM' : 'AM'}",
+      "color": color
+    };
   }
 }

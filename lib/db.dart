@@ -4,15 +4,12 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart' as p;
 
 class DB {
-  // esto debe de ser un map con el key el nombre de la tabla
   Map tables = {
     User.table_name: {
       "create":
-          "CREATE TABLE ${User.table_name} (id INTEGER NOT NULL UNIQUE,uuid TEXT NOT NULL UNIQUE ,name TEXT NOT NULL, password TEXT NOT NULL, PRIMARY KEY(id AUTOINCREMENT))",
+          "CREATE TABLE ${User.table_name} (id INTEGER NOT NULL UNIQUE,uuid TEXT NOT NULL UNIQUE ,name TEXT NOT NULL, password TEXT NOT NULL, salt TEXT, PRIMARY KEY(id AUTOINCREMENT))",
       "drop": "DROP TABLE IF EXISTS ${User.table_name}",
-      "update": [
-        //  'ALTER TABLE ${User.table_name} ADD COLUMN field INTEGER;',
-      ]
+      "update": []
     },
     Password.table_name: {
       "create":
@@ -27,17 +24,17 @@ class DB {
 
     String pathDb = await getDatabasesPath();
 
-    return await openDatabase(p.join(pathDb, 'lockSpace.db'), version: 1,
+    return await openDatabase(p.join(pathDb, 'lockSpace.db'), version: 2,
         onCreate: (Database db, int version) async {
       for (var entry in tables.entries) {
         String tableName = entry.key;
-        String query = entry.value['create'];
+        String query = entry.value["create"];
         await db.execute(query);
       }
     }, onUpgrade: (db, oldVersion, newVersion) async {
-      for (var entry in tables.entries) {}
-
-      if (oldVersion < newVersion) {}
+      if (oldVersion < 2) {
+        await db.execute("ALTER TABLE users ADD COLUMN salt TEXT");
+      }
     });
 
 

@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 
 class Notificacion extends StatelessWidget {
   final double opacidad;
-  const Notificacion({Key key, this.opacidad}) : super(key: key);
+  const Notificacion({super.key, required this.opacidad});
   @override
   Widget build(BuildContext context) {
     return AnimatedOpacity(
-      duration: Duration(milliseconds: 400),
+      duration: const Duration(milliseconds: 400),
       opacity: opacidad,
       child: Container(
         decoration: BoxDecoration(
-            color: Color(0XFFfca06d).withOpacity(0.7),
+            color: const Color(0XFFfca06d).withOpacity(0.7),
             borderRadius: BorderRadius.circular(10.00)),
-        child: Row(
+        child: const Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(

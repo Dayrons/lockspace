@@ -1,8 +1,6 @@
-import 'dart:math';
 import 'package:app/bloc/PasswordBloc/password_bloc.dart';
 import 'package:app/models/Password.dart';
 import 'package:app/utils/functions.dart';
-
 import 'package:app/utils/ui.dart';
 import 'package:app/widgets/%20expiration_selector_widget.dart';
 import 'package:app/widgets/boton.dart';
@@ -15,8 +13,10 @@ import 'package:app/widgets/input.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class RegisterPasswordPage extends StatefulWidget {
+  const RegisterPasswordPage({super.key});
+
   @override
-  _RegisterPasswordPageState createState() => _RegisterPasswordPageState();
+  State<RegisterPasswordPage> createState() => _RegisterPasswordPageState();
 }
 
 class _RegisterPasswordPageState extends State<RegisterPasswordPage> {
@@ -41,22 +41,22 @@ class _RegisterPasswordPageState extends State<RegisterPasswordPage> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
-        backgroundColor: Color(0XFF1c1d22),
+        backgroundColor: const Color(0XFF1c1d22),
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          backgroundColor: Color(0XFF1c1d22),
+          backgroundColor: const Color(0XFF1c1d22),
           elevation: 0,
           leading: IconButton(
             iconSize: 40,
-            icon: Icon(
+            icon: const Icon(
               Icons.navigate_before,
-              color: const Color(0XFF2CDA9D),
+              color: Color(0XFF2CDA9D),
             ),
             onPressed: () {
               Navigator.pop(context);
             },
           ),
-          title: Text(
+          title: const Text(
             "Nueva contraseña",
             style: TextStyle(fontSize: 18),
           ),
@@ -94,7 +94,7 @@ class _RegisterPasswordPageState extends State<RegisterPasswordPage> {
                   Container(
                     height: size.height * 0.75,
                     child: SingleChildScrollView(
-                        physics: BouncingScrollPhysics(),
+                        physics: const BouncingScrollPhysics(),
                         child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -105,7 +105,6 @@ class _RegisterPasswordPageState extends State<RegisterPasswordPage> {
                                 validacion: true,
                                 controller: _textTitleController,
                                 onChange: (value, input) {
-                                  // _validate();
                                   registerValues[input] = value;
                                 },
                               ),
@@ -117,23 +116,23 @@ class _RegisterPasswordPageState extends State<RegisterPasswordPage> {
                                   onChange: (value, input) {
                                     registerValues[input] = value;
                                   }),
-                              SizedBox(height: 16),
+                              const SizedBox(height: 16),
                               ExpirationSelectorWidget(
                                   text: "Expiración",
-                                  valueExpiration: _values["expiration"],
+                                  valueExpiration: _values["expiration"] as int,
                                   valueExpirationUnit:
-                                      _values["expiration_unit"],
+                                      _values["expiration_unit"] as String,
                                   inputExpiration: "expiration",
                                   inputExpirationUnit: "expiration_unit",
                                   onChanged: _onChanged,
                                   controller: _expirationController),
-                              SizedBox(height: 16),
+                              const SizedBox(height: 16),
                               SliderWidget(
                                 text: "Cantidad maxima de caracteres",
                                 width: size.width,
                                 input: 'max_length',
                                 onChanged: _onChanged,
-                                value: _values['max_length'],
+                                value: _values['max_length'] as double,
                               ),
                               Row(
                                 mainAxisAlignment:
@@ -144,20 +143,18 @@ class _RegisterPasswordPageState extends State<RegisterPasswordPage> {
                                     text: "Caracteres",
                                     onChanged: _onChanged,
                                     input: 'special_characters',
-                                    value: _values['special_characters'],
+                                    value: _values['special_characters'] as bool,
                                   ),
                                   SwitchWidget(
                                     width: size.width * 0.42,
                                     text: "Mayusculas",
                                     onChanged: _onChanged,
                                     input: 'capital_letters',
-                                    value: _values['capital_letters'],
+                                    value: _values['capital_letters'] as bool,
                                   ),
                                 ],
                               ),
-                              SizedBox(
-                                height: 10,
-                              ),
+                              const SizedBox(height: 10),
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -167,20 +164,18 @@ class _RegisterPasswordPageState extends State<RegisterPasswordPage> {
                                     text: "Numeros",
                                     onChanged: _onChanged,
                                     input: 'numbers',
-                                    value: _values['numbers'],
+                                    value: _values['numbers'] as bool,
                                   ),
                                   Boton(
                                     width: size.width * 0.42,
-                                    color: Color(0XFF2CDA9D),
+                                    color: const Color(0XFF2CDA9D),
                                     textColor: Colors.white,
                                     texto: "Generar",
                                     onTap: _generatePassword,
                                   ),
                                 ],
                               ),
-                              SizedBox(
-                                height: 10,
-                              ),
+                              const SizedBox(height: 10),
                             ])),
                   ),
                   Align(
@@ -192,17 +187,16 @@ class _RegisterPasswordPageState extends State<RegisterPasswordPage> {
                         final password = registerValues['password'];
                         BlocProvider.of<PasswordBloc>(context).addPassword(
                           Password(
-                              title: registerValues['title'],
-                              password: password,
-                              expiration: registerValues['expiration'],
-                              expirationUnit:registerValues["expiration_unit"]),
+                              title: registerValues['title'] as String? ?? '',
+                              password: password as String? ?? '',
+                              expiration: registerValues['expiration'] as int? ?? 0,
+                              expirationUnit: registerValues["expiration_unit"] as String? ?? 'never'),
                         );
-                        FlutterClipboard.copy(password);
-                        _textTitleController.text="";
-                        _passwordController.text="";
-                        _expirationController.text="";
+                        FlutterClipboard.copy(password as String);
+                        _textTitleController.text = "";
+                        _passwordController.text = "";
+                        _expirationController.text = "";
                         registerValues.clear();
-                       
                       },
                     ),
                   )
@@ -211,9 +205,7 @@ class _RegisterPasswordPageState extends State<RegisterPasswordPage> {
         ));
   }
 
-  void _validar(valor, input) {}
-
-  void _onChanged(input, newValue) {
+  dynamic _onChanged(String input, dynamic newValue) {
     setState(() {
       _values[input] = newValue;
     });

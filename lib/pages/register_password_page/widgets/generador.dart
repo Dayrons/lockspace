@@ -2,25 +2,24 @@ import 'package:app/widgets/check.dart';
 import 'package:flutter/material.dart';
 
 class Generador extends StatelessWidget {
-  final Function onChanged;
-  final List values;
-  final Function onPressed;
+  final dynamic Function(String, dynamic) onChanged;
+  final List<bool> values;
+  final VoidCallback? onPressed;
 
-  const Generador({Key key, this.onChanged, this.values, this.onPressed})
-      : super(key: key);
+  const Generador({super.key, required this.onChanged, required this.values, this.onPressed});
 
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Container(
-        margin: EdgeInsets.symmetric(vertical: 20.00),
+        margin: const EdgeInsets.symmetric(vertical: 20.00),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               'Generar Contraseña'.toUpperCase(),
               style:
-                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                  const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
             Check(
               width: (size.width * 50) / 100,
@@ -44,11 +43,9 @@ class Generador extends StatelessWidget {
               texto: 'Caracteres especiales',
             ),
             MaterialButton(
-              color: Color(0XFF2CDA9D),
-              onPressed: () {
-                onPressed();
-              },
-              child: Text(
+              color: const Color(0XFF2CDA9D),
+              onPressed: onPressed,
+              child: const Text(
                 'Generar',
                 style:
                     TextStyle(color: Colors.white, fontWeight: FontWeight.bold),

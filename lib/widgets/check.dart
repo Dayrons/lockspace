@@ -5,32 +5,35 @@ class Check extends StatelessWidget {
   final bool value;
   final String texto;
   final String input;
-  final Function onChanged;
+  final dynamic Function(String, dynamic) onChanged;
 
-  const Check(
-      {Key key, this.width, this.value, this.onChanged, this.texto, this.input})
-      : super(key: key);
+  const Check({
+    super.key,
+    this.width = 200,
+    this.value = false,
+    required this.onChanged,
+    required this.texto,
+    required this.input,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 10.00),
+      margin: const EdgeInsets.symmetric(vertical: 10.00),
       width: width,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5.00),
-        color: Color(0XFF2b2e3d).withOpacity(0.5),
+        color: const Color(0XFF2b2e3d).withOpacity(0.5),
       ),
       child: CheckboxListTile(
         activeColor: const Color(0XFF2CDA9D),
-        onChanged: (
-          bool value,
-        ) {
-          onChanged(value, input);
+        onChanged: (bool? value) {
+          onChanged(input, value);
         },
         value: value,
         title: Text(
           texto,
-          style: TextStyle(color: Colors.white),
+          style: const TextStyle(color: Colors.white),
         ),
       ),
     );

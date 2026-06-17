@@ -17,14 +17,14 @@ class RootBloc extends Bloc<RootEvent, RootState> {
   ) async* {
     if (event is Init) {
       await _userPreferences.init();
-      final User user =_userPreferences.getUser();
+      final User? user =_userPreferences.getUser();
 
       final sesionIsActive = await _userPreferences.getSesion();
   
-      if (user?.id == null) {
+      if (user == null || user.id == 0) {
         yield IniciandoPorPrimeraVez();
       } else {
-        if (sesionIsActive) {
+        if (sesionIsActive == true) {
           yield SesionActiva();
         } else {
           yield SesionInactiva();

@@ -9,16 +9,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-//QUE MUESTRE UNA PANTALLA LA PRIMERA VEZ QUE SE INICIE LA APP
-//https://es.stackoverflow.com/questions/3243/saber-cuando-la-app-es-lanzada-por-primera-vez-en-android
-
 class SignInPage extends StatefulWidget {
+  const SignInPage({super.key});
+
   @override
   State<SignInPage> createState() => _SignInPageState();
 }
 
 class _SignInPageState extends State<SignInPage> {
-  final Map values = {
+  final Map<String, dynamic> values = {
     'name': '',
     'password': '',
     'sesion': false,
@@ -27,11 +26,11 @@ class _SignInPageState extends State<SignInPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0XFF1c1d22),
+      backgroundColor: const Color(0XFF1c1d22),
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthSignInState) {
-            if (state.isLoading == false && !state.isError) {
+            if (!state.isLoading && !state.isError) {
               Navigator.of(context).pushAndRemoveUntil(
                   CupertinoPageRoute(
                       builder: (BuildContext context) => HomePage()),
@@ -61,7 +60,7 @@ class _SignInPageState extends State<SignInPage> {
                     height: 180.00,
                     width: 180.00,
                   ),
-                  Text(
+                  const Text(
                     "Manten tus contraseñas en un solo lugar, encriptadas y seguras",
                     textAlign: TextAlign.center,
                     style: TextStyle(
@@ -69,9 +68,7 @@ class _SignInPageState extends State<SignInPage> {
                         fontWeight: FontWeight.bold,
                         fontSize: 18.00),
                   ),
-                  SizedBox(
-                    height: 20.00,
-                  ),
+                  const SizedBox(height: 20.00),
                   Input(
                     texto: 'Usuario',
                     input: 'name',
@@ -89,19 +86,19 @@ class _SignInPageState extends State<SignInPage> {
                   Check(
                     texto: 'Mantener sesion activa',
                     input: 'sesion',
-                    value: values['sesion'],
+                    value: values['sesion'] as bool,
                     onChanged: _onChanged,
                   ),
                   BlocBuilder<AuthBloc, AuthState>(
                     builder: (context, state) {
                       if (state is AuthSignInState) {
                         if (state.isLoading) {
-                          return CircularProgressIndicator();
+                          return const CircularProgressIndicator();
                         }
                       }
                       return Boton(
                         texto: 'Iniciar',
-                        color: Color(detalles),
+                        color: const Color(detalles),
                         textColor: Colors.white,
                         onTap: _signIn,
                       );
@@ -114,7 +111,7 @@ class _SignInPageState extends State<SignInPage> {
     );
   }
 
-  void _onChanged(value, input) {
+  void _onChanged(String input, dynamic value) {
     setState(() {
       values[input] = value;
     });

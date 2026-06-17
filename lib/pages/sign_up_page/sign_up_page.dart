@@ -1,5 +1,4 @@
 import 'package:app/bloc/AuthBloc/auth_bloc.dart';
-import 'package:app/models/User.dart';
 import 'package:app/pages/home_page/home_page.dart';
 import 'package:app/utils/ui.dart';
 import 'package:app/widgets/boton.dart';
@@ -10,12 +9,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SignUpPage extends StatefulWidget {
+  const SignUpPage({super.key});
+
   @override
-  _SignUpPageState createState() => _SignUpPageState();
+  State<SignUpPage> createState() => _SignUpPageState();
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  final Map values = {
+  final Map<String, dynamic> values = {
     'name': '',
     'password': '',
     'sesion': false,
@@ -26,7 +27,7 @@ class _SignUpPageState extends State<SignUpPage> {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthSignUpState) {
-          if (state.isLoading == false && !state.isError) {
+          if (!state.isLoading && !state.isError) {
             Navigator.of(context).pushAndRemoveUntil(
               CupertinoPageRoute(
                 builder: (BuildContext context) => HomePage(),
@@ -37,30 +38,26 @@ class _SignUpPageState extends State<SignUpPage> {
         }
       },
       child: Scaffold(
-        backgroundColor: Color(fondo),
+        backgroundColor: const Color(fondo),
         body: Container(
           padding: const EdgeInsets.symmetric(horizontal: padding),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 'Ingresa una contraseña',
                 style: TextStyle(
                     color: Colors.white,
                     fontSize: 24,
                     fontWeight: FontWeight.bold),
               ),
-              SizedBox(
-                height: 10,
-              ),
-              Text(
+              const SizedBox(height: 10),
+              const Text(
                 'Con una sola contraseña gestiona todas las demas  ',
                 style: TextStyle(color: Colors.white, fontSize: 16),
               ),
-              SizedBox(
-                height: 30.00,
-              ),
+              const SizedBox(height: 30.00),
               Input(
                 texto: 'Nombre de usuario',
                 input: 'name',
@@ -78,21 +75,19 @@ class _SignUpPageState extends State<SignUpPage> {
               Check(
                 texto: 'Mantener sesion activa',
                 input: 'sesion',
-                value: values['sesion'],
+                value: values['sesion'] as bool,
                 onChanged: _onChanged,
               ),
               BlocBuilder<AuthBloc, AuthState>(
                 builder: (context, state) {
                   if (state is AuthSignUpState && state.isLoading) {
-                    print(state);
-                    Center(
+                    const Center(
                       child: CircularProgressIndicator(),
                     );
                   }
-
                   return Boton(
                     texto: 'Registrar',
-                    color: Color(detalles),
+                    color: const Color(detalles),
                     textColor: Colors.white,
                     onTap: _signUp,
                   );
@@ -105,7 +100,7 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  void _onChanged(value, input) {
+  void _onChanged(String input, dynamic value) {
     setState(() {
       values[input] = value;
     });
