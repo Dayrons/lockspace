@@ -27,7 +27,7 @@ class PasswordWidget extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 10.00),
         padding: const EdgeInsets.symmetric(horizontal: 15.00, vertical: 5.00),
         decoration: BoxDecoration(
-          color: const Color(0XFF2b2e3d).withOpacity(0.5),
+          color: const Color(0XFF2b2e3d).withValues(alpha: 0.5),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Row(
@@ -111,18 +111,12 @@ class PasswordWidget extends StatelessWidget {
           AndroidAuthMessages(signInTitle: "Authentication", signInHint: "")
         ],
         localizedReason: 'Please authenticate to delete password',
-        options: const AuthenticationOptions(
-          useErrorDialogs: false,
-        ),
       );
     } else {
       isAuth = await auth.authenticate(
         localizedReason:
             'Please enter your device password to delete password',
-        options: const AuthenticationOptions(
-          biometricOnly: false,
-          useErrorDialogs: false,
-        ),
+        biometricOnly: false,
       );
     }
 

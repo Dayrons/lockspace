@@ -1,3 +1,8 @@
+import 'package:app/pages/sign_in_page/sign_in_page.dart';
+import 'package:app/preferences/user_preferences.dart';
+import 'package:app/utils/key_service.dart';
+import 'package:app/utils/ui.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -9,6 +14,21 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   bool _notificationsEnabled = false;
+
+  Future<void> _logout() async {
+    final prefs = UserSharedPrefs();
+    await prefs.init();
+    await prefs.setSesion(false);
+    await prefs.clearUser();
+    KeyService().clear();
+
+    Navigator.of(context).pushAndRemoveUntil(
+      CupertinoPageRoute(
+        builder: (context) => const SignInPage(),
+      ),
+      (route) => false,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -127,7 +147,20 @@ class _SettingsPageState extends State<SettingsPage> {
                 },
               ),
             ],
-          )
+          ),
+          const Spacer(),
+          SizedBox(
+            width: double.infinity,
+            child: TextButton.icon(
+              onPressed: _logout,
+              icon: const Icon(Icons.logout, color: Colors.redAccent),
+              label: const Text(
+                "Cerrar sesión",
+                style: TextStyle(color: Colors.redAccent, fontSize: 16),
+              ),
+            ),
+          ),
+          const SizedBox(height: 80),
         ],
       ),
     );

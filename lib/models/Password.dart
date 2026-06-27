@@ -4,7 +4,9 @@ import 'package:app/utils/key_service.dart';
 import 'package:app/utils/functions.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:sqflite/sqflite.dart';
+import 'package:crypto/crypto.dart';
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:uuid/uuid.dart';
 
 class Password {
@@ -36,11 +38,11 @@ class Password {
   static encrypt.Encrypter getEncrypter() {
     final keyService = KeyService();
     final keyString = keyService.derivedKey ?? getDeviceId();
-    final keyBytes = base64.decode(keyString);
-    final key = encrypt.Key.fromLength(32);
-    final finalKey = encrypt.Key(keyBytes.length == 32 ? keyBytes : key.bytes);
-    final fernet = encrypt.Fernet(finalKey);
-    return encrypt.Encrypter(fernet);
+    print('[DEBUG] getEncrypter() - keyString: $keyString');
+    print('[DEBUG] getEncrypter() - hasKey: ${keyService.hasKey}');
+    final hashBytes = sha256.convert(utf8.encode(keyString)).bytes;
+    print('[DEBUG] getEncrypter() - hashBytes length: ${hashBytes.length}');
+    return encrypt.Encrypter(encrypt.Fernet(encrypt.Key(Uint8List.fromList(hashBytes))));
   }
 
   Future<List<Password>> filter(String search) async {
@@ -142,14 +144,19 @@ class Password {
   }
 
   Future<String> passwordEncrypt() async {
+    print('[DEBUG] passwordEncrypt() - input password: $password');
     final encrypterFernet = getEncrypter();
     final encrypted = encrypterFernet.encrypt(password);
+    print('[DEBUG] passwordEncrypt() - encrypted.base64: ${encrypted.base64}');
     return encrypted.base64;
   }
 
   Future<String> passwordDecrypt() async {
+    print('[DEBUG] passwordDecrypt() - input base64: $password');
     final encrypterFernet = getEncrypter();
-    return encrypterFernet.decrypt64(password);
+    final decrypted = encrypterFernet.decrypt64(password);
+    print('[DEBUG] passwordDecrypt() - decrypted: $decrypted');
+    return decrypted;
   }
 
   @override

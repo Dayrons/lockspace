@@ -6,21 +6,20 @@ part 'password_event.dart';
 part 'password_state.dart';
 
 class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
-  PasswordBloc() : super(PasswordState());
+  PasswordBloc() : super(PasswordState()) {
+    on<PasswordEvent>(_onPasswordEvent);
+  }
 
-  @override
-  Stream<PasswordState> mapEventToState(PasswordEvent event) async* {
-    if (event is PasswordEvent) {
-      yield state.copyWith(
-        isLoading: event.isLoading,
-        passwords: event.passwords,
-        password: event.password,
-        registerError: event.registerError,
-        registerSuccess: event.registerSuccess,
-        updateSuccess: event.updateSuccess,
-        updateError: event.updateError,
-      );
-    }
+  void _onPasswordEvent(PasswordEvent event, Emitter<PasswordState> emit) {
+    emit(state.copyWith(
+      isLoading: event.isLoading,
+      passwords: event.passwords,
+      password: event.password,
+      registerError: event.registerError,
+      registerSuccess: event.registerSuccess,
+      updateSuccess: event.updateSuccess,
+      updateError: event.updateError,
+    ));
   }
 
   void selectPassword(Password password) {

@@ -9,26 +9,23 @@ part 'root_state.dart';
 
 class RootBloc extends Bloc<RootEvent, RootState> {
   final _userPreferences = UserSharedPrefs();
-  RootBloc() : super(RootInitial());
+  RootBloc() : super(RootInitial()) {
+    on<Init>(_onInit);
+  }
 
-  @override
-  Stream<RootState> mapEventToState(
-    RootEvent event,
-  ) async* {
-    if (event is Init) {
-      await _userPreferences.init();
-      final User? user =_userPreferences.getUser();
+  Future<void> _onInit(Init event, Emitter<RootState> emit) async {
+    await _userPreferences.init();
+    final User? user = _userPreferences.getUser();
 
-      final sesionIsActive = await _userPreferences.getSesion();
-  
-      if (user == null || user.id == 0) {
-        yield IniciandoPorPrimeraVez();
+    final sesionIsActive = await _userPreferences.getSesion();
+
+    if (user == null || user.id == 0) {
+      emit(IniciandoPorPrimeraVez());
+    } else {
+      if (sesionIsActive == true) {
+        emit(SesionActiva());
       } else {
-        if (sesionIsActive == true) {
-          yield SesionActiva();
-        } else {
-          yield SesionInactiva();
-        }
+        emit(SesionInactiva());
       }
     }
   }

@@ -9,28 +9,25 @@ part 'auth_event.dart';
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  AuthBloc() : super(AuthInitial());
+  AuthBloc() : super(AuthInitial()) {
+    on<AuthEvent>(_onAuthEvent);
+  }
   final _userPreferences = UserSharedPrefs();
 
-  @override
-  Stream<AuthState> mapEventToState(
-    AuthEvent event,
-  ) async* {
-    if (event is AuthEvent) {
-      if (event.isSignIn) {
-        yield AuthSignInState(
-          isError: event.isError,
-          errorMessage: event.errorMessage,
-          isLoading: event.isLoading,
-        );
-      }
-      if (event.isSignUp) {
-        yield AuthSignUpState(
-          isError: event.isError,
-          errorMessage: event.errorMessage,
-          isLoading: event.isLoading,
-        );
-      }
+  void _onAuthEvent(AuthEvent event, Emitter<AuthState> emit) {
+    if (event.isSignIn) {
+      emit(AuthSignInState(
+        isError: event.isError,
+        errorMessage: event.errorMessage,
+        isLoading: event.isLoading,
+      ));
+    }
+    if (event.isSignUp) {
+      emit(AuthSignUpState(
+        isError: event.isError,
+        errorMessage: event.errorMessage,
+        isLoading: event.isLoading,
+      ));
     }
   }
 

@@ -38,6 +38,8 @@ class User {
     final key = KeyService();
     salt = base64Encode(Uuid().v4().codeUnits);
     key.setDerivedKey(salt!);
+    print('[DEBUG] User.create() - salt: $salt');
+    print('[DEBUG] User.create() - derivedKey: ${key.derivedKey}');
 
     final uuidVal = Uuid().v4();
     final int userId = await db.insert(
@@ -75,6 +77,8 @@ class User {
         final key = KeyService();
         if (users[0].salt != null) {
           key.setDerivedKey(users[0].salt!);
+          print('[DEBUG] User.get() - salt loaded: ${users[0].salt}');
+          print('[DEBUG] User.get() - derivedKey set: ${key.derivedKey}');
         }
         return users[0];
       }
