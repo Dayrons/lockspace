@@ -48,7 +48,7 @@ class Input extends StatelessWidget {
                 cursorColor: const Color(0XFF2CDA9D),
                 decoration: const InputDecoration(border: InputBorder.none),
                 onChanged: (value) {
-                  onChange?.call(value, input);
+                  onChange?.call(input, value);
                 },
               ),
             ),

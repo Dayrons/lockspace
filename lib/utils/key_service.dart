@@ -1,17 +1,17 @@
-import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:typed_data';
 
 class KeyService {
   static final KeyService _instance = KeyService._internal();
   factory KeyService() => _instance;
   KeyService._internal();
 
-  String? _derivedKey;
+  Uint8List? _derivedKey;
 
-  String? get derivedKey => _derivedKey;
+  Uint8List? get derivedKey => _derivedKey;
 
   bool get hasKey => _derivedKey != null;
 
-  void setDerivedKey(String key) {
+  void setDerivedKey(Uint8List key) {
     _derivedKey = key;
   }
 

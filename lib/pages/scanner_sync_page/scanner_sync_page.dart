@@ -1,6 +1,5 @@
 import 'package:app/models/Password.dart';
 import 'package:app/preferences/user_preferences.dart';
-import 'package:app/utils/functions.dart';
 import 'package:app/utils/ui.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -56,7 +55,10 @@ class _ScannerSyncPageState extends State<ScannerSyncPage> {
     if (user == null) return;
 
     final passwords = await _getPassowrds();
-    final String uuid = getDeviceId();
+    // Nota: las contraseñas viajan encriptadas con la key derivada de la
+    // contraseña maestra (PBKDF2). El desktop derivará la misma key usando
+    // la contraseña del usuario + su username como salt, por lo que no es
+    // necesario enviar ningun identificador de dispositivo.
 
     FTPConnect ftpConnect = FTPConnect(jwtDecode["host"] as String,
         port: 2121, user: jwtDecode["username"] as String, pass: jwtDecode["password"] as String);
@@ -65,7 +67,6 @@ class _ScannerSyncPageState extends State<ScannerSyncPage> {
     File file = File('$path/data.txt');
     final Map<String, dynamic> data = {
       "user": user.toMap(),
-      "uuid": uuid,
       "passwords": passwords,
     };
 

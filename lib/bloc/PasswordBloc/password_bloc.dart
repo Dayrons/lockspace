@@ -36,10 +36,13 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
   void addPassword(Password password) async {
     add(PasswordEvent(isLoading: true));
     try {
+      print('[PWD] addPassword() - title: ${password.title}, pass length: ${password.password.length}');
       await password.create();
+      print('[PWD] addPassword() - create() succeeded');
       List<Password> passwords = await password.getAll();
       add(PasswordEvent(passwords: passwords, isLoading: false, registerSuccess: true));
     } catch (e) {
+      print('[PWD] addPassword() EXCEPTION: $e');
       add(PasswordEvent(isLoading: false, registerError: true));
     }
   }

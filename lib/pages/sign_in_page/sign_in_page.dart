@@ -23,6 +23,12 @@ class _SignInPageState extends State<SignInPage> {
     'sesion': false,
   };
 
+  // Flag para ignorar el primer estado que recibe el BlocListener
+  // (que es el estado actual del Bloc al momento de suscribirse).
+  // Solo queremos reaccionar a NUEVOS estados generados por el usuario
+  // al presionar el boton de login.
+  bool _isFirstState = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,6 +36,11 @@ class _SignInPageState extends State<SignInPage> {
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthSignInState) {
+            // Ignorar el primer estado (puede ser un login exitoso anterior)
+            if (_isFirstState) {
+              _isFirstState = false;
+              return;
+            }
             if (!state.isLoading && !state.isError) {
               Navigator.of(context).pushAndRemoveUntil(
                   CupertinoPageRoute(
@@ -118,6 +129,22 @@ class _SignInPageState extends State<SignInPage> {
   }
 
   void _signIn() {
+    _isFirstState = false;
+    // Validar campos vacíos
+    final name = values["name"]?.toString() ?? '';
+    final password = values["password"]?.toString() ?? '';
+    if (name.trim().isEmpty || password.isEmpty) {
+      Fluttertoast.showToast(
+        msg: "Por favor ingresa usuario y contraseña",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 3,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 12,
+      );
+      return;
+    }
     BlocProvider.of<AuthBloc>(context).signIn(values);
   }
 }

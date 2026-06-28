@@ -1,12 +1,8 @@
 import 'package:app/db.dart';
 import 'package:app/preferences/user_preferences.dart';
 import 'package:app/utils/key_service.dart';
-import 'package:app/utils/functions.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:sqflite/sqflite.dart';
-import 'package:crypto/crypto.dart';
-import 'dart:convert';
-import 'dart:typed_data';
 import 'package:uuid/uuid.dart';
 
 class Password {
@@ -35,14 +31,15 @@ class Password {
   }) : createdAt = createdAt ?? DateTime.now(),
        updatedAt = updatedAt ?? DateTime.now();
 
+  /// Retorna un encrypter Fernet usando la key derivada de la contraseña maestra.
+  /// La key se deriva con PBKDF2(password, salt=username) y se almacena en KeyService.
   static encrypt.Encrypter getEncrypter() {
     final keyService = KeyService();
-    final keyString = keyService.derivedKey ?? getDeviceId();
-    print('[DEBUG] getEncrypter() - keyString: $keyString');
-    print('[DEBUG] getEncrypter() - hasKey: ${keyService.hasKey}');
-    final hashBytes = sha256.convert(utf8.encode(keyString)).bytes;
-    print('[DEBUG] getEncrypter() - hashBytes length: ${hashBytes.length}');
-    return encrypt.Encrypter(encrypt.Fernet(encrypt.Key(Uint8List.fromList(hashBytes))));
+    if (!keyService.hasKey) {
+      throw StateError('KeyService no tiene key derivada. El usuario debe estar logueado.');
+    }
+    final keyBytes = keyService.derivedKey!;
+    return encrypt.Encrypter(encrypt.Fernet(encrypt.Key(keyBytes)));
   }
 
   Future<List<Password>> filter(String search) async {
@@ -68,8 +65,7 @@ class Password {
   }
 
   Map<String, dynamic> toMap() {
-    return {
-      'id': id,
+    final map = <String, dynamic>{
       'uuid': uuid,
       'user_id': userId,
       'title': title,
@@ -78,20 +74,31 @@ class Password {
       'expiration_unit': expirationUnit,
       'updated_at': updatedAt,
     };
+    // Solo incluir id si es > 0 (para no interferir con AUTOINCREMENT)
+    if (id > 0) {
+      map['id'] = id;
+    }
+    return map;
   }
 
   Future<void> create() async {
     await _userPreferences.init();
     final user = _userPreferences.getUser();
-    if (user == null) return;
+    if (user == null) {
+      print('[PWD] create() ERROR: user is null');
+      return;
+    }
     userId = user.id;
     Database db = await DB().conexion();
+    print('[PWD] create() - encrypting password for title: $title');
     password = await passwordEncrypt();
+    print('[PWD] create() - encrypted OK, length: ${password.length}');
     uuid = Uuid().v4();
     final data = toMap();
     data['created_at'] = DateTime.now().toString();
     data['updated_at'] = DateTime.now().toString();
     await db.insert(Password.table_name, data);
+    print('[PWD] create() - saved to DB with id: $id');
   }
 
   Future<void> update() async {
@@ -144,19 +151,16 @@ class Password {
   }
 
   Future<String> passwordEncrypt() async {
-    print('[DEBUG] passwordEncrypt() - input password: $password');
+    print('[PWD] passwordEncrypt() - input: $password');
     final encrypterFernet = getEncrypter();
     final encrypted = encrypterFernet.encrypt(password);
-    print('[DEBUG] passwordEncrypt() - encrypted.base64: ${encrypted.base64}');
+    print('[PWD] passwordEncrypt() - encrypted base64 length: ${encrypted.base64.length}');
     return encrypted.base64;
   }
 
   Future<String> passwordDecrypt() async {
-    print('[DEBUG] passwordDecrypt() - input base64: $password');
     final encrypterFernet = getEncrypter();
-    final decrypted = encrypterFernet.decrypt64(password);
-    print('[DEBUG] passwordDecrypt() - decrypted: $decrypted');
-    return decrypted;
+    return encrypterFernet.decrypt64(password);
   }
 
   @override

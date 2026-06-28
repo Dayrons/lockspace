@@ -104,7 +104,7 @@ class _RegisterPasswordPageState extends State<RegisterPasswordPage> {
                                 texto: "Titulo",
                                 validacion: true,
                                 controller: _textTitleController,
-                                onChange: (value, input) {
+                                onChange: (input, value) {
                                   registerValues[input] = value;
                                 },
                               ),
@@ -113,7 +113,7 @@ class _RegisterPasswordPageState extends State<RegisterPasswordPage> {
                                   texto: "Contraseña",
                                   validacion: true,
                                   controller: _passwordController,
-                                  onChange: (value, input) {
+                                  onChange: (input, value) {
                                     registerValues[input] = value;
                                   }),
                               const SizedBox(height: 16),

@@ -22,11 +22,17 @@ class _SignUpPageState extends State<SignUpPage> {
     'sesion': false,
   };
 
+  bool _isFirstState = true;
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthSignUpState) {
+          if (_isFirstState) {
+            _isFirstState = false;
+            return;
+          }
           if (!state.isLoading && !state.isError) {
             Navigator.of(context).pushAndRemoveUntil(
               CupertinoPageRoute(
@@ -81,7 +87,7 @@ class _SignUpPageState extends State<SignUpPage> {
               BlocBuilder<AuthBloc, AuthState>(
                 builder: (context, state) {
                   if (state is AuthSignUpState && state.isLoading) {
-                    const Center(
+                    return const Center(
                       child: CircularProgressIndicator(),
                     );
                   }
@@ -107,6 +113,16 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   void _signUp() {
+    _isFirstState = false;
+    // Validar campos vacíos
+    final name = values["name"]?.toString() ?? '';
+    final password = values["password"]?.toString() ?? '';
+    if (name.trim().isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Por favor ingresa usuario y contraseña")),
+      );
+      return;
+    }
     BlocProvider.of<AuthBloc>(context).signUp(values);
   }
 }

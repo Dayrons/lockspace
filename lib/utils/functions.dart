@@ -1,6 +1,7 @@
 import 'dart:math';
-import 'package:device_info_plus/device_info_plus.dart';
-import 'dart:io';
+import 'dart:convert';
+import 'dart:typed_data';
+import 'package:crypto/crypto.dart';
 
 String generarPassword(Map<String, dynamic> values) {
   String passwordRandom = '';
@@ -54,6 +55,56 @@ String generarPassword(Map<String, dynamic> values) {
   return passwordRandom;
 }
 
-String getDeviceId() {
-  return 'default_device_key_fallback';
+/// Deriva una clave de 32 bytes desde la contraseña del usuario usando PBKDF2.
+/// 
+/// Implementación manual de PBKDF2-HMAC-SHA256 (RFC 2898).
+/// Usa 100,000 iteraciones y un salt fijo basado en el nombre de usuario
+/// para que sea determinista entre dispositivos.
+/// 
+/// Esto permite que la misma contraseña maestra produzca la misma key de
+/// encriptación en cualquier dispositivo (necesario para sincronización FTP
+/// con la app desktop).
+Future<Uint8List> deriveKeyAsync(String password, {String? salt}) async {
+  final saltBytes = utf8.encode(salt != null ? 'lockspace_v1_$salt' : 'lockspace_v1_default');
+  final passwordBytes = utf8.encode(password);
+  const iterations = 100000;
+  const keyLength = 32; // 256 bits para Fernet
+  
+  // PBKDF2: DK = T_1 || T_2 || ... || T_l
+  // T_i = F(Password, Salt, c, i)
+  // F(P,S,c,i) = U_1 XOR U_2 XOR ... XOR U_c
+  // U_1 = PRF(P, S || i)
+  // U_2 = PRF(P, U_1)
+  // ...
+  
+  final hmac = Hmac(sha256, passwordBytes);
+  final blocksNeeded = (keyLength / 32).ceil(); // SHA256 produce 32 bytes
+  
+  final key = <int>[];
+  
+  for (var blockIndex = 1; blockIndex <= blocksNeeded; blockIndex++) {
+    // U_1 = HMAC(Password, Salt || blockIndex)
+    final blockInput = Uint8List(saltBytes.length + 4);
+    blockInput.setAll(0, saltBytes);
+    // blockIndex como big-endian 4 bytes
+    blockInput[saltBytes.length] = (blockIndex >> 24) & 0xff;
+    blockInput[saltBytes.length + 1] = (blockIndex >> 16) & 0xff;
+    blockInput[saltBytes.length + 2] = (blockIndex >> 8) & 0xff;
+    blockInput[saltBytes.length + 3] = blockIndex & 0xff;
+    
+    var u = hmac.convert(blockInput).bytes;
+    var t = List<int>.from(u);
+    
+    // U_2 hasta U_c
+    for (var i = 1; i < iterations; i++) {
+      u = hmac.convert(u).bytes;
+      for (var j = 0; j < t.length; j++) {
+        t[j] ^= u[j];
+      }
+    }
+    
+    key.addAll(t);
+  }
+  
+  return Uint8List.fromList(key.take(keyLength).toList());
 }

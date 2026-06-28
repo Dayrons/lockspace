@@ -39,7 +39,6 @@ class UserSharedPrefs {
       uuid: userDecode["uuid"] as String? ?? '',
       name: userDecode["name"] as String? ?? '',
       password: userDecode["password"] as String? ?? '',
-      salt: userDecode["salt"] as String?,
     );
   }
 

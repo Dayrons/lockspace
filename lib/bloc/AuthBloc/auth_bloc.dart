@@ -1,7 +1,6 @@
 import 'package:app/bloc/PasswordBloc/password_bloc.dart';
 import 'package:app/models/User.dart';
 import 'package:app/preferences/user_preferences.dart';
-import 'package:bcrypt/bcrypt.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 

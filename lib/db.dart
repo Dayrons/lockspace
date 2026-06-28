@@ -7,7 +7,7 @@ class DB {
   Map tables = {
     User.table_name: {
       "create":
-          "CREATE TABLE ${User.table_name} (id INTEGER NOT NULL UNIQUE,uuid TEXT NOT NULL UNIQUE ,name TEXT NOT NULL, password TEXT NOT NULL, salt TEXT, PRIMARY KEY(id AUTOINCREMENT))",
+          "CREATE TABLE ${User.table_name} (id INTEGER NOT NULL UNIQUE, uuid TEXT NOT NULL UNIQUE, name TEXT NOT NULL, password TEXT NOT NULL, PRIMARY KEY(id AUTOINCREMENT))",
       "drop": "DROP TABLE IF EXISTS ${User.table_name}",
       "update": []
     },
@@ -20,11 +20,9 @@ class DB {
   };
 
   conexion() async {
-
-
     String pathDb = await getDatabasesPath();
 
-    return await openDatabase(p.join(pathDb, 'lockSpace.db'), version: 2,
+    return await openDatabase(p.join(pathDb, 'lockSpace.db'), version: 4,
         onCreate: (Database db, int version) async {
       for (var entry in tables.entries) {
         String tableName = entry.key;
@@ -32,11 +30,15 @@ class DB {
         await db.execute(query);
       }
     }, onUpgrade: (db, oldVersion, newVersion) async {
-      if (oldVersion < 2) {
-        await db.execute("ALTER TABLE users ADD COLUMN salt TEXT");
+      // Migración v4: cambio de bcrypt a HMAC-SHA256 para verificación de
+      // contraseña. Los hashes viejos no son compatibles, se recrean tablas.
+      if (oldVersion < 4) {
+        await db.execute("DROP TABLE IF EXISTS ${Password.table_name}");
+        await db.execute("DROP TABLE IF EXISTS ${User.table_name}");
+        for (var entry in tables.entries) {
+          await db.execute(entry.value["create"]);
+        }
       }
     });
-
-
   }
 }
