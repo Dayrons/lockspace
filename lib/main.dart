@@ -40,7 +40,15 @@ class App extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: const Root(),
       theme: ThemeData(
-        primaryColor: const Color(0XFF1c1d22),
+        primaryColor: const Color(0XFF2CDA9D),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0XFF2CDA9D),
+          primary: const Color(0XFF2CDA9D),
+          secondary: const Color(0XFF2CDA9D),
+          surface: const Color(0XFF1c1d22),
+          brightness: Brightness.dark,
+        ),
+        scaffoldBackgroundColor: const Color(0XFF1c1d22),
       ),
     );
   }
