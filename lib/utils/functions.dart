@@ -43,7 +43,7 @@ String generarPassword(Map<String, dynamic> values) {
     selectedCharacters.add(specialCharacters[random.nextInt(specialCharacters.length)]);
   }
 
-  int maxLength = values["max_length"] as int? ?? 12;
+  int maxLength = (values["max_length"] as num?)?.toInt() ?? 12;
   for (var i = 1; i < maxLength - selectedCharacters.length; i++) {
     final numeroRandom = random.nextInt(lowercase.length);
     passwordRandom += lowercase[numeroRandom];

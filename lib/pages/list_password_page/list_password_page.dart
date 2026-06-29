@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'package:app/bloc/PasswordBloc/password_bloc.dart';
 import 'package:app/models/Password.dart';
 import 'package:app/pages/list_password_page/widgets/password.dart';
 import 'package:app/pages/register_password_page/register_password_page.dart';
+import 'package:app/utils/sync_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,10 +16,24 @@ class ListPasswordPage extends StatefulWidget {
 }
 
 class _ListPasswordPageState extends State<ListPasswordPage> {
+  StreamSubscription? _syncSubscription;
+
   @override
   void initState() {
     super.initState();
     init(context);
+    // Refrescar lista cuando llega sync del desktop
+    _syncSubscription = SyncService().onSyncCompleted.listen((_) {
+      if (mounted) {
+        BlocProvider.of<PasswordBloc>(context).init();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _syncSubscription?.cancel();
+    super.dispose();
   }
 
   @override
@@ -84,6 +100,7 @@ class _ListPasswordPageState extends State<ListPasswordPage> {
               if (state.passwords.isNotEmpty) {
                 return ListView.builder(
                   physics: const BouncingScrollPhysics(),
+                  padding: const EdgeInsets.only(bottom: 100),
                   itemCount: state.passwords.length,
                   itemBuilder: (BuildContext context, int index) {
                     final Password password = state.passwords[index];

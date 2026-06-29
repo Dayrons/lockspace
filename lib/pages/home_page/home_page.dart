@@ -2,6 +2,7 @@ import 'package:app/pages/list_password_page/list_password_page.dart';
 import 'package:app/pages/scanner_sync_page/scanner_sync_page.dart';
 import 'package:app/pages/settings_page/settings_page.dart';
 import 'package:app/pages/home_page/widgets/bottom_bar.dart';
+import 'package:app/widgets/sync_banner.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
@@ -16,12 +17,17 @@ class HomePage extends StatelessWidget {
       body: SafeArea(
           child: Stack(
         children: [
-          Positioned(
-            child: PageView(
-              controller: controller,
-              physics: const NeverScrollableScrollPhysics(),
-              children: [ScannerSyncPage(controller: controller), const ListPasswordPage(), const SettingsPage()],
-            ),
+          Column(
+            children: [
+              const SyncBanner(),
+              Expanded(
+                child: PageView(
+                  controller: controller,
+                  physics: const NeverScrollableScrollPhysics(),
+                  children: [ScannerSyncPage(controller: controller), const ListPasswordPage(), const SettingsPage()],
+                ),
+              ),
+            ],
           ),
           BottomBar(controller: controller,)
         ],

@@ -1,6 +1,7 @@
 import 'package:app/bloc/RootBloc/root_bloc.dart';
 import 'package:app/pages/home_page/home_page.dart';
 import 'package:app/pages/sign_in_page/sign_in_page.dart';
+import 'package:app/pages/desbloquear_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -34,6 +35,11 @@ class _RootState extends State<Root> {
           Navigator.of(context).pushAndRemoveUntil(
               CupertinoPageRoute(
                   builder: (BuildContext context) => HomePage()),
+              (Route<dynamic> route) => false);
+        } else if (state is RequiereDesbloqueo) {
+          Navigator.of(context).pushAndRemoveUntil(
+              CupertinoPageRoute(
+                  builder: (BuildContext context) => DesbloquearPage(user: state.user)),
               (Route<dynamic> route) => false);
         } else if (state is SesionInactiva) {
           Navigator.of(context).pushAndRemoveUntil(

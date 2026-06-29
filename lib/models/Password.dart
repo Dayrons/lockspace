@@ -106,6 +106,7 @@ class Password {
     password = await passwordEncrypt();
     final data = toMap();
     data['updated_at'] = DateTime.now().toString();
+    updatedAt = DateTime.now();
     await db.update(Password.table_name, data, where: "id = ?", whereArgs: [id]);
   }
 
@@ -166,5 +167,80 @@ class Password {
   @override
   String toString() {
     return 'Password{id: $id, user_id: $userId title: $title, password: $password}';
+  }
+
+  /// Merge bidireccional: aplica cambios remotos a la DB local.
+  /// Regla: uuid identifica, updated_at más reciente gana.
+  /// Retorna conteo de {created, updated, skipped}.
+  static Future<Map<String, int>> mergeFromRemote(List<Map<String, dynamic>> remotePasswords) async {
+    final prefs = UserSharedPrefs();
+    await prefs.init();
+    final user = prefs.getUser();
+    if (user == null) return {'created': 0, 'updated': 0, 'skipped': 0};
+
+    Database db = await DB().conexion();
+    final results = {'created': 0, 'updated': 0, 'skipped': 0};
+
+    for (final remote in remotePasswords) {
+      try {
+        final remoteUuid = remote['uuid'] as String;
+        final remoteUpdatedAt = remote['updated_at'] != null
+            ? DateTime.parse(remote['updated_at'] as String)
+            : DateTime.fromMillisecondsSinceEpoch(0);
+
+        // Buscar por uuid
+        final existing = await db.query(
+          Password.table_name,
+          where: 'uuid = ? AND user_id = ?',
+          whereArgs: [remoteUuid, user.id],
+          limit: 1,
+        );
+
+        if (existing.isEmpty) {
+          // No existe localmente → CREATE
+          await db.insert(Password.table_name, {
+            'uuid': remoteUuid,
+            'title': remote['title'] as String,
+            'password': remote['password'] as String, // ya viene encriptada con Fernet
+            'expiration': remote['expiration'] as int? ?? 0,
+            'expiration_unit': remote['expiration_unit'] as String? ?? 'never',
+            'user_id': user.id,
+            'created_at': remote['created_at'] != null
+                ? (remote['created_at'] as String)
+                : DateTime.now().toString(),
+            'updated_at': remoteUpdatedAt.toString(),
+          });
+          results['created'] = results['created']! + 1;
+        } else {
+          // Existe → comparar updated_at
+          final localRow = existing.first;
+          final localUpdatedAt = DateTime.parse(localRow['updated_at'] as String);
+
+          if (remoteUpdatedAt.isAfter(localUpdatedAt)) {
+            // Remoto más reciente → UPDATE
+            await db.update(
+              Password.table_name,
+              {
+                'title': remote['title'] as String,
+                'password': remote['password'] as String,
+                'expiration': remote['expiration'] as int? ?? 0,
+                'expiration_unit': remote['expiration_unit'] as String? ?? 'never',
+                'updated_at': remoteUpdatedAt.toString(),
+              },
+              where: 'uuid = ? AND user_id = ?',
+              whereArgs: [remoteUuid, user.id],
+            );
+            results['updated'] = results['updated']! + 1;
+          } else {
+            // Local más reciente o igual → SKIP
+            results['skipped'] = results['skipped']! + 1;
+          }
+        }
+      } catch (e) {
+        print('[MERGE] Error merging password uuid=${remote['uuid']}: $e');
+      }
+    }
+
+    return results;
   }
 }

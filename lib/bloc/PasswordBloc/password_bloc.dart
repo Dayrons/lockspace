@@ -1,6 +1,7 @@
 import 'package:app/preferences/user_preferences.dart';
 import 'package:bloc/bloc.dart';
 import 'package:app/models/Password.dart';
+import 'package:app/utils/sync_service.dart';
 
 part 'password_event.dart';
 part 'password_state.dart';
@@ -36,11 +37,13 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
   void addPassword(Password password) async {
     add(PasswordEvent(isLoading: true));
     try {
-      print('[PWD] addPassword() - title: ${password.title}, pass length: ${password.password.length}');
+      print('[PWD] addPassword() - title: ${password.title}');
       await password.create();
-      print('[PWD] addPassword() - create() succeeded');
+      print('[PWD] addPassword() - create() succeeded, uuid: ${password.uuid}');
       List<Password> passwords = await password.getAll();
       add(PasswordEvent(passwords: passwords, isLoading: false, registerSuccess: true));
+      // Enviar al desktop via WS (el objeto ya tiene uuid asignado por create())
+      SyncService().sendPasswordCreated(password);
     } catch (e) {
       print('[PWD] addPassword() EXCEPTION: $e');
       add(PasswordEvent(isLoading: false, registerError: true));
@@ -60,6 +63,8 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
       await password.update();
       List<Password> passwords = await password.getAll();
       add(PasswordEvent(isLoading: false, passwords: passwords, updateSuccess: true));
+      // Si hay conexión WS, enviar la actualización al desktop
+      SyncService().sendPasswordUpdated(password);
     } catch (e) {
       add(PasswordEvent(isLoading: false, updateError: true));
     }

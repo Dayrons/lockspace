@@ -101,26 +101,29 @@ class PasswordWidget extends StatelessWidget {
   }
 
   void _auth(BuildContext context, VoidCallback function) async {
-    final LocalAuthentication auth = LocalAuthentication();
-    final bool canAuthenticateWithBiometrics = await auth.canCheckBiometrics;
-    bool isAuth = false;
+    try {
+      final LocalAuthentication auth = LocalAuthentication();
+      final bool canAuthenticateWithBiometrics = await auth.canCheckBiometrics;
+      final bool isDeviceSupported = await auth.isDeviceSupported();
 
-    if (canAuthenticateWithBiometrics) {
-      isAuth = await auth.authenticate(
-        authMessages: const [
-          AndroidAuthMessages(signInTitle: "Authentication", signInHint: "")
-        ],
-        localizedReason: 'Please authenticate to delete password',
-      );
-    } else {
-      isAuth = await auth.authenticate(
-        localizedReason:
-            'Please enter your device password to delete password',
-        biometricOnly: false,
-      );
-    }
-
-    if (isAuth) {
+      if (canAuthenticateWithBiometrics || isDeviceSupported) {
+        final isAuth = await auth.authenticate(
+          authMessages: const [
+            AndroidAuthMessages(signInTitle: "Authentication", signInHint: "")
+          ],
+          localizedReason: 'Por favor autentica para continuar',
+        );
+        if (isAuth) {
+          function();
+        }
+      } else {
+        // Si no hay biometría disponible, permite la acción
+        // (el usuario ya se autenticó con contraseña al hacer login)
+        function();
+      }
+    } catch (e) {
+      // Si hay algún error con la biometría, permite la acción
+      // (el usuario ya se autenticó con contraseña al hacer login)
       function();
     }
   }

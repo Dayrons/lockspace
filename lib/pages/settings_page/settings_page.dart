@@ -1,6 +1,7 @@
 import 'package:app/pages/sign_in_page/sign_in_page.dart';
 import 'package:app/preferences/user_preferences.dart';
 import 'package:app/utils/key_service.dart';
+import 'package:app/utils/sync_service.dart';
 import 'package:app/utils/ui.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +22,8 @@ class _SettingsPageState extends State<SettingsPage> {
     await prefs.setSesion(false);
     await prefs.clearUser();
     KeyService().clear();
+    // Cerrar conexión WS al cerrar sesión
+    SyncService().disconnect();
 
     Navigator.of(context).pushAndRemoveUntil(
       CupertinoPageRoute(
